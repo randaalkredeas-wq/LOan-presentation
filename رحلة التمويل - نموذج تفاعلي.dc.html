@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+<template id="__bundler_thumbnail" data-bg-color="#F8F6FC">
+  <svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg">
+    <rect width="120" height="90" fill="#F8F6FC"/>
+    <rect x="30" y="35" width="44" height="20" rx="10" fill="url(#g)"/>
+    <circle cx="66" cy="30" r="4" fill="#171521"/>
+    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5B3FC0"/><stop offset="1" stop-color="#B9A8E8"/></linearGradient></defs>
+  </svg>
+</template>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #171521; }
+  a { color: #5B3FC0; }
+  a:hover { color: #402C8C; }
+  input[type="range"] { -webkit-appearance: none; appearance: none; background: transparent; }
+  input[type="range"]::-webkit-slider-runnable-track { height: 8px; border-radius: 6px; background: #E7E1F5; }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 26px; height: 26px; border-radius: 50%; background: linear-gradient(135deg,#5B3FC0,#8B6FD1); border: 4px solid #fff; box-shadow: 0 2px 10px rgba(91,63,192,0.45); margin-top: -9px; cursor: pointer; }
+  input::placeholder { color: #A9A2BE; }
+  @keyframes stepIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes flipIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+</style>
+</helmet>
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<section data-label="الغلاف" data-screen-label="01" data-speaker-notes="افتتاحية العرض لمجلس الإدارة." style="direction:rtl; font-family:'Tajawal',sans-serif; background:radial-gradient(1200px 800px at 82% -10%, #E4DBF7 0%, #F8F6FC 55%); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:48px; padding:120px; box-sizing:border-box; color:#171521;">
+  <div style="display:flex; align-items:center; gap:22px;">
+    <img src="assets/logo-loan.png" alt="لون للتمويل" style="height:74px; width:auto;"/>
+  </div>
+  <div style="font-size:72px; font-weight:800; text-align:center;">عرض تقديمي لمجلس الإدارة</div>
+  <div style="font-size:32px; color:#544D66; text-align:center; max-width:1100px; line-height:1.7;">نظرة شاملة على استراتيجية الشركة، خدماتنا، رحلة عملائنا، والسوق المستهدف</div>
+</section>
+
+<section data-label="كلمة رئيس مجلس الإدارة" data-screen-label="02" data-speaker-notes="كلمة رئيس مجلس الإدارة — قابلة للتوسيع." style="direction:rtl; font-family:'Tajawal',sans-serif; background:#F8F6FC; display:flex; padding:120px; box-sizing:border-box; color:#171521; gap:100px; align-items:center;">
+  <div style="width:340px; height:340px; border-radius:50%; background:linear-gradient(160deg,#5B3FC0,#8B6FD1); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:120px; color:#fff; font-weight:800;">ر.م</div>
+  <div style="display:flex; flex-direction:column; gap:28px;">
+    <div style="font-size:26px; font-weight:700; color:#5B3FC0;">٠١ — كلمة رئيس مجلس الإدارة</div>
+    <div style="font-size:34px; line-height:1.9; color:#2B2635;">"{{ chairmanText }}"</div>
+    <div style="display:flex; align-items:center; justify-content:space-between;">
+      <div style="font-size:26px; font-weight:700; color:#171521;">رئيس مجلس الإدارة</div>
+      <button onClick="{{ toggleChairman }}" style="padding:12px 28px; border:2px solid #5B3FC0; border-radius:100px; background:#fff; color:#5B3FC0; font-family:'Tajawal',sans-serif; font-size:24px; font-weight:700; cursor:pointer;">{{ chairmanToggleLabel }}</button>
+    </div>
+  </div>
+</section>
+
+<section data-label="كلمة الرئيس التنفيذي" data-screen-label="03" data-speaker-notes="كلمة الرئيس التنفيذي — قابلة للتوسيع." style="direction:rtl; font-family:'Tajawal',sans-serif; background:#F8F6FC; display:flex; padding:120px; box-sizing:border-box; color:#171521; gap:100px; align-items:center; flex-direction:row-reverse;">
+  <div style="width:340px; height:340px; border-radius:50%; background:linear-gradient(160deg,#5B3FC0,#8B6FD1); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:120px; color:#fff; font-weight:800;">ر.ت</div>
+  <div style="display:flex; flex-direction:column; gap:28px;">
+    <div style="font-size:26px; font-weight:700; color:#5B3FC0;">٠٢ — كلمة الرئيس التنفيذي</div>
+    <div style="font-size:34px; line-height:1.9; color:#2B2635;">"{{ ceoText }}"</div>
+    <div style="display:flex; align-items:center; justify-content:space-between;">
+      <div style="font-size:26px; font-weight:700; color:#171521;">الرئيس التنفيذي</div>
+      <button onClick="{{ toggleCeo }}" style="padding:12px 28px; border:2px solid #5B3FC0; border-radius:100px; background:#fff; color:#5B3FC0; font-family:'Tajawal',sans-serif; font-size:24px; font-weight:700; cursor:pointer;">{{ ceoToggleLabel }}</button>
+    </div>
+  </div>
+</section>
+
+<section data-label="نظرة عامة" data-screen-label="04" data-speaker-notes="نظرة عامة — بطاقات قابلة للنقر لعرض تفاصيل إضافية." style="direction:rtl; font-family:'Tajawal',sans-serif; background:#F8F6FC; display:flex; flex-direction:column; padding:120px; box-sizing:border-box; color:#171521; gap:44px;">
+  <div style="font-size:26px; font-weight:700; color:#5B3FC0;">٠٣ — نظرة عامة</div>
+  <div style="font-size:56px; font-weight:800;">شركة سعودية للتقنية المالية مرخّصة</div>
+  <div style="display:flex; gap:100px; flex:1; align-items:center;">
+    <div style="flex:1.2; font-size:30px; line-height:1.9; color:#2B2635;">لون للتمويل شركة تقنية مالية سعودية (مساهمة مقفلة)، مرخّصة برقم (78/أش/202308)، خاضعة لرقابة وإشراف البنك المركزي السعودي، برأس مال 30,000,000 ريال. تأسست عام 2022 لتكون ركيزة في قطاع التقنية المالية ضمن نشاط التمويل الاستهلاكي المصغر.</div>
+    <div style="flex:1; display:flex; flex-direction:column; gap:20px;">
+      <button onClick="{{ toggleStat0 }}" style="text-align:right; cursor:pointer; background:#fff; border:1px solid #E4DEF3; border-radius:24px; padding:28px 32px; font-family:'Tajawal',sans-serif; display:flex; flex-direction:column; gap:12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; width:100%;"><span style="font-size:24px; font-weight:700; color:#544D66;">تقديم الطلب</span><span style="font-size:32px; font-weight:800; color:#5B3FC0;">3 دقائق</span></div>
+        <sc-if value="{{ stat0Expanded }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:18px; color:#544D66; line-height:1.7; animation:stepIn .3s ease;">تعبئة بيانات العميل وتقديم الطلب رقميًا بالكامل دون أي أوراق أو زيارة فرع.</div>
+        </sc-if>
+      </button>
+      <button onClick="{{ toggleStat1 }}" style="text-align:right; cursor:pointer; background:#fff; border:1px solid #E4DEF3; border-radius:24px; padding:28px 32px; font-family:'Tajawal',sans-serif; display:flex; flex-direction:column; gap:12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; width:100%;"><span style="font-size:24px; font-weight:700; color:#544D66;">معالجة الطلب</span><span style="font-size:32px; font-weight:800; color:#5B3FC0;">خلال ثوانٍ</span></div>
+        <sc-if value="{{ stat1Expanded }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:18px; color:#544D66; line-height:1.7; animation:stepIn .3s ease;">أنظمة آلية تقيّم الطلب وتصدر القرار فور اكتمال البيانات.</div>
+        </sc-if>
+      </button>
+      <button onClick="{{ toggleStat2 }}" style="text-align:right; cursor:pointer; background:#fff; border:1px solid #E4DEF3; border-radius:24px; padding:28px 32px; font-family:'Tajawal',sans-serif; display:flex; flex-direction:column; gap:12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; width:100%;"><span style="font-size:24px; font-weight:700; color:#544D66;">إيداع المبلغ</span><span style="font-size:32px; font-weight:800; color:#5B3FC0;">خلال 24 ساعة</span></div>
+        <sc-if value="{{ stat2Expanded }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:18px; color:#544D66; line-height:1.7; animation:stepIn .3s ease;">تحويل مباشر إلى الحساب البنكي المسجل للعميل بعد توقيع العقد.</div>
+        </sc-if>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section data-label="الرؤية والرسالة" data-screen-label="05" data-speaker-notes="الرؤية والرسالة." style="direction:rtl; font-family:'Tajawal',sans-serif; background:#F8F6FC; display:flex; flex-direction:column; padding:120px; box-sizing:border-box; color:#171521; gap:56px; justify-content:center;">
+  <div style="font-size:26px; font-weight:700; color:#5B3FC0;">٠٤ — الرؤية والرسالة</div>
+  <div style="display:flex; gap:48px;">
+    <div style-hover="transform:translateY(-6px);" style="flex:1; background:linear-gradient(160deg,#5B3FC0,#8B6FD1); border-radius:36px; padding:56px; color:#fff; display:flex; flex-direction:column; gap:24px; transition:transform .25s ease;">
+      <div style="font-size:30px; font-weight:800;">الرؤية</div>
+      <div style="font-size:32px; line-height:1.8;">أن نكون الخيار الأسرع والأبسط للتمويل الاستهلاكي المصغر، حيث تبدأ رحلتك التمويلية بلمسة واحدة.</div>
+    </div>
+    <div style-hover="transform:translateY(-6px);" style="flex:1; background:#fff; border:1px solid #E4DEF3; border-radius:36px; padding:56px; display:flex; flex-direction:column; gap:24px; transition:transform .25s ease;">
+      <div style="font-size:30px; font-weight:800; color:#5B3FC0;">الرسالة</div>
+      <div style="font-size:32px; line-height:1.8; color:#2B2635;">بناء منظومة رقمية متكاملة واستحداث حلول تمويلية مستدامة ومتنوعة للأفراد ضمن نشاط التمويل الاستهلاكي المصغر، تساهم في تطوير رؤية القطاع المالي وتحقيق مستهدفات 2030.</div>
+    </div>
+  </div>
+</section>
+
+<section data-label="القيم" data-screen-label="06" data-speaker-notes="قيم الشركة — بطاقات بأيقونات تنقلب عند النقر لعرض الوصف." style="direction:rtl; font-family:'Tajawal',sans-serif; background:#F8F6FC; display:flex; flex-direction:column; padding:120px; box-sizing:border-box; color:#171521; gap:56px; justify-content:center;">
+  <div style="font-size:26px; font-weight:700; color:#5B3FC0;">٠٥ — القيم</div>
+  <div style="font-size:56px; font-weight:800;">القيم التي نعمل بها</div>
+  <div style="font-size:24px; color:#A9A2BE;">انقر على أي بطاقة للاطلاع على تفصيلها</div>
+  <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:32px;">
+    <button onClick="{{ toggleValue0 }}" style="text-align:right; cursor:pointer; background:#fff; border:1px solid #E4DEF3; border-radius:28px; padding:44px; display:flex; flex-direction:column; gap:20px; font-family:'Tajawal',sans-serif; min-height:200px;">
+      <div style="width:64px; height:64px; border-radius:18px; background:linear-gradient(135deg,#5B3FC0,#8B6FD1); display:flex; align-items:center; justify-content:center;">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.6.6 1 1.5 1 2.5h6c0-1 .4-1.9 1-2.5A6 6 0 0 0 12 3z"/></svg>
+      </div>
+      <div style="font-size:30px; font-weight:800;">الابتكار</div>
+      <sc-if value="{{ value0Flipped }}" hint-placeholder-val="{{ false }}"><div style="font-size:19px; color:#544D66; line-height:1.7; animation:flipIn .3s ease;">تطوير حلول تمويلية رقمية جديدة تواكب تطلعات العملاء.</div></sc-if>
+    </button>
+    <button onClick="{{ toggleValue1 }}" style="text-align:right; cursor:pointer; background:#fff; border:1px solid #E4DEF3; border-radius:28px; padding:44px; display:flex; flex-direction:column; gap:20px; font-family:'Tajawal',sans-serif; min-height:200px;">
+      <div style="width:64px; height:64px; border-radius:18px; background:linear-gradient(135deg,#5B3FC0,#8B6FD1); display:flex; align-items:center; justify-content:center;">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <div style="font-size:30px; font-weight:800;">الموثوقية</div>
+      <sc-if value="{{ value1Flipped }}" hint-placeholder-val="{{ false }}"><div style="font-size:19px; color:#544D66; line-height:1.7; animation:flipIn .3s ease;">التزام راسخ تجاه العملاء والشركاء والجهات الرقابية.</div></sc-if>
+    </button>
+    <button onClick="{{ toggleValue2 }}" style="text-align:right; cursor:pointer; background:#fff; border:1px solid #E4DEF3; border-radius:28px; padding:44px; display:flex; flex-direction:column; gap:20px; font-family:'Tajawal',sans-serif; min-height:200px;">
+      <div style="width:64px; height:64px; border-radius:18px; background:linear-gradient(135deg,#5B3FC0,#8B6FD1); display:flex; align-items:center; justify-content:center;">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+      </div>
+      <div style="font-size:30px; font-weight:800;">الشفافية</div>
+      <sc-if value="{{ value2Flipped }}" hint-placeholder-val="{{ false }}"><div style="font-size:19px; color:#544D66; line-height:1.7; animation:flipIn .3s ease;">وضوح كامل في الشروط والرسوم والإجراءات مع كل عميل.</div></sc-if>
+    </button>
+    <button onClick="{{ toggleValue3 }}" style="text-align:right; cursor:pointer; background:#fff; border:1px solid #E4DEF3; border-radius:28px; padding:44px; display:flex; flex-direction:column; gap:20px; font-family:'Tajawal',sans-serif; min-height:200px;">
+      <div style="width:64px; height:64px; border-radius:18px; background:linear-gradient(135deg,#5B3FC0,#8B6FD1); display:flex; align-items:center; justify-content:center;">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c6-2 8-7 8-13a13 13 0 0 0-8-3 13 13 0 0 0-8 3c0 6 2 11 8 13z"/><path d="M12 22V9"/></svg>
+      </div>
+      <div style="font-size:30px; font-weight:800;">الاستدامة</div>
+      <sc-if value="{{ value3Flipped }}" hint-placeholder-val="{{ false }}"><div style="font-size:19px; color:#544D66; line-height:1.7; animation:flipIn .3s ease;">نمو مسؤول يراعي الأثر الاقتصادي والاجتماعي طويل المدى.</div></sc-if>
+    </button>
+    <button onClick="{{ toggleValue4 }}" style="text-align:right; cursor:pointer; background:#fff; border:1px solid #E4DEF3; border-radius:28px; padding:44px; display:flex; flex-direction:column; gap:20px; font-family:'Tajawal',sans-serif; min-height:200px;">
+      <div style="width:64px; height:64px; border-radius:18px; background:linear-gradient(135deg,#5B3FC0,#8B6FD1); display:flex; align-items:center; justify-content:center;">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="4"/><circle cx="16" cy="16" r="4"/><path d="M10.8 10.8l2.4 2.4"/></svg>
+      </div>
+      <div style="font-size:30px; font-weight:800;">الالتزام</div>
+      <sc-if value="{{ value4Flipped }}" hint-placeholder-val="{{ false }}"><div style="font-size:19px; color:#544D66; line-height:1.7; animation:flipIn .3s ease;">الوفاء الكامل بالضوابط الشرعية والتنظيمية في كل تعامل.</div></sc-if>
+    </button>
+    <button onClick="{{ toggleValue5 }}" style="text-align:right; cursor:pointer; background:#fff; border:1px solid #E4DEF3; border-radius:28px; padding:44px; display:flex; flex-direction:column; gap:20px; font-family:'Tajawal',sans-serif; min-height:200px;">
+      <div style="width:64px; height:64px; border-radius:18px; background:linear-gradient(135deg,#5B3FC0,#8B6FD1); display:flex; align-items:center; justify-content:center;">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6.5 7-6.5s7 2.5 7 6.5"/></svg>
+      </div>
+      <div style="font-size:30px; font-weight:800;">العميل أولًا</div>
+      <sc-if value="{{ value5Flipped }}" hint-placeholder-val="{{ false }}"><div style="font-size:19px; color:#544D66; line-height:1.7; animation:flipIn .3s ease;">كل قرار وخدمة تبدأ من احتياج العميل ومصلحته أولًا.</div></sc-if>
+    </button>
+  </div>
+</section>
+
+<section data-label="خدماتنا" data-screen-label="07" data-speaker-notes="نوع النشاط ومزايا التمويل الشخصي — بطاقات قابلة للنقر." style="direction:rtl; font-family:'Tajawal',sans-serif; background:#F8F6FC; display:flex; flex-direction:column; padding:120px; box-sizing:border-box; color:#171521; gap:36px; justify-content:center;">
+  <div style="font-size:26px; font-weight:700; color:#5B3FC0;">٠٦ — خدماتنا</div>
+  <div style="font-size:56px; font-weight:800;">التمويل الاستهلاكي المصغر</div>
+  <div style="font-size:24px; color:#A9A2BE;">انقر على أي ميزة لعرض التفاصيل</div>
+  <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:28px;">
+    <button onClick="{{ toggleFeature0 }}" style="text-align:right; cursor:pointer; background:#fff; border:1px solid #E4DEF3; border-radius:24px; padding:36px; font-family:'Tajawal',sans-serif; min-height:150px;"><div style="font-size:30px; font-weight:800; color:#5B3FC0;">حتى 30,000 ريال</div><sc-if value="{{ feature0Flipped }}" hint-placeholder-val="{{ false }}"><div style="font-size:18px; color:#544D66; margin-top:12px; animation:flipIn .3s ease;">سقف مبلغ التمويل الشخصي المتاح لعملاء لون.</div></sc-if></button>
+    <button onClick="{{ toggleFeature1 }}" style="text-align:right; cursor:pointer; background:#fff; border:1px solid #E4DEF3; border-radius:24px; padding:36px; font-family:'Tajawal',sans-serif; min-height:150px;"><div style="font-size:30px; font-weight:800; color:#5B3FC0;">حتى 24 شهرًا</div><sc-if value="{{ feature1Flipped }}" hint-placeholder-val="{{ false }}"><div style="font-size:18px; color:#544D66; margin-top:12px; animation:flipIn .3s ease;">مرونة في اختيار مدة السداد بما يناسب دخل العميل.</div></sc-if></button>
+    <button onClick="{{ toggleFeature2 }}" style="text-align:right; cursor:pointer; background:#fff; border:1px solid #E4DEF3; border-radius:24px; padding:36px; font-family:'Tajawal',sans-serif; min-height:150px;"><div style="font-size:30px; font-weight:800; color:#5B3FC0;">خلال 24 ساعة</div><sc-if value="{{ feature2Flipped }}" hint-placeholder-val="{{ false }}"><div style="font-size:18px; color:#544D66; margin-top:12px; animation:flipIn .3s ease;">قرار الموافقة يصدر سريعًا دون انتظار طويل.</div></sc-if></button>
+    <button onClick="{{ toggleFeature3 }}" style="text-align:right; cursor:pointer; background:#fff; border:1px solid #E4DEF3; border-radius:24px; padding:36px; font-family:'Tajawal',sans-serif; min-height:150px;"><div style="font-size:30px; font-weight:800; color:#5B3FC0;">بدون كفيل</div><sc-if value="{{ feature3Flipped }}" hint-placeholder-val="{{ false }}"><div style="font-size:18px; color:#544D66; margin-top:12px; animation:flipIn .3s ease;">وبدون اشتراط تحويل الراتب لصالح الشركة.</div></sc-if></button>
+    <button onClick="{{ toggleFeature4 }}" style="text-align:right; cursor:pointer; background:#fff; border:1px solid #E4DEF3; border-radius:24px; padding:36px; font-family:'Tajawal',sans-serif; min-height:150px;"><div style="font-size:30px; font-weight:800; color:#5B3FC0;">رقمية بالكامل</div><sc-if value="{{ feature4Flipped }}" hint-placeholder-val="{{ false }}"><div style="font-size:18px; color:#544D66; margin-top:12px; animation:flipIn .3s ease;">من التسجيل حتى استلام المبلغ دون أوراق.</div></sc-if></button>
+    <button onClick="{{ toggleFeature5 }}" style="text-align:right; cursor:pointer; background:#fff; border:1px solid #E4DEF3; border-radius:24px; padding:36px; font-family:'Tajawal',sans-serif; min-height:150px;"><div style="font-size:30px; font-weight:800; color:#5B3FC0;">متوافقة شرعيًا</div><sc-if value="{{ feature5Flipped }}" hint-placeholder-val="{{ false }}"><div style="font-size:18px; color:#544D66; margin-top:12px; animation:flipIn .3s ease;">وفق عقد التورّق ومعتمدة من اللجنة الشرعية.</div></sc-if></button>
+  </div>
+</section>
+
+<section data-label="رحلة العميل" data-screen-label="08" data-speaker-notes="عرض تفاعلي لرحلة العميل الكاملة في صفحة واحدة متحركة." style="direction:rtl; font-family:'Tajawal',sans-serif; background:#F8F6FC; display:flex; flex-direction:column; padding:80px 100px; box-sizing:border-box; color:#171521; gap:24px;">
+  <div style="display:flex; align-items:baseline; gap:24px;">
+    <div style="font-size:26px; font-weight:700; color:#5B3FC0;">٠٧ — رحلة العميل</div>
+    <div style="font-size:38px; font-weight:800;">نموذج تفاعلي لطلب التمويل</div>
+  </div>
+  <div style="flex:1; background:#fff; border-radius:32px; border:1px solid #E4DEF3; box-shadow:0 20px 50px rgba(91,63,192,0.1); padding:40px; box-sizing:border-box; display:flex; flex-direction:column; overflow:hidden;">
+    <div style="display:flex; justify-content:space-between; gap:8px; margin-bottom:28px;">
+      <sc-for list="{{ steps }}" as="step" hint-placeholder-count="6">
+        <button onClick="{{ step.onSelect }}" style="flex:1; display:flex; flex-direction:column; align-items:center; gap:8px; background:none; border:none; cursor:pointer; font-family:'Tajawal',sans-serif; padding:0;">
+          <div style="width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:800; background:{{ step.circleBg }}; color:{{ step.circleColor }}; transition:background .3s ease;">{{ step.number }}</div>
+          <div style="font-size:24px; font-weight:700; color:{{ step.labelColor }}; text-align:center; transition:color .3s ease;">{{ step.label }}</div>
+        </button>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{ isStep0 }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex; gap:56px; align-items:center; flex:1; animation:stepIn .4s ease;">
+        <div style="flex:1; display:flex; flex-direction:column; gap:18px;">
+          <div style="font-size:26px; font-weight:800;">سجّل برقم جوالك</div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <label style="font-size:24px; font-weight:700;">رقم الجوال</label>
+            <div dir="ltr" style="display:flex; align-items:center; gap:12px; background:#F8F6FC; border:2px solid #E4DEF3; border-radius:14px; padding:4px 18px;">
+              <span style="font-size:24px; font-weight:700; color:#5B3FC0;">+966</span>
+              <div style="width:1px; height:24px; background:#E4DEF3;"></div>
+              <input dir="ltr" type="tel" placeholder="5xxxxxxxx" value="{{ phone }}" onChange="{{ onPhone }}" maxlength="9" style="flex:1; border:none; outline:none; font-family:'Tajawal',sans-serif; font-size:18px; padding:12px 4px; background:transparent; color:#171521;"/>
+            </div>
+          </div>
+          <sc-if value="{{ otpSent }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex; flex-direction:column; gap:8px; animation:flipIn .3s ease;">
+              <label style="font-size:24px; font-weight:700;">رمز التحقق</label>
+              <div dir="ltr" style="display:flex; gap:10px;">
+                <sc-for list="{{ otpDigits }}" as="d" hint-placeholder-count="4">
+                  <input type="text" maxlength="1" value="{{ d.value }}" onChange="{{ d.onChange }}" style="width:48px; height:56px; text-align:center; font-size:22px; font-weight:800; border-radius:12px; border:2px solid #E4DEF3; background:#F8F6FC; color:#5B3FC0; font-family:'Tajawal',sans-serif;"/>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+          <div style="display:flex; gap:14px;">
+            <sc-if value="{{ otpNotSent }}" hint-placeholder-val="{{ true }}">
+              <button onClick="{{ onSendOtp }}" disabled="{{ phoneIncomplete }}" style="padding:14px 34px; border:none; border-radius:100px; background:{{ sendButtonBg }}; color:#fff; font-family:'Tajawal',sans-serif; font-size:24px; font-weight:700; cursor:pointer;">إرسال رمز التحقق</button>
+            </sc-if>
+            <sc-if value="{{ otpSent }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ goStep1 }}" disabled="{{ otpIncomplete }}" style="padding:14px 34px; border:none; border-radius:100px; background:{{ otpButtonBg }}; color:#fff; font-family:'Tajawal',sans-serif; font-size:24px; font-weight:700; cursor:pointer;">تأكيد ومتابعة</button>
+            </sc-if>
+          </div>
+        </div>
+        <div style="width:220px; height:320px; border-radius:32px; background:#171521; padding:12px; box-sizing:border-box; flex-shrink:0;">
+          <div style="width:100%; height:100%; border-radius:22px; background:linear-gradient(160deg,#5B3FC0,#8B6FD1 55%,#C3B4EA); display:flex; align-items:center; justify-content:center; color:#fff; font-size:56px;">🔐</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isStep1 }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex; gap:32px; flex:1; animation:stepIn .4s ease;">
+        <div style="flex:1.3; display:flex; flex-direction:column; gap:20px;">
+          <div style="background:#F8F6FC; border-radius:20px; padding:26px; border:1px solid #E4DEF3; display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; align-items:baseline; justify-content:space-between;">
+              <div style="font-size:24px; font-weight:700; color:#544D66;">مبلغ التمويل</div>
+              <div dir="ltr" style="font-size:28px; font-weight:800; color:#5B3FC0;">{{ amountFormatted }} <span style="font-size:24px; font-weight:700; color:#171521;">ريال</span></div>
+            </div>
+            <input type="range" min="1000" max="30000" step="500" value="{{ amount }}" onChange="{{ onAmount }}" style="width:100%; height:8px;"/>
+          </div>
+          <div style="background:#F8F6FC; border-radius:20px; padding:26px; border:1px solid #E4DEF3; display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; align-items:baseline; justify-content:space-between;">
+              <div style="font-size:24px; font-weight:700; color:#544D66;">مدة السداد</div>
+              <div style="font-size:28px; font-weight:800; color:#5B3FC0;">{{ duration }} <span style="font-size:24px; font-weight:700; color:#171521;">شهر</span></div>
+            </div>
+            <input type="range" min="3" max="24" step="1" value="{{ duration }}" onChange="{{ onDuration }}" style="width:100%; height:8px;"/>
+          </div>
+        </div>
+        <div style="flex:1; background:linear-gradient(160deg,#5B3FC0,#8B6FD1); border-radius:20px; padding:30px; display:flex; flex-direction:column; justify-content:space-between; color:#fff;">
+          <div>
+            <div style="font-size:24px; font-weight:700; opacity:0.85;">القسط الشهري التقديري</div>
+            <div dir="ltr" style="font-size:42px; font-weight:800; margin-top:8px;">{{ installmentFormatted }} <span style="font-size:24px; font-weight:700;">ريال</span></div>
+          </div>
+          <button onClick="{{ goStep2 }}" style="padding:14px; border:none; border-radius:100px; background:#fff; color:#5B3FC0; font-family:'Tajawal',sans-serif; font-size:24px; font-weight:800; cursor:pointer;">متابعة الطلب</button>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isStep2 }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex; flex-direction:column; gap:20px; flex:1; animation:stepIn .4s ease;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px 24px;">
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <label style="font-size:24px; font-weight:700;">الاسم الكامل</label>
+            <input type="text" placeholder="مثال: عبدالله محمد القحطاني" value="{{ fullName }}" onChange="{{ onFullName }}" style="border:2px solid #E4DEF3; border-radius:12px; padding:12px 16px; font-size:20px; font-family:'Tajawal',sans-serif; background:#F8F6FC; color:#171521;"/>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <label style="font-size:24px; font-weight:700;">رقم الهوية الوطنية</label>
+            <input dir="ltr" type="text" placeholder="1XXXXXXXXX" value="{{ nationalId }}" onChange="{{ onNationalId }}" style="border:2px solid #E4DEF3; border-radius:12px; padding:12px 16px; font-size:20px; font-family:'Tajawal',sans-serif; background:#F8F6FC; color:#171521;"/>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <label style="font-size:24px; font-weight:700;">جهة العمل</label>
+            <input type="text" placeholder="مثال: القطاع الحكومي" value="{{ employer }}" onChange="{{ onEmployer }}" style="border:2px solid #E4DEF3; border-radius:12px; padding:12px 16px; font-size:20px; font-family:'Tajawal',sans-serif; background:#F8F6FC; color:#171521;"/>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <label style="font-size:24px; font-weight:700;">الراتب الشهري (ريال)</label>
+            <input dir="ltr" type="text" placeholder="8000" value="{{ salary }}" onChange="{{ onSalary }}" style="border:2px solid #E4DEF3; border-radius:12px; padding:12px 16px; font-size:20px; font-family:'Tajawal',sans-serif; background:#F8F6FC; color:#171521;"/>
+          </div>
+        </div>
+        <div style="flex:1;"></div>
+        <div style="display:flex; justify-content:flex-end;">
+          <button onClick="{{ goStep3 }}" disabled="{{ infoIncomplete }}" style="padding:14px 34px; border:none; border-radius:100px; background:{{ infoButtonBg }}; color:#fff; font-family:'Tajawal',sans-serif; font-size:24px; font-weight:700; cursor:pointer;">عرض التمويل</button>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isStep3 }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:18px; flex:1; justify-content:center; animation:stepIn .4s ease;">
+        <div style="font-size:26px; font-weight:800;">عرض التمويل الخاص بك جاهز يا {{ firstNameDisplay }}</div>
+        <div style="width:100%; max-width:820px; background:#F8F6FC; border:1px solid #E4DEF3; border-radius:20px; padding:28px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; text-align:center;">
+          <div><div style="font-size:20px; color:#544D66; font-weight:700;">مبلغ التمويل</div><div dir="ltr" style="font-size:24px; font-weight:800; color:#5B3FC0; margin-top:6px;">{{ amountFormatted }} ريال</div></div>
+          <div style="border-right:1px solid #E4DEF3; border-left:1px solid #E4DEF3;"><div style="font-size:20px; color:#544D66; font-weight:700;">مدة السداد</div><div style="font-size:24px; font-weight:800; color:#5B3FC0; margin-top:6px;">{{ duration }} شهر</div></div>
+          <div><div style="font-size:20px; color:#544D66; font-weight:700;">القسط الشهري</div><div dir="ltr" style="font-size:24px; font-weight:800; color:#5B3FC0; margin-top:6px;">{{ installmentFormatted }} ريال</div></div>
+        </div>
+        <div style="display:flex; gap:14px;">
+          <button onClick="{{ goStep4 }}" style="padding:14px 34px; border:none; border-radius:100px; background:linear-gradient(90deg,#5B3FC0,#B9A8E8); color:#fff; font-family:'Tajawal',sans-serif; font-size:17px; font-weight:700; cursor:pointer;">أوافق على العرض</button>
+          <button onClick="{{ goStep1 }}" style="padding:14px 34px; border:2px solid #E4DEF3; border-radius:100px; background:#fff; color:#544D66; font-family:'Tajawal',sans-serif; font-size:24px; font-weight:700; cursor:pointer;">تعديل الطلب</button>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isStep4 }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex; gap:28px; flex:1; animation:stepIn .4s ease;">
+        <div style="flex:1.2; background:#F8F6FC; border:1px solid #E4DEF3; border-radius:18px; padding:22px; font-size:20px; line-height:1.8; color:#544D66; overflow:auto;">
+          <div style="font-size:24px; font-weight:800; color:#171521; margin-bottom:10px;">ملخص شروط عقد التورّق</div>
+          يقر العميل بموافقته على تمويل بمبلغ {{ amountFormatted }} ريال يُسدد على {{ duration }} شهرًا بقسط شهري قدره {{ installmentFormatted }} ريال، وفق عقد تورّق متوافق مع الضوابط والمعايير الشرعية.
+        </div>
+        <div style="flex:1; display:flex; flex-direction:column; gap:14px;">
+          <label style="display:flex; align-items:flex-start; gap:10px; background:#F8F6FC; border:2px solid #E4DEF3; border-radius:14px; padding:16px; cursor:pointer;">
+            <input type="checkbox" checked="{{ agreeTerms }}" onChange="{{ onToggleAgree }}" style="width:20px; height:20px; margin-top:2px; accent-color:#5B3FC0;"/>
+            <span style="font-size:24px; font-weight:700;">أقر بالموافقة على جميع الشروط والأحكام</span>
+          </label>
+          <input type="text" placeholder="اكتب اسمك الثلاثي للتوقيع" value="{{ signatureName }}" onChange="{{ onSignatureName }}" style="border:2px solid #E4DEF3; border-radius:12px; padding:12px 16px; font-size:20px; font-family:'Tajawal',sans-serif; background:#F8F6FC; color:#171521;"/>
+          <div style="border-bottom:3px solid #171521; padding:8px 6px; font-size:22px; font-style:italic; color:#5B3FC0; min-height:32px;">{{ signatureName }}</div>
+          <button onClick="{{ goStep5 }}" disabled="{{ signIncomplete }}" style="padding:14px; border:none; border-radius:100px; background:{{ signButtonBg }}; color:#fff; font-family:'Tajawal',sans-serif; font-size:17px; font-weight:800; cursor:pointer;">توقيع العقد</button>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isStep5 }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:14px; flex:1; justify-content:center; animation:stepIn .4s ease;">
+        <div style="width:72px; height:72px; border-radius:50%; background:linear-gradient(135deg,#5B3FC0,#8B6FD1); display:flex; align-items:center; justify-content:center; font-size:34px; color:#fff;">✓</div>
+        <div style="font-size:26px; font-weight:800;">تم إيداع مبلغ التمويل في حسابك</div>
+        <div dir="ltr" style="font-size:40px; font-weight:800; color:#5B3FC0;">{{ amountFormatted }} <span style="font-size:18px; font-weight:700; color:#171521;">ريال</span></div>
+        <div style="font-size:16px; color:#544D66;">خلال 24 ساعة من التوقيع — على بركة الله يا {{ firstNameDisplay }}</div>
+      </div>
+    </sc-if>
+  </div>
+</section>
+
+<section data-label="نظرة على السوق" data-screen-label="09" data-speaker-notes="حجم السوق ومعدلات النمو — بطاقات قابلة للنقر." style="direction:rtl; font-family:'Tajawal',sans-serif; background:#F8F6FC; display:flex; flex-direction:column; padding:120px; box-sizing:border-box; color:#171521; gap:44px; justify-content:center;">
+  <div style="font-size:26px; font-weight:700; color:#5B3FC0;">٠٨ — نظرة على السوق</div>
+  <div style="font-size:56px; font-weight:800;">سوق تمويل استهلاكي سريع النمو</div>
+  <div style="display:flex; gap:100px; align-items:center;">
+    <div style="flex:1.1; font-size:28px; line-height:1.9; color:#2B2635;">يعد سوق التمويل الاستهلاكي في المملكة من الأسواق الناشئة ذات النمو السريع، مدفوعًا بالطلب المتزايد على الائتمان من الأفراد وتحوّل نمط استهلاكهم نحو الحلول المالية الرقمية.</div>
+    <div style="flex:1; display:flex; flex-direction:column; gap:20px;">
+      <button onClick="{{ toggleMarket0 }}" style="text-align:right; cursor:pointer; background:#fff; border:1px solid #E4DEF3; border-radius:22px; padding:28px; font-family:'Tajawal',sans-serif;">
+        <div style="font-size:40px; font-weight:800; color:#5B3FC0;">356.72$ مليار</div><div style="font-size:20px; color:#544D66; margin-top:6px;">حجم السوق في 2024</div>
+        <sc-if value="{{ market0Expanded }}" hint-placeholder-val="{{ false }}"><div style="font-size:17px; color:#A9A2BE; margin-top:10px; animation:flipIn .3s ease;">المصدر: تقارير أبحاث السوق السعودي 2024.</div></sc-if>
+      </button>
+      <button onClick="{{ toggleMarket1 }}" style="text-align:right; cursor:pointer; background:#fff; border:1px solid #E4DEF3; border-radius:22px; padding:28px; font-family:'Tajawal',sans-serif;">
+        <div style="font-size:40px; font-weight:800; color:#5B3FC0;">16.4%</div><div style="font-size:20px; color:#544D66; margin-top:6px;">النمو السنوي المركب المتوقع (2025–2033)</div>
+        <sc-if value="{{ market1Expanded }}" hint-placeholder-val="{{ false }}"><div style="font-size:17px; color:#A9A2BE; margin-top:10px; animation:flipIn .3s ease;">مدفوع بالتحول الرقمي وزيادة الطلب على الائتمان الفردي.</div></sc-if>
+      </button>
+      <button onClick="{{ toggleMarket2 }}" style="text-align:right; cursor:pointer; background:#fff; border:1px solid #E4DEF3; border-radius:22px; padding:28px; font-family:'Tajawal',sans-serif;">
+        <div style="font-size:40px; font-weight:800; color:#5B3FC0;">15%</div><div style="font-size:20px; color:#544D66; margin-top:6px;">نمو الإيرادات المستهدف للون خلال 5 أعوام</div>
+        <sc-if value="{{ market2Expanded }}" hint-placeholder-val="{{ false }}"><div style="font-size:17px; color:#A9A2BE; margin-top:10px; animation:flipIn .3s ease;">مبني على توسّع المحفظة التمويلية وقاعدة العملاء.</div></sc-if>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section data-label="اللجنة الشرعية" data-screen-label="10" data-speaker-notes="مهام اللجنة الشرعية — بطاقات قابلة للنقر." style="direction:rtl; font-family:'Tajawal',sans-serif; background:#F8F6FC; display:flex; flex-direction:column; padding:120px; box-sizing:border-box; color:#171521; gap:44px; justify-content:center;">
+  <div style="font-size:26px; font-weight:700; color:#5B3FC0;">٠٩ — اللجنة الشرعية</div>
+  <div style="font-size:56px; font-weight:800;">استقلالية شرعية كاملة</div>
+  <div style="font-size:28px; color:#544D66; max-width:1200px; line-height:1.8;">لجنة شرعية مستقلة تضم نخبة من العلماء والمتخصصين في الفقه والمعاملات المالية الإسلامية، تتولى:</div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+    <button onClick="{{ toggleSharia0 }}" style="text-align:right; cursor:pointer; background:#fff; border:1px solid #E4DEF3; border-radius:22px; padding:32px; font-family:'Tajawal',sans-serif;"><div style="font-size:24px; font-weight:700;">مراجعة واعتماد المنتجات التمويلية</div><sc-if value="{{ sharia0Expanded }}" hint-placeholder-val="{{ false }}"><div style="font-size:18px; color:#544D66; margin-top:10px; animation:flipIn .3s ease;">دراسة كل منتج جديد والتأكد من توافقه قبل إطلاقه للعملاء.</div></sc-if></button>
+    <button onClick="{{ toggleSharia1 }}" style="text-align:right; cursor:pointer; background:#fff; border:1px solid #E4DEF3; border-radius:22px; padding:32px; font-family:'Tajawal',sans-serif;"><div style="font-size:24px; font-weight:700;">التأكد من توافق السياسات والإجراءات</div><sc-if value="{{ sharia1Expanded }}" hint-placeholder-val="{{ false }}"><div style="font-size:18px; color:#544D66; margin-top:10px; animation:flipIn .3s ease;">مراجعة دورية لكافة السياسات الداخلية والعقود.</div></sc-if></button>
+    <button onClick="{{ toggleSharia2 }}" style="text-align:right; cursor:pointer; background:#fff; border:1px solid #E4DEF3; border-radius:22px; padding:32px; font-family:'Tajawal',sans-serif;"><div style="font-size:24px; font-weight:700;">إصدار الفتاوى والقرارات المتعلقة بالنشاط</div><sc-if value="{{ sharia2Expanded }}" hint-placeholder-val="{{ false }}"><div style="font-size:18px; color:#544D66; margin-top:10px; animation:flipIn .3s ease;">توفير مرجعية شرعية موثقة لكل قرار تمويلي.</div></sc-if></button>
+    <button onClick="{{ toggleSharia3 }}" style="text-align:right; cursor:pointer; background:#fff; border:1px solid #E4DEF3; border-radius:22px; padding:32px; font-family:'Tajawal',sans-serif;"><div style="font-size:24px; font-weight:700;">متابعة دورية لاستمرارية الالتزام الشرعي</div><sc-if value="{{ sharia3Expanded }}" hint-placeholder-val="{{ false }}"><div style="font-size:18px; color:#544D66; margin-top:10px; animation:flipIn .3s ease;">تدقيق مستمر على جميع التعاملات الجارية.</div></sc-if></button>
+  </div>
+</section>
+
+<section data-label="شركاؤنا" data-screen-label="11" data-speaker-notes="فئات الشركاء — اختيار فئة يعرض لوحة توضيحية." style="direction:rtl; font-family:'Tajawal',sans-serif; background:#F8F6FC; display:flex; flex-direction:column; padding:120px; box-sizing:border-box; color:#171521; gap:44px; justify-content:center;">
+  <div style="font-size:26px; font-weight:700; color:#5B3FC0;">١٠ — شركاؤنا</div>
+  <div style="font-size:56px; font-weight:800;">شراكات فعّالة طويلة المدى</div>
+  <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:32px;">
+    <button onClick="{{ selectPartner0 }}" style="text-align:right; cursor:pointer; background:{{ partner0Bg }}; border:1px solid #E4DEF3; border-radius:28px; padding:40px; display:flex; flex-direction:column; gap:16px; font-family:'Tajawal',sans-serif; transition:background .25s ease;"><div style="font-size:28px; font-weight:800; color:{{ partner0Text }};">استراتيجية</div></button>
+    <button onClick="{{ selectPartner1 }}" style="text-align:right; cursor:pointer; background:{{ partner1Bg }}; border:1px solid #E4DEF3; border-radius:28px; padding:40px; display:flex; flex-direction:column; gap:16px; font-family:'Tajawal',sans-serif; transition:background .25s ease;"><div style="font-size:28px; font-weight:800; color:{{ partner1Text }};">تجارية</div></button>
+    <button onClick="{{ selectPartner2 }}" style="text-align:right; cursor:pointer; background:{{ partner2Bg }}; border:1px solid #E4DEF3; border-radius:28px; padding:40px; display:flex; flex-direction:column; gap:16px; font-family:'Tajawal',sans-serif; transition:background .25s ease;"><div style="font-size:28px; font-weight:800; color:{{ partner2Text }};">غير ربحية</div></button>
+  </div>
+  <div style="background:#fff; border:1px solid #E4DEF3; border-radius:24px; padding:36px; font-size:24px; color:#2B2635; line-height:1.8; animation:flipIn .3s ease;">{{ partnerDetail }}</div>
+</section>
+
+<section data-label="الخاتمة" data-screen-label="12" data-speaker-notes="خاتمة العرض." style="direction:rtl; font-family:'Tajawal',sans-serif; background:radial-gradient(1100px 700px at 50% -10%, #E4DBF7 0%, #F8F6FC 55%); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:32px; padding:120px; box-sizing:border-box; color:#171521;">
+  <div style="font-size:26px; font-weight:700; color:#5B3FC0;">١١ — الخاتمة</div>
+  <div style="font-size:52px; font-weight:800; text-align:center; max-width:1200px; line-height:1.5;">نسعى لأن نكون الشريك المالي الأول لعملائنا، من خلال حلول تمويلية مبتكرة وموثوقة تعكس التزامنا بالجودة والابتكار</div>
+  <div style="font-size:26px; color:#544D66; text-align:center; max-width:1000px; line-height:1.8;">وبفضل ثقة عملائنا وشركائنا، نمضي بخطى ثابتة نحو مستقبل واعد، نرتكز فيه على رؤيتنا وقيمنا.</div>
+</section>
+
+<section data-label="التواصل" data-screen-label="13" data-speaker-notes="بيانات التواصل." style="direction:rtl; font-family:'Tajawal',sans-serif; background:radial-gradient(1100px 700px at 50% -10%, #F6D9C4 0%, #F8F6FC 55%); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:44px; padding:120px; box-sizing:border-box; color:#171521;">
+  <div style="display:flex; align-items:center; gap:22px;">
+    <img src="assets/logo-loan.png" alt="لون للتمويل" style="height:74px; width:auto;"/>
+  </div>
+  <div style="display:flex; gap:56px; flex-wrap:wrap; justify-content:center; font-size:28px; font-weight:700;">
+    <div dir="ltr">www.loan.com.sa</div>
+    <div dir="ltr">info@loan.com.sa</div>
+    <div dir="ltr">8001240301</div>
+  </div>
+  <div style="font-size:22px; color:#544D66; text-align:center; max-width:800px;">ص.ب 2333 طريق مكة المكرمة، الرياض 12821، المملكة العربية السعودية</div>
+</section>
+
+</x-import>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    currentStep: 0,
+    phone: '', otpSent: false, otp: ['', '', '', ''],
+    amount: 15000, duration: 12,
+    fullName: '', nationalId: '', employer: '', salary: '',
+    agreeTerms: false, signatureName: '',
+    chairmanExpanded: false, ceoExpanded: false,
+    statExpanded: [false, false, false],
+    valueFlipped: [false, false, false, false, false, false],
+    featureFlipped: [false, false, false, false, false, false],
+    marketExpanded: [false, false, false],
+    shariaExpanded: [false, false, false, false],
+    selectedPartner: 0
+  };
+
+  toggleArr(key, i) {
+    const arr = [...this.state[key]];
+    arr[i] = !arr[i];
+    this.setState({ [key]: arr });
+  }
+
+  renderVals() {
+    const s = this.state;
+    const fmt = (n) => Math.round(n).toLocaleString('en-US');
+    const installment = s.duration > 0 ? Math.round(s.amount / s.duration) : 0;
+    const otpDigits = s.otp.map((value, i) => ({
+      value,
+      onChange: (e) => {
+        const v = e.target.value.replace(/[^0-9]/g, '').slice(-1);
+        const next = [...this.state.otp];
+        next[i] = v;
+        this.setState({ otp: next });
+      }
+    }));
+    const firstNameDisplay = s.fullName.trim() ? s.fullName.trim().split(/\s+/)[0] : 'عميلنا';
+    const labels = ['التسجيل', 'الطلب', 'المعلومات', 'العرض', 'العقد', 'الاستلام'];
+    const steps = labels.map((label, i) => {
+      const active = i === s.currentStep;
+      const done = i < s.currentStep;
+      return {
+        number: i + 1,
+        label,
+        onSelect: () => this.setState({ currentStep: i }),
+        circleBg: active || done ? 'linear-gradient(90deg,#5B3FC0,#8B6FD1)' : '#E4DEF3',
+        circleColor: active || done ? '#fff' : '#8A82A0',
+        labelColor: active ? '#5B3FC0' : done ? '#171521' : '#A9A2BE'
+      };
+    });
+
+    const chairmanFull = 'منذ أن بدأت فكرة تأسيس لون للتمويل، وضعنا أمامنا هدفًا واضحًا: أن نكون الخيار الأول للأفراد في الحصول على حلول تمويلية مبتكرة، تخدم شرائح متنوعة من العملاء، بشكل رقمي كامل وباستخدام أحدث التقنيات، وتخضع للضوابط والمعايير الشرعية. انطلقت رؤيتنا من إيماننا بأن التمويل ليس مجرد خدمة مالية، بل أحد أهم محركات التنمية الاقتصادية وأداة أساسية في تمكين الأفراد وتحقيق طموحاتهم، دعمًا لمستهدفات رؤية المملكة 2030. وبهذا الاسم، أؤكد التزامنا بمواصلة هذا النهج وتعزيز موقعنا كشركة تمويل رائدة تضع عملاءها في قلب اهتمامها.';
+    const chairmanShort = chairmanFull.slice(0, 220) + '…';
+    const ceoFull = 'في عالم تتسارع فيه المتغيرات الاقتصادية وتتنوع فيه احتياجات الأفراد، أصبحت السرعة والموثوقية الركيزة الأساسية لأي تعامل مالي ناجح. من هذا المنطلق، جاءت لون للتمويل لتكون منصة تمويلية تقدم منتجات جديدة متوافقة مع الضوابط والمعايير الشرعية من خلال التورّق. نستثمر بشكل دائم في تطوير كوادرنا البشرية، ونفخر بكوننا بيئة جاذبة للكفاءات الوطنية، إيمانًا بأن الاستثمار في الإنسان أساس نجاح أي مؤسسة تسعى للريادة والاستمرارية.';
+    const ceoShort = ceoFull.slice(0, 200) + '…';
+
+    const partnerDetails = [
+      'الشركاء الاستراتيجيون: شركات وجهات نستهدف من خلالها تقديم التمويل وتوسيع شريحة العملاء عبر علاقات طويلة المدى.',
+      'الشركاء التجاريون: الشركاء الذين يتم التكامل معهم ويدخلون ضمن العملية التشغيلية للشركة بشكل مباشر.',
+      'الشركاء غير الربحيين: مبادرات وبرامج تساهم في المسؤولية الاجتماعية ودعم فئات المجتمع.'
+    ];
+
+    return {
+      steps,
+      isStep0: s.currentStep === 0,
+      isStep1: s.currentStep === 1,
+      isStep2: s.currentStep === 2,
+      isStep3: s.currentStep === 3,
+      isStep4: s.currentStep === 4,
+      isStep5: s.currentStep === 5,
+      goStep1: () => this.setState({ currentStep: 1 }),
+      goStep2: () => this.setState({ currentStep: 2 }),
+      goStep3: () => this.setState({ currentStep: 3 }),
+      goStep4: () => this.setState({ currentStep: 4 }),
+      goStep5: () => this.setState({ currentStep: 5 }),
+
+      phone: s.phone,
+      onPhone: (e) => this.setState({ phone: e.target.value.replace(/[^0-9]/g, '').slice(0, 9) }),
+      phoneIncomplete: s.phone.length < 9,
+      sendButtonBg: s.phone.length < 9 ? '#C9C1E0' : 'linear-gradient(90deg,#5B3FC0,#8B6FD1)',
+      onSendOtp: () => this.setState({ otpSent: true }),
+      otpSent: s.otpSent,
+      otpNotSent: !s.otpSent,
+      otpDigits,
+      otpIncomplete: s.otp.some((d) => !d),
+      otpButtonBg: s.otp.some((d) => !d) ? '#C9C1E0' : 'linear-gradient(90deg,#5B3FC0,#8B6FD1)',
+
+      amount: s.amount,
+      amountFormatted: fmt(s.amount),
+      onAmount: (e) => this.setState({ amount: Number(e.target.value) }),
+      duration: s.duration,
+      onDuration: (e) => this.setState({ duration: Number(e.target.value) }),
+      installmentFormatted: fmt(installment),
+
+      fullName: s.fullName,
+      onFullName: (e) => this.setState({ fullName: e.target.value }),
+      nationalId: s.nationalId,
+      onNationalId: (e) => this.setState({ nationalId: e.target.value.replace(/[^0-9]/g, '').slice(0, 10) }),
+      employer: s.employer,
+      onEmployer: (e) => this.setState({ employer: e.target.value }),
+      salary: s.salary,
+      onSalary: (e) => this.setState({ salary: e.target.value.replace(/[^0-9]/g, '') }),
+      infoIncomplete: !(s.fullName.trim() && s.nationalId.length === 10 && s.employer.trim() && s.salary),
+      infoButtonBg: !(s.fullName.trim() && s.nationalId.length === 10 && s.employer.trim() && s.salary) ? '#C9C1E0' : 'linear-gradient(90deg,#5B3FC0,#8B6FD1)',
+
+      firstNameDisplay,
+
+      agreeTerms: s.agreeTerms,
+      onToggleAgree: (e) => this.setState({ agreeTerms: e.target.checked }),
+      signatureName: s.signatureName,
+      onSignatureName: (e) => this.setState({ signatureName: e.target.value }),
+      signIncomplete: !(s.agreeTerms && s.signatureName.trim().length > 2),
+      signButtonBg: !(s.agreeTerms && s.signatureName.trim().length > 2) ? '#C9C1E0' : 'linear-gradient(90deg,#5B3FC0,#8B6FD1)',
+
+      chairmanText: s.chairmanExpanded ? chairmanFull : chairmanShort,
+      chairmanToggleLabel: s.chairmanExpanded ? 'عرض أقل' : 'قراءة الكلمة كاملة',
+      toggleChairman: () => this.setState({ chairmanExpanded: !s.chairmanExpanded }),
+      ceoText: s.ceoExpanded ? ceoFull : ceoShort,
+      ceoToggleLabel: s.ceoExpanded ? 'عرض أقل' : 'قراءة الكلمة كاملة',
+      toggleCeo: () => this.setState({ ceoExpanded: !s.ceoExpanded }),
+
+      stat0Expanded: s.statExpanded[0], toggleStat0: () => this.toggleArr('statExpanded', 0),
+      stat1Expanded: s.statExpanded[1], toggleStat1: () => this.toggleArr('statExpanded', 1),
+      stat2Expanded: s.statExpanded[2], toggleStat2: () => this.toggleArr('statExpanded', 2),
+
+      value0Flipped: s.valueFlipped[0], toggleValue0: () => this.toggleArr('valueFlipped', 0),
+      value1Flipped: s.valueFlipped[1], toggleValue1: () => this.toggleArr('valueFlipped', 1),
+      value2Flipped: s.valueFlipped[2], toggleValue2: () => this.toggleArr('valueFlipped', 2),
+      value3Flipped: s.valueFlipped[3], toggleValue3: () => this.toggleArr('valueFlipped', 3),
+      value4Flipped: s.valueFlipped[4], toggleValue4: () => this.toggleArr('valueFlipped', 4),
+      value5Flipped: s.valueFlipped[5], toggleValue5: () => this.toggleArr('valueFlipped', 5),
+
+      feature0Flipped: s.featureFlipped[0], toggleFeature0: () => this.toggleArr('featureFlipped', 0),
+      feature1Flipped: s.featureFlipped[1], toggleFeature1: () => this.toggleArr('featureFlipped', 1),
+      feature2Flipped: s.featureFlipped[2], toggleFeature2: () => this.toggleArr('featureFlipped', 2),
+      feature3Flipped: s.featureFlipped[3], toggleFeature3: () => this.toggleArr('featureFlipped', 3),
+      feature4Flipped: s.featureFlipped[4], toggleFeature4: () => this.toggleArr('featureFlipped', 4),
+      feature5Flipped: s.featureFlipped[5], toggleFeature5: () => this.toggleArr('featureFlipped', 5),
+
+      market0Expanded: s.marketExpanded[0], toggleMarket0: () => this.toggleArr('marketExpanded', 0),
+      market1Expanded: s.marketExpanded[1], toggleMarket1: () => this.toggleArr('marketExpanded', 1),
+      market2Expanded: s.marketExpanded[2], toggleMarket2: () => this.toggleArr('marketExpanded', 2),
+
+      sharia0Expanded: s.shariaExpanded[0], toggleSharia0: () => this.toggleArr('shariaExpanded', 0),
+      sharia1Expanded: s.shariaExpanded[1], toggleSharia1: () => this.toggleArr('shariaExpanded', 1),
+      sharia2Expanded: s.shariaExpanded[2], toggleSharia2: () => this.toggleArr('shariaExpanded', 2),
+      sharia3Expanded: s.shariaExpanded[3], toggleSharia3: () => this.toggleArr('shariaExpanded', 3),
+
+      selectPartner0: () => this.setState({ selectedPartner: 0 }),
+      selectPartner1: () => this.setState({ selectedPartner: 1 }),
+      selectPartner2: () => this.setState({ selectedPartner: 2 }),
+      partner0Bg: s.selectedPartner === 0 ? '#5B3FC0' : '#fff',
+      partner1Bg: s.selectedPartner === 1 ? '#5B3FC0' : '#fff',
+      partner2Bg: s.selectedPartner === 2 ? '#5B3FC0' : '#fff',
+      partner0Text: s.selectedPartner === 0 ? '#fff' : '#5B3FC0',
+      partner1Text: s.selectedPartner === 1 ? '#fff' : '#5B3FC0',
+      partner2Text: s.selectedPartner === 2 ? '#fff' : '#5B3FC0',
+      partnerDetail: partnerDetails[s.selectedPartner]
+    };
+  }
+}
+
+</script>
+</body>
+</html>
