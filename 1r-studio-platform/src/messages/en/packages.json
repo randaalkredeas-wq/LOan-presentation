@@ -1,0 +1,14 @@
+{
+  "pageTitle": "Our Packages",
+  "pageSubtitle": "Real prices, real inclusions — pick the package that fits your session.",
+  "whatsIncluded": "What's included",
+  "addonsAvailable": "Available add-ons",
+  "duration": "Duration",
+  "durationMinutes": "{minutes} minutes",
+  "deposit": "Deposit to confirm",
+  "depositNote": "A deposit of {amount} confirms your booking; the remainder is due the day before your session.",
+  "selectPackage": "Select this package",
+  "mostPopular": "Most Popular",
+  "allServices": "All Services",
+  "filterByService": "Filter by service"
+}

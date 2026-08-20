@@ -1,0 +1,25 @@
+{
+  "home": "Home",
+  "services": "Services",
+  "packages": "Packages",
+  "portfolio": "Portfolio",
+  "about": "About",
+  "contact": "Contact",
+  "booking": "Booking",
+  "myBooking": "Track My Booking",
+  "dashboard": "Dashboard",
+  "dashboardNav": {
+    "overview": "Overview",
+    "calendar": "Calendar",
+    "orders": "Orders",
+    "customers": "Customers",
+    "services": "Services",
+    "packages": "Packages",
+    "sales": "Sales & Growth",
+    "expenses": "Expenses",
+    "profitability": "Profitability",
+    "kri": "KRI Monitoring",
+    "reports": "Reports",
+    "settings": "Settings"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "severity": {
+    "info": "Info",
+    "positive": "Positive",
+    "warning": "Warning",
+    "critical": "Critical"
+  },
+  "healthComponents": {
+    "revenueGrowth": "Revenue Growth",
+    "orderGrowth": "Order Growth",
+    "netMargin": "Net Profit Margin",
+    "expenseRatio": "Expense-to-Revenue Ratio",
+    "breakEven": "Break-even Position",
+    "cancellationRate": "Cancellation Rate",
+    "outstandingPayments": "Outstanding Payments"
+  }
+}

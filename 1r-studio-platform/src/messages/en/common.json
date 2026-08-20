@@ -1,0 +1,82 @@
+{
+  "brand": "1R. Studio",
+  "actions": {
+    "viewAll": "View all",
+    "learnMore": "Learn more",
+    "bookNow": "Book Now",
+    "getStarted": "Get Started",
+    "continue": "Continue",
+    "back": "Back",
+    "next": "Next",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saveChanges": "Save Changes",
+    "edit": "Edit",
+    "delete": "Delete",
+    "add": "Add",
+    "close": "Close",
+    "submit": "Submit",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "exportExcel": "Export Excel",
+    "exportPdf": "Export PDF",
+    "print": "Print",
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "viewDetails": "View details",
+    "retry": "Retry",
+    "select": "Select"
+  },
+  "status": {
+    "NEW": "New",
+    "PENDING": "Pending",
+    "CONFIRMED": "Confirmed",
+    "IN_PROGRESS": "In Progress",
+    "COMPLETED": "Completed",
+    "CANCELLED": "Cancelled",
+    "UNPAID": "Unpaid",
+    "PARTIALLY_PAID": "Partially Paid",
+    "PAID": "Paid",
+    "REFUNDED": "Refunded",
+    "AVAILABLE": "Available",
+    "UNAVAILABLE": "Unavailable",
+    "FULLY_BOOKED": "Fully Booked",
+    "BLOCKED": "Blocked",
+    "VACATION": "Vacation"
+  },
+  "risk": {
+    "GREEN": "Healthy",
+    "YELLOW": "Warning",
+    "ORANGE": "High Risk",
+    "RED": "Critical"
+  },
+  "trend": { "up": "Up", "down": "Down", "flat": "Flat" },
+  "periods": {
+    "today": "Today",
+    "this_week": "This Week",
+    "this_month": "This Month",
+    "last_month": "Last Month",
+    "this_quarter": "This Quarter",
+    "last_quarter": "Last Quarter",
+    "this_year": "This Year",
+    "last_year": "Last Year",
+    "custom": "Custom Range"
+  },
+  "empty": {
+    "title": "Nothing here yet",
+    "description": "There's no data to show for this selection."
+  },
+  "error": {
+    "title": "Something went wrong",
+    "description": "Please try again, or contact us if the problem continues."
+  },
+  "loading": "Loading…",
+  "currencyLabel": "SAR",
+  "vs": "vs",
+  "previousPeriod": "previous period",
+  "language": "Language",
+  "arabic": "العربية",
+  "english": "English"
+}

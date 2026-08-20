@@ -1,0 +1,100 @@
+{
+  "pageTitle": "Book Your Session",
+  "steps": {
+    "service": "Service",
+    "package": "Package",
+    "date": "Date",
+    "time": "Time",
+    "details": "Your Details",
+    "review": "Review",
+    "confirm": "Confirmation"
+  },
+  "step1": {
+    "title": "Select a service",
+    "subtitle": "Choose the type of session you'd like to book."
+  },
+  "step2": {
+    "title": "Select a package",
+    "subtitle": "Pick the package that includes what you need."
+  },
+  "step3": {
+    "title": "Select a date",
+    "subtitle": "Green dates are available. Red dates are fully booked or blocked.",
+    "legendAvailable": "Available",
+    "legendUnavailable": "Unavailable",
+    "legendSelected": "Selected",
+    "legendToday": "Today"
+  },
+  "step4": {
+    "title": "Select a time",
+    "subtitle": "Available time slots for {date}.",
+    "noSlots": "No time slots available on this date — please pick another date.",
+    "unavailable": "Unavailable"
+  },
+  "step5": {
+    "title": "Your details",
+    "subtitle": "Tell us a bit about you and your session.",
+    "fullName": "Full Name",
+    "fullNamePlaceholder": "e.g. Sara Al-Otaibi",
+    "phone": "Phone Number",
+    "phonePlaceholder": "05XXXXXXXX",
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "location": "Event Location",
+    "locationPlaceholder": "Hospital name, home address, or studio",
+    "additionalRequirements": "Additional Requirements",
+    "additionalRequirementsPlaceholder": "Any specific requests for your session",
+    "notes": "Notes",
+    "notesPlaceholder": "Anything else we should know",
+    "addons": "Add-ons",
+    "noAddons": "No add-ons available for this package."
+  },
+  "step6": {
+    "title": "Review your booking",
+    "subtitle": "Please confirm all details before submitting.",
+    "service": "Service",
+    "package": "Package",
+    "addons": "Add-ons",
+    "date": "Date",
+    "time": "Time",
+    "customer": "Customer",
+    "packagePrice": "Package price",
+    "addonsTotal": "Add-ons total",
+    "total": "Total",
+    "depositDue": "Deposit due now",
+    "remainingDue": "Remaining balance (due the day before your session)",
+    "termsNote": "By confirming, you agree to pay the deposit to secure this date. The remaining balance is due one day before your session.",
+    "submit": "Confirm Booking"
+  },
+  "confirmation": {
+    "title": "Booking Submitted Successfully",
+    "subtitle": "We've received your request — our team will confirm shortly.",
+    "bookingNumber": "Booking Number",
+    "customerName": "Customer Name",
+    "service": "Service",
+    "package": "Package",
+    "date": "Date",
+    "time": "Time",
+    "amount": "Amount",
+    "status": "Booking Status",
+    "trackHint": "Save your booking number to track your status anytime.",
+    "backHome": "Back to Home",
+    "trackBooking": "Track this booking"
+  },
+  "errors": {
+    "slotTaken": "Sorry, this date and time was just booked by someone else. Please choose another slot.",
+    "invalidDate": "Please select a valid, available date.",
+    "required": "This field is required.",
+    "invalidPhone": "Please enter a valid phone number.",
+    "invalidEmail": "Please enter a valid email address.",
+    "generic": "Something went wrong while submitting your booking. Please try again."
+  },
+  "track": {
+    "title": "Track Your Booking",
+    "subtitle": "Enter your booking number and phone number to view its status.",
+    "bookingNumber": "Booking Number",
+    "phone": "Phone Number",
+    "find": "Find Booking",
+    "notFound": "We couldn't find a booking matching those details."
+  }
+}

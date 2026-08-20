@@ -1,0 +1,12 @@
+{
+  "filters": { "all": "All Statuses", "allPayment": "All Payment Statuses", "searchPlaceholder": "Search by customer name, phone or order #" },
+  "detail": {
+    "title": "Order Details",
+    "timeline": "Timeline",
+    "customerInfo": "Customer Information",
+    "sessionInfo": "Session Information",
+    "paymentInfo": "Payment Information",
+    "addPayment": "Record Payment",
+    "changeStatus": "Change Status"
+  }
+}

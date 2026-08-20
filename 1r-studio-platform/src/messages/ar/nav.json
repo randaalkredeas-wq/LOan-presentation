@@ -1,0 +1,25 @@
+{
+  "home": "الرئيسية",
+  "services": "الخدمات",
+  "packages": "الباقات",
+  "portfolio": "أعمالنا",
+  "about": "من نحن",
+  "contact": "تواصل معنا",
+  "booking": "الحجز",
+  "myBooking": "تتبعي حجزك",
+  "dashboard": "لوحة التحكم",
+  "dashboardNav": {
+    "overview": "نظرة عامة",
+    "calendar": "التقويم",
+    "orders": "الطلبات",
+    "customers": "العميلات",
+    "services": "الخدمات",
+    "packages": "الباقات",
+    "sales": "المبيعات والنمو",
+    "expenses": "المصروفات",
+    "profitability": "الربحية",
+    "kri": "مراقبة مؤشرات المخاطر",
+    "reports": "التقارير",
+    "settings": "الإعدادات"
+  }
+}

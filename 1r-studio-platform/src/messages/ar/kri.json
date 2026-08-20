@@ -1,0 +1,17 @@
+{
+  "severity": {
+    "info": "معلومة",
+    "positive": "إيجابي",
+    "warning": "تحذير",
+    "critical": "حرج"
+  },
+  "healthComponents": {
+    "revenueGrowth": "نمو الإيرادات",
+    "orderGrowth": "نمو الطلبات",
+    "netMargin": "هامش صافي الربح",
+    "expenseRatio": "نسبة المصروفات إلى الإيرادات",
+    "breakEven": "موقع نقطة التعادل",
+    "cancellationRate": "معدل الإلغاء",
+    "outstandingPayments": "المدفوعات المستحقة"
+  }
+}

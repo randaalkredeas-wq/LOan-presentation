@@ -1,0 +1,14 @@
+{
+  "pageTitle": "باقاتنا",
+  "pageSubtitle": "أسعار ومحتويات حقيقية — اختاري الباقة التي تناسب جلستك.",
+  "whatsIncluded": "ماذا تشمل الباقة",
+  "addonsAvailable": "إضافات متاحة",
+  "duration": "المدة",
+  "durationMinutes": "{minutes} دقيقة",
+  "deposit": "عربون التأكيد",
+  "depositNote": "عربون بقيمة {amount} يؤكد حجزك، وتُسدد بقية المبلغ قبل الجلسة بيوم.",
+  "selectPackage": "اختيار هذه الباقة",
+  "mostPopular": "الأكثر طلبًا",
+  "allServices": "كل الخدمات",
+  "filterByService": "تصفية حسب الخدمة"
+}

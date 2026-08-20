@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+/* ── 1R. Studio brand tokens — derived from the studio's own navy/cream logo ── */
+:root {
+  --brand-navy-50: #eef2f5;
+  --brand-navy-100: #d6dfe6;
+  --brand-navy-200: #adc0cd;
+  --brand-navy-300: #7d9bb0;
+  --brand-navy-400: #4c7290;
+  --brand-navy-500: #2c526f;
+  --brand-navy-600: #1a3a52;
+  --brand-navy-700: #122a3d;
+  --brand-navy-800: #0a2540;
+  --brand-navy-900: #071a2d;
+
+  --brand-cream-50: #fdfcfa;
+  --brand-cream-100: #f8f5ef;
+  --brand-cream-200: #f3efe6;
+  --brand-cream-300: #e9e2d3;
+  --brand-cream-400: #dcd1ba;
+
+  --brand-accent-300: #d9b28c;
+  --brand-accent-500: #b98456;
+  --brand-accent-600: #9c6a3f;
+
+  --risk-green: #1f8a4c;
+  --risk-yellow: #c99a1a;
+  --risk-orange: #d3720f;
+  --risk-red: #c0342a;
+
+  --background: var(--brand-cream-100);
+  --foreground: var(--brand-navy-900);
+}
+
+@theme inline {
+  --color-navy-50: var(--brand-navy-50);
+  --color-navy-100: var(--brand-navy-100);
+  --color-navy-200: var(--brand-navy-200);
+  --color-navy-300: var(--brand-navy-300);
+  --color-navy-400: var(--brand-navy-400);
+  --color-navy-500: var(--brand-navy-500);
+  --color-navy-600: var(--brand-navy-600);
+  --color-navy-700: var(--brand-navy-700);
+  --color-navy-800: var(--brand-navy-800);
+  --color-navy-900: var(--brand-navy-900);
+
+  --color-cream-50: var(--brand-cream-50);
+  --color-cream-100: var(--brand-cream-100);
+  --color-cream-200: var(--brand-cream-200);
+  --color-cream-300: var(--brand-cream-300);
+  --color-cream-400: var(--brand-cream-400);
+
+  --color-accent-300: var(--brand-accent-300);
+  --color-accent-500: var(--brand-accent-500);
+  --color-accent-600: var(--brand-accent-600);
+
+  --color-risk-green: var(--risk-green);
+  --color-risk-yellow: var(--risk-yellow);
+  --color-risk-orange: var(--risk-orange);
+  --color-risk-red: var(--risk-red);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+[dir="rtl"] body {
+  font-family: var(--font-sans-ar);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+[dir="rtl"] .font-display {
+  font-family: var(--font-display-ar);
+}
+
+/* Smooth focus rings, consistent across the app */
+:focus-visible {
+  outline: 2px solid var(--brand-navy-500);
+  outline-offset: 2px;
+}
+
+/* Utility: numerals stay Latin/tabular even inside Arabic copy (prices, dates) */
+.tabular-nums-ltr {
+  direction: ltr;
+  unicode-bidi: isolate;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Shared form control style used across booking, contact and dashboard forms */
+.input {
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid var(--brand-navy-200);
+  padding: 0.625rem 0.75rem;
+  font-size: 0.875rem;
+  outline: none;
+  background: white;
+  color: var(--brand-navy-900);
+}
+.input:focus {
+  border-color: var(--brand-navy-500);
+}
+.input::placeholder {
+  color: var(--brand-navy-300);
+}

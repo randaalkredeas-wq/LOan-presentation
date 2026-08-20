@@ -1,0 +1,12 @@
+{
+  "filters": { "all": "كل الحالات", "allPayment": "كل حالات الدفع", "searchPlaceholder": "ابحثي باسم العميلة أو الجوال أو رقم الطلب" },
+  "detail": {
+    "title": "تفاصيل الطلب",
+    "timeline": "المسار الزمني",
+    "customerInfo": "معلومات العميلة",
+    "sessionInfo": "معلومات الجلسة",
+    "paymentInfo": "معلومات الدفع",
+    "addPayment": "تسجيل دفعة",
+    "changeStatus": "تغيير الحالة"
+  }
+}

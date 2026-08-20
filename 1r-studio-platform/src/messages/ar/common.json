@@ -1,0 +1,82 @@
+{
+  "brand": "استوديو ون آر",
+  "actions": {
+    "viewAll": "عرض الكل",
+    "learnMore": "اعرفي أكثر",
+    "bookNow": "احجزي الآن",
+    "getStarted": "ابدئي الآن",
+    "continue": "متابعة",
+    "back": "رجوع",
+    "next": "التالي",
+    "confirm": "تأكيد",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "saveChanges": "حفظ التغييرات",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "add": "إضافة",
+    "close": "إغلاق",
+    "submit": "إرسال",
+    "search": "بحث",
+    "filter": "تصفية",
+    "export": "تصدير",
+    "exportExcel": "تصدير Excel",
+    "exportPdf": "تصدير PDF",
+    "print": "طباعة",
+    "signIn": "تسجيل الدخول",
+    "signOut": "تسجيل الخروج",
+    "viewDetails": "عرض التفاصيل",
+    "retry": "إعادة المحاولة",
+    "select": "اختيار"
+  },
+  "status": {
+    "NEW": "جديد",
+    "PENDING": "قيد الانتظار",
+    "CONFIRMED": "مؤكد",
+    "IN_PROGRESS": "قيد التنفيذ",
+    "COMPLETED": "مكتمل",
+    "CANCELLED": "ملغي",
+    "UNPAID": "غير مدفوع",
+    "PARTIALLY_PAID": "مدفوع جزئيًا",
+    "PAID": "مدفوع",
+    "REFUNDED": "مسترجع",
+    "AVAILABLE": "متاح",
+    "UNAVAILABLE": "غير متاح",
+    "FULLY_BOOKED": "محجوز بالكامل",
+    "BLOCKED": "محظور",
+    "VACATION": "إجازة"
+  },
+  "risk": {
+    "GREEN": "سليم",
+    "YELLOW": "تحذير",
+    "ORANGE": "مخاطر مرتفعة",
+    "RED": "حرج"
+  },
+  "trend": { "up": "ارتفاع", "down": "انخفاض", "flat": "ثابت" },
+  "periods": {
+    "today": "اليوم",
+    "this_week": "هذا الأسبوع",
+    "this_month": "هذا الشهر",
+    "last_month": "الشهر الماضي",
+    "this_quarter": "هذا الربع",
+    "last_quarter": "الربع الماضي",
+    "this_year": "هذا العام",
+    "last_year": "العام الماضي",
+    "custom": "فترة مخصصة"
+  },
+  "empty": {
+    "title": "لا توجد بيانات بعد",
+    "description": "لا توجد بيانات لعرضها ضمن هذا الاختيار."
+  },
+  "error": {
+    "title": "حدث خطأ ما",
+    "description": "يرجى المحاولة مرة أخرى، أو التواصل معنا إذا استمرت المشكلة."
+  },
+  "loading": "جارِ التحميل…",
+  "currencyLabel": "ريال",
+  "vs": "مقابل",
+  "previousPeriod": "الفترة السابقة",
+  "language": "اللغة",
+  "arabic": "العربية",
+  "english": "English"
+}

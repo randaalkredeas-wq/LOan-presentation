@@ -1,0 +1,4 @@
+{
+  "searchPlaceholder": "Search by name, phone or email",
+  "detail": { "title": "Customer Details", "orderHistory": "Order History", "notes": "Notes" }
+}

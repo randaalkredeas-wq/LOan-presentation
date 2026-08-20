@@ -1,0 +1,38 @@
+{
+  "hero": {
+    "eyebrow": "1R. Studio — Newborn & Family Photography",
+    "title": "Every first moment,\nheld forever.",
+    "subtitle": "From the first breath in the hospital room to the quiet joy of family life — we capture your story with a calm, professional touch.",
+    "cta": "Book Your Session",
+    "ctaSecondary": "Explore Packages"
+  },
+  "servicesSection": {
+    "eyebrow": "What We Offer",
+    "title": "Photography for every chapter",
+    "subtitle": "Real sessions, real packages — choose what fits your moment."
+  },
+  "whyUs": {
+    "eyebrow": "Why 1R. Studio",
+    "title": "Gentle with your newest chapter",
+    "items": [
+      { "title": "Hospital-ready care", "text": "Calm, hygienic, and private sessions designed around a newborn's comfort." },
+      { "title": "Professional equipment", "text": "Full-frame cameras and studio-grade lighting for every session." },
+      { "title": "Fast delivery", "text": "Edited photos and videos delivered straight to your phone via WhatsApp." },
+      { "title": "Printed keepsakes", "text": "Albums, frames, and prints — memories you can hold, not just scroll." }
+    ]
+  },
+  "packagesSection": {
+    "eyebrow": "Our Packages",
+    "title": "Transparent pricing, real inclusions",
+    "subtitle": "Every package below is exactly what we offer — nothing generic."
+  },
+  "portfolioSection": {
+    "eyebrow": "Our Work",
+    "title": "A glimpse into real sessions"
+  },
+  "ctaBanner": {
+    "title": "Ready to capture this moment?",
+    "subtitle": "Choose your service, pick a package, and reserve your date in minutes.",
+    "cta": "Start Booking"
+  }
+}
