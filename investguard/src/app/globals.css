@@ -1,0 +1,175 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f6f7fb;
+  --surface: #ffffff;
+  --surface-2: #f0f2f8;
+  --border: #e3e6ef;
+  --foreground: #10131c;
+  --muted-foreground: #656c7e;
+  --brand: #2f5fff;
+  --brand-2: #7c5cff;
+  --brand-foreground: #ffffff;
+  --positive: #0f9d63;
+  --positive-bg: #e5f7ee;
+  --negative: #e1483f;
+  --negative-bg: #fdeceb;
+  --warning: #b8790a;
+  --warning-bg: #fdf1de;
+  --critical: #c81e4a;
+  --critical-bg: #fbe6ec;
+  --info: #2f6fed;
+  --info-bg: #e9f1ff;
+  --risk-low: #0f9d63;
+  --risk-medium: #b8790a;
+  --risk-high: #e1483f;
+  --risk-critical: #c81e4a;
+  --chart-1: #2f5fff;
+  --chart-2: #7c5cff;
+  --chart-3: #21b3a4;
+  --chart-4: #e6a83c;
+  --chart-5: #e1483f;
+  --chart-6: #4fb8e0;
+  --shadow-color: 220 30% 15%;
+}
+
+.dark {
+  --background: #0a0d16;
+  --surface: #10141f;
+  --surface-2: #161b29;
+  --border: #232a3d;
+  --foreground: #f3f5fa;
+  --muted-foreground: #8b93a7;
+  --brand: #5b7fff;
+  --brand-2: #9d84ff;
+  --brand-foreground: #ffffff;
+  --positive: #2fd68b;
+  --positive-bg: rgba(47, 214, 139, 0.12);
+  --negative: #ff6b61;
+  --negative-bg: rgba(255, 107, 97, 0.12);
+  --warning: #f0ac3f;
+  --warning-bg: rgba(240, 172, 63, 0.12);
+  --critical: #ff5a86;
+  --critical-bg: rgba(255, 90, 134, 0.14);
+  --info: #5b9dff;
+  --info-bg: rgba(91, 157, 255, 0.12);
+  --risk-low: #2fd68b;
+  --risk-medium: #f0ac3f;
+  --risk-high: #ff6b61;
+  --risk-critical: #ff5a86;
+  --chart-1: #5b7fff;
+  --chart-2: #9d84ff;
+  --chart-3: #2fd6c4;
+  --chart-4: #f0ac3f;
+  --chart-5: #ff6b61;
+  --chart-6: #5bc8f0;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-brand: var(--brand);
+  --color-brand-2: var(--brand-2);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-positive: var(--positive);
+  --color-positive-bg: var(--positive-bg);
+  --color-negative: var(--negative);
+  --color-negative-bg: var(--negative-bg);
+  --color-warning: var(--warning);
+  --color-warning-bg: var(--warning-bg);
+  --color-critical: var(--critical);
+  --color-critical-bg: var(--critical-bg);
+  --color-info: var(--info);
+  --color-info-bg: var(--info-bg);
+  --color-risk-low: var(--risk-low);
+  --color-risk-medium: var(--risk-medium);
+  --color-risk-high: var(--risk-high);
+  --color-risk-critical: var(--risk-critical);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-6: var(--chart-6);
+  --font-latin: var(--font-latin-sans);
+  --font-arabic: var(--font-arabic-sans);
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+html {
+  color-scheme: dark;
+}
+html:not(.dark) {
+  color-scheme: light;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-latin), "Segoe UI", system-ui, sans-serif;
+  font-feature-settings: "tnum" 1, "cv05" 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+[dir="rtl"] body {
+  font-family: var(--font-arabic), var(--font-latin), "Segoe UI", system-ui, sans-serif;
+}
+
+/* Tabular numerals everywhere financial figures appear */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted-foreground);
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 0.35s ease-out both;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+.animate-pulse-dot {
+  animation: pulse-dot 1.8s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.animate-shimmer {
+  background-image: linear-gradient(90deg, var(--color-surface-2) 0px, var(--color-border) 40px, var(--color-surface-2) 80px);
+  background-size: 800px 100%;
+  animation: shimmer 1.6s linear infinite;
+}
