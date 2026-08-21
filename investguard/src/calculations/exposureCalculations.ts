@@ -1,5 +1,6 @@
 import { EnrichedHolding, ExposureSlice, OverlapExposure, InvestmentAccount, InvestmentPlatform } from "@/types";
 import { toBaseCurrency } from "@/data/fx";
+import { Locale, localizedName } from "@/utils/formatters";
 
 function groupBy(
   holdings: EnrichedHolding[],
@@ -116,14 +117,16 @@ export function computeTrueSectorExposure(holdings: EnrichedHolding[]): Exposure
 export function platformConcentrationCheck(
   accounts: InvestmentAccount[],
   platforms: InvestmentPlatform[],
-  maxPct: number
+  maxPct: number,
+  locale: Locale = "en"
 ): { platform: string; pct: number; breach: boolean }[] {
   const totals = new Map<string, number>();
   let grand = 0;
   for (const a of accounts) {
     const platform = platforms.find((p) => p.id === a.platformId);
+    const name = platform ? localizedName(platform, locale) : "Unknown";
     const valueBase = toBaseCurrency(a.totalValue, a.currency);
-    totals.set(platform?.name ?? "Unknown", (totals.get(platform?.name ?? "Unknown") ?? 0) + valueBase);
+    totals.set(name, (totals.get(name) ?? 0) + valueBase);
     grand += valueBase;
   }
   return Array.from(totals.entries())

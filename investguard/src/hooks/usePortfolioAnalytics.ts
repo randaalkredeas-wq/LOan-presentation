@@ -4,6 +4,8 @@ import { useMemo } from "react";
 import { usePortfolioRawData } from "./usePortfolioRawData";
 import { useSettings } from "@/contexts/SettingsContext";
 import { useDateRange } from "@/contexts/DateRangeContext";
+import { useLanguage } from "@/i18n/LanguageContext";
+import { localizedName } from "@/utils/formatters";
 import {
   PortfolioScope,
   enrichHoldings,
@@ -41,10 +43,11 @@ export function usePortfolioAnalytics(scope?: PortfolioScope) {
   const raw = usePortfolioRawData();
   const { settings } = useSettings();
   const { range, customRange } = useDateRange();
+  const { language } = useLanguage();
 
   const enrichedHoldings = useMemo(
-    () => enrichHoldings(raw.holdings, raw.accounts, raw.platforms, settings.baseCurrency, scope),
-    [raw.holdings, raw.accounts, raw.platforms, settings.baseCurrency, scope]
+    () => enrichHoldings(raw.holdings, raw.accounts, raw.platforms, settings.baseCurrency, scope, language),
+    [raw.holdings, raw.accounts, raw.platforms, settings.baseCurrency, scope, language]
   );
 
   const filteredSnapshots = useMemo(
@@ -90,8 +93,8 @@ export function usePortfolioAnalytics(scope?: PortfolioScope) {
   const currencyExp = useMemo(() => currencyExposure(enrichedHoldings), [enrichedHoldings]);
   const platformExp = useMemo(() => platformExposure(enrichedHoldings), [enrichedHoldings]);
   const platformConcentration = useMemo(
-    () => platformConcentrationCheck(raw.accounts, raw.platforms, settings.riskLimits.maxPlatformExposurePct),
-    [raw.accounts, raw.platforms, settings.riskLimits.maxPlatformExposurePct]
+    () => platformConcentrationCheck(raw.accounts, raw.platforms, settings.riskLimits.maxPlatformExposurePct, language),
+    [raw.accounts, raw.platforms, settings.riskLimits.maxPlatformExposurePct, language]
   );
   const overlaps = useMemo(() => computeSymbolOverlap(enrichedHoldings), [enrichedHoldings]);
 
@@ -160,9 +163,9 @@ export function usePortfolioAnalytics(scope?: PortfolioScope) {
       topOverlap: overlaps[0],
       currencyExposure: currencyExp,
       alphaVsBenchmarkPct: alphaKpi?.currentValue ?? 0,
-      benchmarkName: benchmark?.name ?? "",
+      benchmarkName: benchmark ? localizedName(benchmark, language) : "",
     });
-  }, [raw.snapshots, maxDD, settings.riskLimits, trueSectorExp, platformConcentration, topSingleAsset, overlaps, currencyExp, kpis, benchmark]);
+  }, [raw.snapshots, maxDD, settings.riskLimits, trueSectorExp, platformConcentration, topSingleAsset, overlaps, currencyExp, kpis, benchmark, language]);
 
   return {
     ...raw,

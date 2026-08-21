@@ -82,7 +82,7 @@ export type DateRangeKey = "1D" | "1W" | "1M" | "3M" | "6M" | "YTD" | "1Y" | "3Y
 export interface InvestmentPlatform {
   id: string;
   name: string;
-  /** localization key suffix, e.g. platform.alphaInvest */
+  nameAr?: string; // Arabic display name; falls back to `name` when absent
   type: "Brokerage" | "Fund Platform" | "ETF Platform" | "Robo-Advisor" | "Bank";
   logoColor: string; // hex accent used for avatar/badges
   country: Country;
@@ -93,6 +93,7 @@ export interface InvestmentAccount {
   id: string;
   platformId: string;
   name: string;
+  nameAr?: string; // Arabic display name; falls back to `name` when absent
   currency: Currency;
   totalValue: number; // in account currency
   costBasis: number; // in account currency
@@ -276,7 +277,13 @@ export interface AlertPreferences {
   performanceAlerts: boolean;
 }
 
+export interface UserProfile {
+  displayName: string;
+  email: string;
+}
+
 export interface AppSettings {
+  profile: UserProfile;
   baseCurrency: Currency;
   benchmarkId: string;
   riskLimits: RiskLimit;

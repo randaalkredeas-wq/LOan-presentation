@@ -12,7 +12,7 @@ import { Badge, riskLevelTone } from "@/components/ui/Badge";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { usePortfolioAnalytics } from "@/hooks/usePortfolioAnalytics";
 import { portfolioService } from "@/services";
-import { formatCurrency, formatDate, formatPercent } from "@/utils/formatters";
+import { formatCurrency, formatDate, formatPercent, localizedName } from "@/utils/formatters";
 import { Wallet } from "lucide-react";
 
 export default function AccountsPage() {
@@ -52,7 +52,7 @@ export default function AccountsPage() {
           riskScore: value.riskLevel === "Low" ? 25 : value.riskLevel === "Medium" ? 50 : value.riskLevel === "High" ? 75 : 92,
           riskLevel: value.riskLevel,
         },
-        { name: value.platformName, type: "Brokerage", country: "Other" }
+        { name: value.platformName, type: "Brokerage", country: "Saudi Arabia" }
       );
     }
     setModalOpen(false);
@@ -112,7 +112,7 @@ export default function AccountsPage() {
                   <button onClick={() => toggleCompare(r.account.id)} className="absolute end-2 top-2 text-muted-foreground hover:text-foreground">
                     <X className="h-3.5 w-3.5" />
                   </button>
-                  <p className="text-sm font-semibold text-foreground">{r.platform.name}</p>
+                  <p className="text-sm font-semibold text-foreground">{localizedName(r.platform, language)}</p>
                   <p className="mt-2 text-lg font-bold tabular-nums text-foreground">{formatCurrency(r.valueBase, data.settings.baseCurrency, language)}</p>
                   <p className={`mt-1 text-xs font-medium tabular-nums ${r.returnPct >= 0 ? "text-positive" : "text-negative"}`}>
                     {formatPercent(r.returnPct, language)}
@@ -154,7 +154,7 @@ export default function AccountsPage() {
                     onChange={() => toggleCompare(r.account.id)}
                     className="h-4 w-4 accent-brand"
                   />
-                  <span className="text-sm font-medium text-foreground">{r.platform.name}</span>
+                  <span className="text-sm font-medium text-foreground">{localizedName(r.platform, language)}</span>
                   <span className="ms-auto tabular-nums text-sm font-semibold text-foreground">{formatCurrency(r.valueBase, data.settings.baseCurrency, language)}</span>
                 </label>
               ))}
@@ -184,13 +184,13 @@ export default function AccountsPage() {
         initial={editing ? { account: editing.account, platform: editing.platform } : undefined}
       />
 
-      <Modal open={!!viewing} onClose={() => setViewingId(null)} title={viewing?.platform.name ?? ""}>
+      <Modal open={!!viewing} onClose={() => setViewingId(null)} title={viewing ? localizedName(viewing.platform, language) : ""}>
         {viewing && (
           <div className="space-y-3 text-sm">
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <p className="text-xs text-muted-foreground">{t("accounts.accountName")}</p>
-                <p className="font-medium text-foreground">{viewing.account.name}</p>
+                <p className="font-medium text-foreground">{localizedName(viewing.account, language)}</p>
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">{t("accounts.currency")}</p>

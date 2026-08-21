@@ -8,6 +8,7 @@ import {
 } from "@/types";
 import { getAsset } from "@/data/assets";
 import { convertCurrency } from "@/data/fx";
+import { Locale, localizedName } from "@/utils/formatters";
 
 /** Mock snapshots/benchmarks are generated natively in SAR terms. */
 export const MOCK_DATA_NATIVE_CURRENCY: Currency = "SAR";
@@ -47,7 +48,8 @@ export function enrichHoldings(
   accounts: InvestmentAccount[],
   platforms: InvestmentPlatform[],
   baseCurrency: Currency,
-  scope?: PortfolioScope
+  scope?: PortfolioScope,
+  locale: Locale = "en"
 ): EnrichedHolding[] {
   const accountMap = new Map(accounts.map((a) => [a.id, a]));
   const platformMap = new Map(platforms.map((p) => [p.id, p]));
@@ -66,8 +68,8 @@ export function enrichHoldings(
     return {
       ...h,
       asset,
-      platformName: platform?.name ?? "Unknown",
-      accountName: account?.name ?? "Unknown",
+      platformName: platform ? localizedName(platform, locale) : "Unknown",
+      accountName: account ? localizedName(account, locale) : "Unknown",
       marketValue,
       costValue,
       pnl: marketValue - costValue,

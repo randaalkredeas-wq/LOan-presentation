@@ -6,7 +6,7 @@ import { AccountSummaryRow } from "@/calculations/portfolioCalculations";
 import { Currency } from "@/types";
 import { Badge, riskLevelTone } from "@/components/ui/Badge";
 import { useLanguage } from "@/i18n/LanguageContext";
-import { formatCurrency, formatPercent } from "@/utils/formatters";
+import { formatCurrency, formatPercent, localizedName } from "@/utils/formatters";
 import { cn } from "@/utils/cn";
 
 export function AccountsTable({
@@ -40,7 +40,10 @@ export function AccountsTable({
           </tr>
         </thead>
         <tbody>
-          {rows.map((r) => (
+          {rows.map((r) => {
+            const platformLabel = localizedName(r.platform, language);
+            const accountLabel = localizedName(r.account, language);
+            return (
             <tr key={r.account.id} className="border-b border-border last:border-0 hover:bg-surface-2/60 transition-colors">
               <td className="px-3 py-3">
                 <div className="flex items-center gap-2.5">
@@ -48,12 +51,12 @@ export function AccountsTable({
                     className="flex h-7 w-7 items-center justify-center rounded-lg text-[11px] font-bold text-white"
                     style={{ backgroundColor: r.platform.logoColor }}
                   >
-                    {r.platform.name.slice(0, 1)}
+                    {platformLabel.slice(0, 1)}
                   </span>
-                  <span className="font-medium text-foreground">{r.platform.name}</span>
+                  <span className="font-medium text-foreground">{platformLabel}</span>
                 </div>
               </td>
-              <td className="px-3 py-3 text-muted-foreground">{r.account.name}</td>
+              <td className="px-3 py-3 text-muted-foreground">{accountLabel}</td>
               <td className="px-3 py-3 text-muted-foreground">{r.account.currency}</td>
               <td className="px-3 py-3 text-end tabular-nums font-semibold text-foreground">
                 {formatCurrency(r.valueBase, baseCurrency, language)}
@@ -85,7 +88,8 @@ export function AccountsTable({
                 </div>
               </td>
             </tr>
-          ))}
+            );
+          })}
         </tbody>
       </table>
     </div>

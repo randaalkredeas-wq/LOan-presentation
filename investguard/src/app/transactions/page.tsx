@@ -10,7 +10,7 @@ import { EmptyState, ErrorState, Skeleton } from "@/components/ui/States";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { usePortfolioAnalytics } from "@/hooks/usePortfolioAnalytics";
 import { convertCurrency } from "@/data/fx";
-import { formatCurrency, formatDate } from "@/utils/formatters";
+import { formatCurrency, formatDate, localizedName } from "@/utils/formatters";
 import { TransactionType } from "@/types";
 import { cn } from "@/utils/cn";
 
@@ -59,8 +59,14 @@ export default function TransactionsPage() {
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const pageData = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-  const platformName = (id: string) => data.platforms.find((p) => p.id === id)?.name ?? "";
-  const accountName = (id: string) => data.accounts.find((a) => a.id === id)?.name ?? "";
+  const platformName = (id: string) => {
+    const p = data.platforms.find((p) => p.id === id);
+    return p ? localizedName(p, language) : "";
+  };
+  const accountName = (id: string) => {
+    const a = data.accounts.find((a) => a.id === id);
+    return a ? localizedName(a, language) : "";
+  };
 
   return (
     <div>

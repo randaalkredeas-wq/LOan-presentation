@@ -13,7 +13,7 @@ import { CardSkeleton, EmptyState, ErrorState, Skeleton } from "@/components/ui/
 import { Badge, riskLevelTone } from "@/components/ui/Badge";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { usePortfolioAnalytics } from "@/hooks/usePortfolioAnalytics";
-import { formatCurrency, formatPercent } from "@/utils/formatters";
+import { formatCurrency, formatPercent, localizedName } from "@/utils/formatters";
 import { ShieldCheck } from "lucide-react";
 
 export default function OverviewPage() {
@@ -135,16 +135,18 @@ export default function OverviewPage() {
               </div>
             ) : (
               <div className="space-y-1">
-                {data.accountSummaries.map((r) => (
+                {data.accountSummaries.map((r) => {
+                  const platformLabel = localizedName(r.platform, language);
+                  return (
                   <div key={r.account.id} className="flex items-center gap-3 rounded-xl px-2 py-2.5 hover:bg-surface-2/60 transition-colors">
                     <span
                       className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-xs font-bold text-white"
                       style={{ backgroundColor: r.platform.logoColor }}
                     >
-                      {r.platform.name.slice(0, 1)}
+                      {platformLabel.slice(0, 1)}
                     </span>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-foreground">{r.platform.name}</p>
+                      <p className="truncate text-sm font-medium text-foreground">{platformLabel}</p>
                       <p className="text-xs text-muted-foreground">{formatPercent(r.allocationPct, language, { signed: false })} {t("common.of")} {t("overview.totalPortfolioValue").toLowerCase()}</p>
                     </div>
                     <Badge tone={riskLevelTone(r.account.riskLevel)} className="hidden sm:inline-flex">
@@ -157,7 +159,8 @@ export default function OverviewPage() {
                       </p>
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </CardContent>

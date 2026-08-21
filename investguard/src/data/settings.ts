@@ -1,6 +1,10 @@
 import { AppSettings } from "@/types";
 
 export const DEFAULT_SETTINGS: AppSettings = {
+  profile: {
+    displayName: "",
+    email: "",
+  },
   baseCurrency: "SAR",
   benchmarkId: "tasi",
   riskLimits: {

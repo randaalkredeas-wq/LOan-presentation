@@ -1,11 +1,13 @@
 import { InvestmentAccount } from "@/types";
 
 /**
- * Account totals/costs are expressed in the account's own currency.
- * Values reconcile exactly with the holdings defined in holdings.ts and
- * with the flagship demo numbers used throughout the product spec:
- *   Alpha Invest 62,400 + Global Broker 94,800 (USD 25,280 @ 3.75)
- *   + Saudi Funds 48,200 + ETF Account 45,030 (USD 12,008 @ 3.75)
+ * These are the same person's brokerage accounts — one account per
+ * platform. Account totals/costs are expressed in the account's own
+ * currency. Values reconcile exactly with the holdings defined in
+ * holdings.ts and with the flagship demo numbers used throughout the
+ * product spec:
+ *   Al Rajhi Capital 62,400 + Abyan 94,800 (USD 25,280 @ 3.75)
+ *   + Funds Portfolio 48,200 + Derayah 45,030 (USD 12,008 @ 3.75)
  *   = SAR 250,430 total portfolio value, SAR 220,000 invested,
  *   +SAR 30,430 P&L (+13.83%).
  */
@@ -13,7 +15,8 @@ export const ACCOUNTS: InvestmentAccount[] = [
   {
     id: "acc-alpha",
     platformId: "plat-alpha",
-    name: "Alpha Invest",
+    name: "Al Rajhi Capital",
+    nameAr: "الراجحي المالية",
     currency: "SAR",
     totalValue: 62400,
     costBasis: 55000,
@@ -25,7 +28,8 @@ export const ACCOUNTS: InvestmentAccount[] = [
   {
     id: "acc-global",
     platformId: "plat-global",
-    name: "Global Broker",
+    name: "Abyan",
+    nameAr: "أبيان",
     currency: "USD",
     totalValue: 25280,
     costBasis: 21333.33,
@@ -37,7 +41,8 @@ export const ACCOUNTS: InvestmentAccount[] = [
   {
     id: "acc-saudifunds",
     platformId: "plat-saudifunds",
-    name: "Saudi Funds",
+    name: "Funds Portfolio",
+    nameAr: "محفظة صناديق",
     currency: "SAR",
     totalValue: 48200,
     costBasis: 44500,
@@ -49,7 +54,8 @@ export const ACCOUNTS: InvestmentAccount[] = [
   {
     id: "acc-etf",
     platformId: "plat-etf",
-    name: "ETF Account",
+    name: "Derayah",
+    nameAr: "دراية المالية",
     currency: "USD",
     totalValue: 12008,
     costBasis: 10800,

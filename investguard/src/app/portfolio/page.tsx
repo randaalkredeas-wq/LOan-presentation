@@ -12,7 +12,7 @@ import { useLanguage } from "@/i18n/LanguageContext";
 import { usePortfolioAnalytics } from "@/hooks/usePortfolioAnalytics";
 import { PortfolioScope } from "@/calculations/portfolioCalculations";
 import { computeRebalancing } from "@/calculations/rebalancingCalculations";
-import { formatCurrency } from "@/utils/formatters";
+import { formatCurrency, localizedName } from "@/utils/formatters";
 
 export default function PortfolioPage() {
   const { t, language } = useLanguage();
@@ -22,10 +22,10 @@ export default function PortfolioPage() {
   const scopeOptions = useMemo(() => {
     const opts: { label: string; scope: PortfolioScope | undefined }[] = [{ label: t("common.allAccounts"), scope: undefined }];
     for (const p of data.platforms) {
-      opts.push({ label: p.name, scope: { platformId: p.id } });
+      opts.push({ label: localizedName(p, language), scope: { platformId: p.id } });
     }
     return opts;
-  }, [data.platforms, t]);
+  }, [data.platforms, t, language]);
 
   if (data.error) return <ErrorState message={data.error} onRetry={data.reload} />;
   const baseCurrency = data.settings.baseCurrency;

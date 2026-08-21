@@ -76,6 +76,57 @@ export default function SettingsPage() {
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <Card>
+          <CardHeader>
+            <div>
+              <CardTitle>{t("settings.profile")}</CardTitle>
+              <CardDescription>{t("settings.profileSubtitle")}</CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <label className={labelClass}>
+                {t("settings.displayName")}
+                <input
+                  className={inputClass}
+                  value={local.profile.displayName}
+                  onChange={(e) => setLocal((s) => ({ ...s, profile: { ...s.profile, displayName: e.target.value } }))}
+                  placeholder={t("settings.displayNamePlaceholder")}
+                />
+              </label>
+              <label className={labelClass}>
+                {t("settings.email")}
+                <input
+                  type="email"
+                  className={inputClass}
+                  value={local.profile.email}
+                  onChange={(e) => setLocal((s) => ({ ...s, profile: { ...s.profile, email: e.target.value } }))}
+                  placeholder={t("settings.emailPlaceholder")}
+                />
+              </label>
+            </div>
+            <div>
+              <p className="mb-2 text-xs font-medium text-muted-foreground">{t("settings.displayPreferences")}</p>
+              <div className="grid grid-cols-2 gap-4">
+                <label className={labelClass}>
+                  {t("settings.language")}
+                  <select className={inputClass} value={language} onChange={(e) => setLanguage(e.target.value as "en" | "ar")}>
+                    <option value="en">English</option>
+                    <option value="ar">العربية</option>
+                  </select>
+                </label>
+                <label className={labelClass}>
+                  {t("settings.theme")}
+                  <select className={inputClass} value={theme} onChange={(e) => setTheme(e.target.value as "dark" | "light")}>
+                    <option value="dark">{t("settings.themeDark")}</option>
+                    <option value="light">{t("settings.themeLight")}</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
           <CardHeader><CardTitle>{t("settings.general")}</CardTitle></CardHeader>
           <CardContent className="space-y-4">
             <label className={labelClass}>
@@ -90,22 +141,6 @@ export default function SettingsPage() {
                 {benchmarks.map((b) => <option key={b.id} value={b.id}>{language === "ar" ? b.nameAr : b.name}</option>)}
               </select>
             </label>
-            <div className="grid grid-cols-2 gap-4">
-              <label className={labelClass}>
-                {t("settings.language")}
-                <select className={inputClass} value={language} onChange={(e) => setLanguage(e.target.value as "en" | "ar")}>
-                  <option value="en">English</option>
-                  <option value="ar">العربية</option>
-                </select>
-              </label>
-              <label className={labelClass}>
-                {t("settings.theme")}
-                <select className={inputClass} value={theme} onChange={(e) => setTheme(e.target.value as "dark" | "light")}>
-                  <option value="dark">{t("settings.themeDark")}</option>
-                  <option value="light">{t("settings.themeLight")}</option>
-                </select>
-              </label>
-            </div>
           </CardContent>
         </Card>
 

@@ -10,6 +10,11 @@ const localeMap: Record<Locale, string> = {
   ar: "ar-SA-u-nu-latn",
 };
 
+/** Picks the Arabic display name when available and the UI is in Arabic, else falls back to the English name. */
+export function localizedName(entity: { name: string; nameAr?: string }, locale: Locale): string {
+  return locale === "ar" && entity.nameAr ? entity.nameAr : entity.name;
+}
+
 export function formatCurrency(value: number, currency: Currency, locale: Locale = "en", opts: { compact?: boolean; signed?: boolean } = {}): string {
   const { compact = false, signed = false } = opts;
   const currencyCode = currency === "Other" ? "USD" : currency;

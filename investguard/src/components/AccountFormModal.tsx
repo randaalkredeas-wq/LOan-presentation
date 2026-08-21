@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { InvestmentAccount, InvestmentPlatform, Currency, RiskLevel } from "@/types";
 import { Modal } from "@/components/ui/Modal";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { localizedName } from "@/utils/formatters";
 
 export interface AccountFormValue {
   platformName: string;
@@ -29,7 +30,7 @@ export function AccountFormModal({
   onSubmit: (value: AccountFormValue) => void;
   initial?: { account: InvestmentAccount; platform: InvestmentPlatform };
 }) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [form, setForm] = useState<AccountFormValue>({
     platformName: "",
     accountName: "",
@@ -46,8 +47,8 @@ export function AccountFormModal({
     if (initial) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setForm({
-        platformName: initial.platform.name,
-        accountName: initial.account.name,
+        platformName: localizedName(initial.platform, language),
+        accountName: localizedName(initial.account, language),
         currency: initial.account.currency,
         totalValue: initial.account.totalValue,
         costBasis: initial.account.costBasis,
@@ -57,7 +58,7 @@ export function AccountFormModal({
     } else {
       setForm({ platformName: "", accountName: "", currency: "SAR", totalValue: 0, costBasis: 0, cashBalance: 0, riskLevel: "Medium" });
     }
-  }, [initial, open]);
+  }, [initial, open, language]);
 
   const inputClass = "w-full rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-brand/40";
   const labelClass = "flex flex-col gap-1.5 text-xs font-medium text-muted-foreground";
@@ -79,7 +80,7 @@ export function AccountFormModal({
               className={inputClass}
               value={form.platformName}
               onChange={(e) => setForm((f) => ({ ...f, platformName: e.target.value }))}
-              placeholder="e.g. Derayah"
+              placeholder="e.g. Alinma Investment"
             />
           </label>
           <label className={labelClass}>

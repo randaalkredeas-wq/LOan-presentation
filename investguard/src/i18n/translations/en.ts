@@ -370,6 +370,13 @@ const en = {
   settings: {
     title: "Settings",
     subtitle: "Configure how InvestGuard aggregates, monitors and displays your portfolio.",
+    profile: "Profile",
+    profileSubtitle: "This is your personal investment tracker — these details are yours alone.",
+    displayName: "Name",
+    displayNamePlaceholder: "Enter your name",
+    email: "Email",
+    emailPlaceholder: "you@example.com",
+    displayPreferences: "Display Preferences",
     general: "General",
     baseCurrency: "Base Currency",
     benchmark: "Benchmark",

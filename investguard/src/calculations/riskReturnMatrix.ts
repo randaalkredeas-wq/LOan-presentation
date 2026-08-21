@@ -1,5 +1,6 @@
 import { EnrichedHolding, RiskLevel } from "@/types";
 import { AccountSummaryRow } from "./portfolioCalculations";
+import { Locale, localizedName } from "@/utils/formatters";
 
 export interface RiskReturnPoint {
   id: string;
@@ -27,10 +28,10 @@ export function holdingsToRiskReturnPoints(holdings: EnrichedHolding[]): RiskRet
     }));
 }
 
-export function accountsToRiskReturnPoints(accounts: AccountSummaryRow[]): RiskReturnPoint[] {
+export function accountsToRiskReturnPoints(accounts: AccountSummaryRow[], locale: Locale = "en"): RiskReturnPoint[] {
   return accounts.map((a) => ({
     id: a.account.id,
-    label: a.account.name,
+    label: localizedName(a.account, locale),
     group: "Account" as const,
     riskScore: a.account.riskScore,
     returnPct: a.returnPct,

@@ -372,6 +372,13 @@ const ar: TranslationDict = {
   settings: {
     title: "الإعدادات",
     subtitle: "تحكم في كيفية تجميع إنفست غارد لمحفظتك ومراقبتها وعرضها.",
+    profile: "الملف الشخصي",
+    profileSubtitle: "هذا متتبع استثماراتك الشخصي — هذه البيانات خاصة بك وحدك.",
+    displayName: "الاسم",
+    displayNamePlaceholder: "أدخل اسمك",
+    email: "البريد الإلكتروني",
+    emailPlaceholder: "you@example.com",
+    displayPreferences: "تفضيلات العرض",
     general: "عام",
     baseCurrency: "العملة الأساسية",
     benchmark: "المؤشر المرجعي",
