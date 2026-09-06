@@ -242,8 +242,14 @@
   </section>
 
   <section>
-    <h2 class="section">المتأخرات الثابتة</h2>
+    <h2 class="section">التحصيل والمتأخرات حسب الباكت</h2>
     <div class="chart-grid">
+      <div class="card">
+        <h3>التحصيل حسب الباكت — التارقت مقابل السداد</h3>
+        <p class="meta" id="bucketMeta">—</p>
+        <div class="chart-legend" id="bucketLegend"></div>
+        <div class="canvas-wrap chart-host" id="chartBucket"></div>
+      </div>
       <div class="card">
         <h3>المتأخرات حسب الباكت</h3>
         <p class="meta" id="arrearsMeta">—</p>
@@ -344,7 +350,8 @@ async function fetchAll(){
       sales: { date: null, labels: SALES_LABELS, counts: SALES_LABELS.map(()=>0) },
       customer_care: { date: null, labels: CARE_LABELS, active: CARE_LABELS.map(()=>0), close: CARE_LABELS.map(()=>0) },
       collections: { period_to: null, labels: COLLECTIONS_LABELS, amounts: COLLECTIONS_LABELS.map(()=>0) },
-      fixed_arrears: { as_of: null, labels: ARREARS_LABELS, amounts: ARREARS_LABELS.map(()=>0), customers: ARREARS_LABELS.map(()=>0) }
+      fixed_arrears: { as_of: null, labels: ARREARS_LABELS, amounts: ARREARS_LABELS.map(()=>0), customers: ARREARS_LABELS.map(()=>0) },
+      collections_by_bucket: { date: null, labels: ARREARS_LABELS, target: ARREARS_LABELS.map(()=>0), payment: ARREARS_LABELS.map(()=>0) }
     },
     trend: { dates: [], total_financing: [], total_collections: [] }
   };
@@ -400,7 +407,8 @@ async function fetchAll(){
     });
   }
 
-  // ---- Fixed arrears (from collection_employee, latest day) ----
+  // ---- Collection_Employee (latest day): feeds both "Fixed arrears by bucket"
+  // and "Collections by bucket" (Target vs Payment) ----
   const empDate = await latestDateValue('collection_employee', 'emp_date');
   if (empDate){
     const { data: rows } = await sb.from('collection_employee').select('*').eq('emp_date', empDate);
@@ -410,6 +418,10 @@ async function fetchAll(){
       result.breakdowns.fixed_arrears.customers = alignByLabel(rows, 'bucket', 'number_of_customers', ARREARS_LABELS);
       result.kpi.fixed_arrears_asof = empDate;
       result.kpi.fixed_arrears_total = result.breakdowns.fixed_arrears.amounts.reduce((a,b)=>a+b, 0);
+
+      result.breakdowns.collections_by_bucket.date = empDate;
+      result.breakdowns.collections_by_bucket.target = alignByLabel(rows, 'bucket', 'target', ARREARS_LABELS);
+      result.breakdowns.collections_by_bucket.payment = alignByLabel(rows, 'bucket', 'payment', ARREARS_LABELS);
     }
   }
 
@@ -651,6 +663,10 @@ function renderCharts(){
   document.getElementById('collMeta').textContent = 'الفترة المنتهية ' + (co.period_to || '—') + ' — المبلغ';
   drawHBar('chartColl', co.labels, co.amounts, green);
 
+  const cb = DATA.breakdowns.collections_by_bucket;
+  document.getElementById('bucketMeta').textContent = 'بتاريخ ' + (cb.date || '—');
+  drawHGroupedBar('chartBucket', 'bucketLegend', cb.labels, cb.target, cb.payment, 'التارقت', 'السداد', accent, green);
+
   const fa = DATA.breakdowns.fixed_arrears;
   document.getElementById('arrearsMeta').textContent = 'كما في ' + (fa.as_of || '—') + ' — المبلغ المتأخر';
   drawVBar('chartArrears', fa.labels, fa.amounts, red);
@@ -682,7 +698,8 @@ async function main(){
           sales:{date:null,labels:SALES_LABELS,counts:SALES_LABELS.map(()=>0)},
           customer_care:{date:null,labels:CARE_LABELS,active:CARE_LABELS.map(()=>0),close:CARE_LABELS.map(()=>0)},
           collections:{period_to:null,labels:COLLECTIONS_LABELS,amounts:COLLECTIONS_LABELS.map(()=>0)},
-          fixed_arrears:{as_of:null,labels:ARREARS_LABELS,amounts:ARREARS_LABELS.map(()=>0),customers:ARREARS_LABELS.map(()=>0)}
+          fixed_arrears:{as_of:null,labels:ARREARS_LABELS,amounts:ARREARS_LABELS.map(()=>0),customers:ARREARS_LABELS.map(()=>0)},
+          collections_by_bucket:{date:null,labels:ARREARS_LABELS,target:ARREARS_LABELS.map(()=>0),payment:ARREARS_LABELS.map(()=>0)}
         },
         trend:{dates:[],total_financing:[],total_collections:[]}
       };
