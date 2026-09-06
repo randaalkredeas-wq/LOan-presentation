@@ -1,0 +1,181 @@
+{
+  "generated_note": "قيم حقيقية من ملف Excel المُرسل — تتحدث عند إعادة نشر الموقع بملف جديد.",
+  "kpi": {
+    "as_of_date": "2026-09-01",
+    "total_financing": 0,
+    "today_financing": 0,
+    "total_contracts": 0,
+    "cancelled": 0,
+    "total_collections": 0,
+    "collections_period_to": "2026-09-01",
+    "fixed_arrears_total": 0,
+    "fixed_arrears_asof": "2026-09-01",
+    "sales_accepted_latest": 0,
+    "sales_date": "2026-09-01",
+    "care_active_latest": 0,
+    "care_date": "2026-09-01"
+  },
+  "breakdowns": {
+    "credit_decisions": {
+      "date": "2026-09-01",
+      "labels": [
+        "Approval",
+        "In progress",
+        "Review with IT",
+        "High DBR",
+        "Salary less minimum",
+        "Reject (Policy Nationality)",
+        "Reject DPD",
+        "Bad Credit History",
+        "Age less minimum",
+        "Length of service less minimum",
+        "Retired",
+        "Reject.Documents",
+        "Fraud.",
+        "Retirement Age",
+        "high risk",
+        "Reject No Documents",
+        "Rejected by client"
+      ],
+      "counts": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "amounts": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "sales": {
+      "date": "2026-09-01",
+      "labels": [
+        "Accepted - تم التنفيذ",
+        "High profit - النسبه مرتفعه",
+        "Thinking - يفكر",
+        "Want more - يرغب ب اكثر",
+        "Active Loan - الطلب قائم",
+        "rejected - لايرغب بالتمويل",
+        "Answer - تم التواصل",
+        "Not eligible - غير مستحق",
+        "No Answer - لم يتم الرد"
+      ],
+      "counts": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "customer_care": {
+      "date": "2026-09-01",
+      "labels": [
+        "SAMA care complaint",
+        "Customer Complaints and Requests",
+        "Stitch Tickets",
+        "Calls",
+        "Emails"
+      ],
+      "active": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "close": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "collections": {
+      "period_to": "2026-09-01",
+      "labels": [
+        "البنك العربي - تحصيل لون",
+        "البنك العربي - التحصيل القضائي لون",
+        "تاب الغير مسجل بالتحصيل",
+        "مدفوعات من خلال سداد تاب - لون",
+        "مدفوعات من خلال سداد تاب - الصندوق"
+      ],
+      "amounts": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "fixed_arrears": {
+      "as_of": "2026-09-01",
+      "labels": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5 - 30"
+      ],
+      "amounts": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "customers": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "trend": {
+    "dates": [
+      "2026-09-01"
+    ],
+    "total_financing": [
+      0
+    ],
+    "total_collections": [
+      0
+    ]
+  }
+}

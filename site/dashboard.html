@@ -1,0 +1,517 @@
+<title>Departments Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme: light;
+    --page:      #f9f9f7;
+    --surface:   #fcfcfb;
+    --surface-2: #f3f2ee;
+    --ink:       #0b0b0b;
+    --ink-2:     #52514e;
+    --ink-muted: #898781;
+    --grid:      #e1e0d9;
+    --baseline:  #c3c2b7;
+    --border:    rgba(11,11,11,0.10);
+
+    --accent:    #2a78d6;   /* blue  — credit / brand */
+    --accent-ink:#ffffff;
+    --s-orange:  #eb6834;   /* care: close        */
+    --s-aqua:    #1baf7a;   /* sales               */
+    --s-green:   #008300;   /* collections         */
+    --s-red:     #e34948;   /* arrears / risk      */
+    --s-violet:  #4a3aa7;   /* care: active        */
+
+    --good:      #0ca30c;
+    --critical:  #d03b3b;
+
+    --font-ui: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, Arial, sans-serif;
+    --font-num: "IBM Plex Mono", ui-monospace, "IBM Plex Sans Arabic", monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      color-scheme: dark;
+      --page:      #0d0d0d;
+      --surface:   #1a1a19;
+      --surface-2: #232321;
+      --ink:       #ffffff;
+      --ink-2:     #c3c2b7;
+      --ink-muted: #898781;
+      --grid:      #2c2c2a;
+      --baseline:  #383835;
+      --border:    rgba(255,255,255,0.10);
+
+      --accent:    #3987e5;
+      --s-orange:  #d95926;
+      --s-aqua:    #199e70;
+      --s-green:   #008300;
+      --s-red:     #e66767;
+      --s-violet:  #9085e9;
+
+      --good:      #0ca30c;
+      --critical:  #e66767;
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme: dark;
+    --page:      #0d0d0d;
+    --surface:   #1a1a19;
+    --surface-2: #232321;
+    --ink:       #ffffff;
+    --ink-2:     #c3c2b7;
+    --ink-muted: #898781;
+    --grid:      #2c2c2a;
+    --baseline:  #383835;
+    --border:    rgba(255,255,255,0.10);
+
+    --accent:    #3987e5;
+    --s-orange:  #d95926;
+    --s-aqua:    #199e70;
+    --s-green:   #008300;
+    --s-red:     #e66767;
+    --s-violet:  #9085e9;
+
+    --good:      #0ca30c;
+    --critical:  #e66767;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ text-size-adjust: 100%; }
+  body{
+    margin:0; background: var(--page); color: var(--ink);
+    font-family: var(--font-ui); direction: rtl;
+    -webkit-font-smoothing: antialiased;
+  }
+  bdi.num{ font-family: var(--font-num); font-variant-numeric: tabular-nums; unicode-bidi: isolate; }
+
+  .wrap{ max-width: 1180px; margin: 0 auto; padding: 28px 20px 64px; }
+
+  header.top{
+    display:flex; align-items:flex-start; justify-content:space-between; gap:16px;
+    flex-wrap: wrap; padding-bottom: 20px; margin-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand{ display:flex; align-items:center; gap:12px; }
+  .brand .mark{
+    width:40px; height:40px; border-radius:10px; flex:none;
+    background: linear-gradient(135deg, var(--accent), var(--s-violet));
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-weight:700; font-size:16px;
+  }
+  h1{ margin:0; font-size:1.5rem; font-weight:700; letter-spacing:-.01em; }
+  .subtitle{ margin:2px 0 0; color: var(--ink-2); font-size:.9rem; }
+  .status{ text-align:left; direction:ltr; }
+  .badge{
+    display:inline-flex; align-items:center; gap:6px;
+    background: var(--surface-2); border:1px solid var(--border);
+    border-radius:999px; padding:6px 12px; font-size:.8rem; color: var(--ink-2);
+  }
+  .badge .dot{ width:7px; height:7px; border-radius:50%; background: var(--good); }
+  .note{
+    margin-top:8px; font-size:.78rem; color: var(--ink-muted); max-width:340px; direction:rtl; text-align:right;
+  }
+
+  .empty-banner{
+    display:none; background: var(--surface-2); border:1px solid var(--border);
+    border-inline-start: 3px solid var(--accent); border-radius:10px;
+    padding:12px 16px; margin-bottom:20px; font-size:.88rem; color: var(--ink-2);
+  }
+  .empty-banner.show{ display:block; }
+
+  h2.section{
+    font-size:1.02rem; font-weight:700; margin: 36px 0 14px; padding-inline-start:10px;
+    border-inline-start: 3px solid var(--accent); color: var(--ink);
+  }
+
+  .kpi-grid{
+    display:grid; gap:12px;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  }
+  .kpi{
+    background: var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:16px 16px 14px; display:flex; flex-direction:column; gap:8px;
+    border-top: 3px solid var(--tile, var(--accent));
+  }
+  .kpi .val{ font-size:1.55rem; font-weight:700; line-height:1.1; }
+  .kpi .lbl{ font-size:.78rem; color: var(--ink-2); line-height:1.35; }
+  .kpi .sub{ font-size:.7rem; color: var(--ink-muted); }
+
+  .chart-grid{
+    display:grid; gap:16px;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  }
+  .card{
+    background: var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:16px 16px 10px;
+  }
+  .card h3{ margin:0 0 4px; font-size:.92rem; font-weight:600; }
+  .card .meta{ margin:0 0 12px; font-size:.74rem; color: var(--ink-muted); }
+  .card .canvas-wrap{ position:relative; height:260px; }
+  .card .canvas-wrap.tall{ height:340px; }
+  .chart-host{ direction:ltr; }
+  .chart-host svg{ display:block; width:100%; height:100%; overflow:visible; font-family: var(--font-ui); }
+  .chart-host text{ fill: var(--ink-2); }
+  .chart-host .axis-line{ stroke: var(--baseline); stroke-width:1; }
+  .chart-host .grid-line{ stroke: var(--grid); stroke-width:1; }
+  .chart-host .val-label{ fill: var(--ink-muted); font-variant-numeric: tabular-nums; }
+  .chart-host .cat-label{ fill: var(--ink-2); }
+  .chart-legend{ display:flex; gap:16px; margin-bottom:8px; font-size:.76rem; color:var(--ink-2); flex-wrap:wrap; }
+  .chart-legend .sw{ display:inline-block; width:10px; height:10px; border-radius:3px; margin-inline-end:5px; vertical-align:-1px; }
+  .empty-chart{ display:flex; align-items:center; justify-content:center; height:100%; color:var(--ink-muted); font-size:.82rem; direction:rtl; }
+
+  footer{
+    margin-top:44px; padding-top:18px; border-top:1px solid var(--border);
+    font-size:.76rem; color: var(--ink-muted); display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  }
+
+  @media (max-width:520px){
+    header.top{ flex-direction:column; }
+    .status{ text-align:right; direction:rtl; }
+  }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="mark">DD</div>
+      <div>
+        <h1>Departments Dashboard</h1>
+        <p class="subtitle">بيانات تشغيلية يومية — الائتمان · التحصيل · المبيعات · خدمة العملاء</p>
+      </div>
+    </div>
+    <div class="status">
+      <span class="badge"><span class="dot"></span><span id="asOfBadge">—</span></span>
+      <p class="note">هذه صفحة عرض فقط — تُحدَّث كل ما تُرسَل نسخة جديدة من ملف الإكسل اليومي وتُعاد نشر الرابط بنفس العنوان.</p>
+    </div>
+  </header>
+
+  <div class="empty-banner" id="emptyBanner">
+    ⏳ لا توجد بيانات مُدخلة بعد بتاريخ اليوم — الأرقام أدناه أصفار لحد ما يبدأ إدخال البيانات اليومية في ملف الإكسل. أول تحديث حقيقي بينعكس هنا تلقائيًا.
+  </div>
+
+  <section>
+    <h2 class="section">المؤشرات الرئيسية</h2>
+    <div class="kpi-grid" id="kpiGrid"></div>
+  </section>
+
+  <section>
+    <h2 class="section">قرارات الائتمان والمبيعات — آخر يوم</h2>
+    <div class="chart-grid">
+      <div class="card">
+        <h3>قرارات الائتمان حسب النوع</h3>
+        <p class="meta" id="cdMeta">—</p>
+        <div class="canvas-wrap tall chart-host" id="chartCredit"></div>
+      </div>
+      <div class="card">
+        <h3>حالات المبيعات</h3>
+        <p class="meta" id="salesMeta">—</p>
+        <div class="canvas-wrap tall chart-host" id="chartSales"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section">خدمة العملاء والتحصيل — آخر يوم/فترة</h2>
+    <div class="chart-grid">
+      <div class="card">
+        <h3>خدمة العملاء — نشط مقابل مغلق</h3>
+        <p class="meta" id="careMeta">—</p>
+        <div class="chart-legend" id="careLegend"></div>
+        <div class="canvas-wrap chart-host" id="chartCare"></div>
+      </div>
+      <div class="card">
+        <h3>التحصيلات حسب البند</h3>
+        <p class="meta" id="collMeta">—</p>
+        <div class="canvas-wrap chart-host" id="chartColl"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section">المتأخرات الثابتة</h2>
+    <div class="chart-grid">
+      <div class="card">
+        <h3>المتأخرات حسب الباكت</h3>
+        <p class="meta" id="arrearsMeta">—</p>
+        <div class="canvas-wrap chart-host" id="chartArrears"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section">الاتجاه اليومي</h2>
+    <div class="chart-grid">
+      <div class="card">
+        <h3>إجمالي مبلغ التمويل</h3>
+        <p class="meta" id="trendFinMeta">—</p>
+        <div class="canvas-wrap chart-host" id="chartTrendFinancing"></div>
+      </div>
+      <div class="card">
+        <h3>إجمالي التحصيلات</h3>
+        <p class="meta" id="trendCollMeta">—</p>
+        <div class="canvas-wrap chart-host" id="chartTrendCollections"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Departments Dashboard — نسخة عرض ثابتة</span>
+    <span id="generatedAt">—</span>
+  </footer>
+</div>
+
+<script>
+const DATA = {"generated_note": "قيم حقيقية من ملف Excel المُرسل — تتحدث عند إعادة نشر الموقع بملف جديد.", "kpi": {"as_of_date": "2026-09-01", "total_financing": 0, "today_financing": 0, "total_contracts": 0, "cancelled": 0, "total_collections": 0, "collections_period_to": "2026-09-01", "fixed_arrears_total": 0, "fixed_arrears_asof": "2026-09-01", "sales_accepted_latest": 0, "sales_date": "2026-09-01", "care_active_latest": 0, "care_date": "2026-09-01"}, "breakdowns": {"credit_decisions": {"date": "2026-09-01", "labels": ["Approval", "In progress", "Review with IT", "High DBR", "Salary less minimum", "Reject (Policy Nationality)", "Reject DPD", "Bad Credit History", "Age less minimum", "Length of service less minimum", "Retired", "Reject.Documents", "Fraud.", "Retirement Age", "high risk", "Reject No Documents", "Rejected by client"], "counts": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "amounts": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, "sales": {"date": "2026-09-01", "labels": ["Accepted - تم التنفيذ", "High profit - النسبه مرتفعه", "Thinking - يفكر", "Want more - يرغب ب اكثر", "Active Loan - الطلب قائم", "rejected - لايرغب بالتمويل", "Answer - تم التواصل", "Not eligible - غير مستحق", "No Answer - لم يتم الرد"], "counts": [0, 0, 0, 0, 0, 0, 0, 0, 0]}, "customer_care": {"date": "2026-09-01", "labels": ["SAMA care complaint", "Customer Complaints and Requests", "Stitch Tickets", "Calls", "Emails"], "active": [0, 0, 0, 0, 0], "close": [0, 0, 0, 0, 0]}, "collections": {"period_to": "2026-09-01", "labels": ["البنك العربي - تحصيل لون", "البنك العربي - التحصيل القضائي لون", "تاب الغير مسجل بالتحصيل", "مدفوعات من خلال سداد تاب - لون", "مدفوعات من خلال سداد تاب - الصندوق"], "amounts": [0, 0, 0, 0, 0]}, "fixed_arrears": {"as_of": "2026-09-01", "labels": ["1", "2", "3", "4", "5 - 30"], "amounts": [0, 0, 0, 0, 0], "customers": [0, 0, 0, 0, 0]}}, "trend": {"dates": ["2026-09-01"], "total_financing": [0], "total_collections": [0]}};
+
+function fmt(n){
+  if (n === null || n === undefined) return '—';
+  return Math.round(n).toLocaleString('en-US');
+}
+function bdiNum(n){ return '<bdi class="num">' + fmt(n) + '</bdi>'; }
+
+function isDark(){
+  const t = document.documentElement.getAttribute('data-theme');
+  if (t === 'dark') return true;
+  if (t === 'light') return false;
+  return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+}
+function themeVar(name){
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+function renderKpis(){
+  const k = DATA.kpi;
+  const tiles = [
+    { val: bdiNum(k.total_financing), lbl: 'إجمالي مبلغ التمويل<br>Total Financing Amount', sub: k.as_of_date, tile: 'accent' },
+    { val: bdiNum(k.today_financing), lbl: 'تمويل اليوم<br>Today Financing Amount', sub: k.as_of_date, tile: 'accent' },
+    { val: bdiNum(k.total_contracts), lbl: 'إجمالي العقود<br>Total Contracts', sub: k.as_of_date, tile: 's-aqua' },
+    { val: bdiNum(k.cancelled), lbl: 'الملغى<br>Cancelled', sub: k.as_of_date, tile: 's-orange' },
+    { val: bdiNum(k.total_collections), lbl: 'إجمالي التحصيلات (آخر فترة)<br>Total Collections', sub: k.collections_period_to, tile: 's-green' },
+    { val: bdiNum(k.fixed_arrears_total), lbl: 'إجمالي المتأخرات الثابتة<br>Fixed Arrears Total', sub: 'كما في ' + (k.fixed_arrears_asof || '—'), tile: 's-red' },
+    { val: bdiNum(k.sales_accepted_latest), lbl: 'مبيعات مقبولة (آخر يوم)<br>Sales Accepted', sub: k.sales_date, tile: 's-aqua' },
+    { val: bdiNum(k.care_active_latest), lbl: 'شكاوى نشطة (آخر يوم)<br>Customer Care Active', sub: k.care_date, tile: 's-violet' },
+  ];
+  const grid = document.getElementById('kpiGrid');
+  grid.innerHTML = tiles.map(t => `
+    <div class="kpi" style="--tile:var(--${t.tile})">
+      <div class="val">${t.val}</div>
+      <div class="lbl">${t.lbl}</div>
+      <div class="sub">${t.sub || ''}</div>
+    </div>`).join('');
+
+  const allZero = [k.total_financing, k.today_financing, k.total_contracts, k.total_collections,
+                   k.sales_accepted_latest, k.care_active_latest].every(v => !v);
+  document.getElementById('emptyBanner').classList.toggle('show', allZero);
+  document.getElementById('asOfBadge').textContent = 'آخر تحديث بيانات: ' + (k.as_of_date || '—');
+}
+
+// ---- Dependency-free SVG chart renderers ----------------------------------
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs, children){
+  const e = document.createElementNS(NS, tag);
+  for (const k in (attrs||{})) e.setAttribute(k, attrs[k]);
+  (children||[]).forEach(c => e.appendChild(c));
+  return e;
+}
+function textEl(x, y, str, attrs){
+  const t = el('text', Object.assign({ x, y }, attrs || {}));
+  t.textContent = str;
+  return t;
+}
+function niceMax(v){
+  if (v <= 0) return 1;
+  const mag = Math.pow(10, Math.floor(Math.log10(v)));
+  const n = v / mag;
+  const step = n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10;
+  return step * mag;
+}
+function truncate(s, n){ s = String(s); return s.length > n ? s.slice(0, n-1) + '…' : s; }
+
+function emptyState(host, msg){
+  host.innerHTML = '';
+  const d = document.createElement('div');
+  d.className = 'empty-chart';
+  d.textContent = msg || 'لا توجد بيانات كافية بعد';
+  host.appendChild(d);
+}
+
+// Horizontal bar: one value per category, value labels + native tooltip.
+function drawHBar(hostId, labels, values, color){
+  const host = document.getElementById(hostId);
+  if (!labels.length){ emptyState(host); return; }
+  const W = Math.max(host.clientWidth, 280), rowH = 26, top = 6, bottom = 6;
+  const H = top + bottom + rowH * labels.length;
+  const labelW = Math.min(Math.round(W * 0.36), 190);
+  const valueW = 56;
+  const plotW = Math.max(W - labelW - valueW - 12, 40);
+  const max = niceMax(Math.max(...values, 1));
+  const svg = el('svg', { viewBox: `0 0 ${W} ${H}` });
+  svg.appendChild(el('line', { class:'axis-line', x1:labelW, x2:labelW, y1:top-2, y2:H-bottom+2 }));
+  values.forEach((v, i) => {
+    const y = top + i * rowH;
+    const barW = (v / max) * plotW;
+    const g = el('g');
+    g.appendChild(textEl(labelW - 8, y + rowH/2 + 4, truncate(labels[i], 30),
+      { class:'cat-label', 'text-anchor':'end', 'font-size':11 }));
+    const rect = el('rect', {
+      x: labelW, y: y + (rowH-14)/2, width: Math.max(barW, v > 0 ? 2 : 0), height: 14, rx: 4, fill: color,
+    });
+    const title = el('title'); title.textContent = labels[i] + ': ' + fmt(v);
+    rect.appendChild(title);
+    g.appendChild(rect);
+    g.appendChild(textEl(labelW + barW + 8, y + rowH/2 + 4, fmt(v), { class:'val-label', 'font-size':11 }));
+    svg.appendChild(g);
+  });
+  host.innerHTML = ''; host.appendChild(svg);
+}
+
+// Horizontal grouped bar (2 series per category) with a legend row above.
+function drawHGroupedBar(hostId, legendHostId, labels, seriesA, seriesB, nameA, nameB, colorA, colorB){
+  const host = document.getElementById(hostId);
+  const legendHost = document.getElementById(legendHostId);
+  legendHost.innerHTML = `<span><span class="sw" style="background:${colorA}"></span>${nameA}</span>` +
+                          `<span><span class="sw" style="background:${colorB}"></span>${nameB}</span>`;
+  if (!labels.length){ emptyState(host); return; }
+  const W = Math.max(host.clientWidth, 280), rowH = 40, barH = 13, top = 8, bottom = 8;
+  const H = top + bottom + rowH * labels.length;
+  const labelW = Math.min(Math.round(W * 0.34), 170);
+  const valueW = 52;
+  const plotW = Math.max(W - labelW - valueW - 12, 40);
+  const max = niceMax(Math.max(...seriesA, ...seriesB, 1));
+  const svg = el('svg', { viewBox: `0 0 ${W} ${H}` });
+  svg.appendChild(el('line', { class:'axis-line', x1:labelW, x2:labelW, y1:top-2, y2:H-bottom+2 }));
+  labels.forEach((lab, i) => {
+    const y = top + i * rowH;
+    svg.appendChild(textEl(labelW - 8, y + rowH/2 + 4, truncate(lab, 28),
+      { class:'cat-label', 'text-anchor':'end', 'font-size':11 }));
+    [[seriesA[i], colorA, nameA], [seriesB[i], colorB, nameB]].forEach(([v, color, name], j) => {
+      const barW = (v / max) * plotW;
+      const ry = y + j * (barH + 3);
+      const rect = el('rect', { x: labelW, y: ry, width: Math.max(barW, v > 0 ? 2 : 0), height: barH, rx: 3, fill: color });
+      const title = el('title'); title.textContent = lab + ' — ' + name + ': ' + fmt(v);
+      rect.appendChild(title);
+      svg.appendChild(rect);
+      svg.appendChild(textEl(labelW + barW + 8, ry + barH/2 + 3.5, fmt(v), { class:'val-label', 'font-size':10 }));
+    });
+  });
+  host.innerHTML = ''; host.appendChild(svg);
+}
+
+// Vertical bar with direct value labels on top — for short category lists.
+function drawVBar(hostId, labels, values, color){
+  const host = document.getElementById(hostId);
+  if (!labels.length){ emptyState(host); return; }
+  const W = Math.max(host.clientWidth, 240), H = 240;
+  const top = 24, bottom = 30, left = 16, right = 16;
+  const plotH = H - top - bottom, plotW = W - left - right;
+  const max = niceMax(Math.max(...values, 1));
+  const bw = Math.min(64, plotW / values.length - 16);
+  const step = plotW / values.length;
+  const svg = el('svg', { viewBox: `0 0 ${W} ${H}` });
+  svg.appendChild(el('line', { class:'axis-line', x1:left, x2:W-right, y1:H-bottom, y2:H-bottom }));
+  values.forEach((v, i) => {
+    const barH = (v / max) * plotH;
+    const cx = left + step * i + step/2;
+    const x = cx - bw/2, y = H - bottom - barH;
+    const rect = el('rect', { x, y, width: Math.max(bw,0), height: Math.max(barH, v>0?2:0), rx: 5, fill: color });
+    const title = el('title'); title.textContent = labels[i] + ': ' + fmt(v);
+    rect.appendChild(title);
+    svg.appendChild(rect);
+    svg.appendChild(textEl(cx, y - 6, fmt(v), { class:'val-label', 'text-anchor':'middle', 'font-size':11 }));
+    svg.appendChild(textEl(cx, H - bottom + 16, truncate(labels[i], 10), { class:'cat-label', 'text-anchor':'middle', 'font-size':11 }));
+  });
+  host.innerHTML = ''; host.appendChild(svg);
+}
+
+// Line/area chart with faint gridlines and an emphasized endpoint.
+function drawLine(hostId, dates, values, color){
+  const host = document.getElementById(hostId);
+  const pts = dates.map((d, i) => ({ d, v: values[i] })).filter(p => p.v !== null && p.v !== undefined);
+  if (pts.length < 1){ emptyState(host, 'بانتظار أول قراءتين لرسم الاتجاه'); return; }
+  const W = Math.max(host.clientWidth, 280), H = 240;
+  const top = 16, bottom = 26, left = 54, right = 14;
+  const plotW = W - left - right, plotH = H - top - bottom;
+  const max = niceMax(Math.max(...pts.map(p => p.v), 1));
+  const n = dates.length;
+  const x = i => n <= 1 ? left + plotW/2 : left + (plotW * i) / (n - 1);
+  const y = v => top + plotH - (v / max) * plotH;
+  const svg = el('svg', { viewBox: `0 0 ${W} ${H}` });
+
+  const ticks = 4;
+  for (let t = 0; t <= ticks; t++){
+    const gv = (max / ticks) * t;
+    const gy = y(gv);
+    svg.appendChild(el('line', { class:'grid-line', x1:left, x2:W-right, y1:gy, y2:gy }));
+    svg.appendChild(textEl(left - 8, gy + 3, fmt(gv), { class:'val-label', 'text-anchor':'end', 'font-size':10 }));
+  }
+  svg.appendChild(el('line', { class:'axis-line', x1:left, x2:W-right, y1:H-bottom, y2:H-bottom }));
+
+  const idxOf = d => dates.indexOf(d);
+  if (pts.length > 1){
+    const linePath = pts.map((p,i) => (i===0?'M':'L') + x(idxOf(p.d)).toFixed(1) + ',' + y(p.v).toFixed(1)).join(' ');
+    const areaPath = linePath + ` L${x(idxOf(pts[pts.length-1].d)).toFixed(1)},${H-bottom} L${x(idxOf(pts[0].d)).toFixed(1)},${H-bottom} Z`;
+    svg.appendChild(el('path', { d: areaPath, fill: color, opacity: 0.14, stroke: 'none' }));
+    svg.appendChild(el('path', { d: linePath, fill: 'none', stroke: color, 'stroke-width': 2, 'stroke-linejoin':'round', 'stroke-linecap':'round' }));
+  }
+  pts.forEach((p, i) => {
+    const cx = x(idxOf(p.d)), cy = y(p.v);
+    const isLast = i === pts.length - 1;
+    const c = el('circle', { cx, cy, r: isLast ? 5 : 3, fill: isLast ? color : 'var(--surface)', stroke: color, 'stroke-width': 2 });
+    const title = el('title'); title.textContent = p.d + ': ' + fmt(p.v);
+    c.appendChild(title);
+    svg.appendChild(c);
+  });
+
+  const labelEvery = Math.max(1, Math.ceil(n / 6));
+  dates.forEach((d, i) => {
+    if (i % labelEvery !== 0 && i !== n-1) return;
+    svg.appendChild(textEl(x(i), H - bottom + 16, d.slice(5), { class:'cat-label', 'text-anchor':'middle', 'font-size':10 }));
+  });
+  host.innerHTML = ''; host.appendChild(svg);
+}
+
+function renderCharts(){
+  const accent = themeVar('--accent'), aqua = themeVar('--s-aqua'), green = themeVar('--s-green'),
+        red = themeVar('--s-red'), violet = themeVar('--s-violet'), orange = themeVar('--s-orange');
+
+  const cd = DATA.breakdowns.credit_decisions;
+  document.getElementById('cdMeta').textContent = 'بتاريخ ' + (cd.date || '—') + ' — عدد الطلبات لكل قرار';
+  drawHBar('chartCredit', cd.labels, cd.counts, accent);
+
+  const sl = DATA.breakdowns.sales;
+  document.getElementById('salesMeta').textContent = 'بتاريخ ' + (sl.date || '—') + ' — عدد الحالات لكل وضع';
+  drawHBar('chartSales', sl.labels, sl.counts, aqua);
+
+  const cc = DATA.breakdowns.customer_care;
+  document.getElementById('careMeta').textContent = 'بتاريخ ' + (cc.date || '—');
+  drawHGroupedBar('chartCare', 'careLegend', cc.labels, cc.active, cc.close, 'نشط', 'مغلق', violet, orange);
+
+  const co = DATA.breakdowns.collections;
+  document.getElementById('collMeta').textContent = 'الفترة المنتهية ' + (co.period_to || '—') + ' — المبلغ';
+  drawHBar('chartColl', co.labels, co.amounts, green);
+
+  const fa = DATA.breakdowns.fixed_arrears;
+  document.getElementById('arrearsMeta').textContent = 'كما في ' + (fa.as_of || '—') + ' — المبلغ المتأخر';
+  drawVBar('chartArrears', fa.labels, fa.amounts, red);
+
+  const tr = DATA.trend;
+  const trendNote = tr.dates.length + ' يوم من البيانات';
+  document.getElementById('trendFinMeta').textContent = trendNote;
+  document.getElementById('trendCollMeta').textContent = trendNote;
+  drawLine('chartTrendFinancing', tr.dates, tr.total_financing, accent);
+  drawLine('chartTrendCollections', tr.dates, tr.total_collections, green);
+}
+
+function renderAll(){ renderKpis(); renderCharts(); }
+
+renderAll();
+document.getElementById('generatedAt').textContent = 'تاريخ توليد الصفحة: ' + new Date().toISOString().slice(0,10);
+
+if (window.matchMedia) {
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', renderCharts);
+}
+new MutationObserver(renderCharts).observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] });
+let resizeTimer;
+window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(renderCharts, 150); });
+</script>
