@@ -1,0 +1,706 @@
+<title>Departments Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme: light;
+    --page:      #f9f9f7;
+    --surface:   #fcfcfb;
+    --surface-2: #f3f2ee;
+    --ink:       #0b0b0b;
+    --ink-2:     #52514e;
+    --ink-muted: #898781;
+    --grid:      #e1e0d9;
+    --baseline:  #c3c2b7;
+    --border:    rgba(11,11,11,0.10);
+
+    --accent:    #2a78d6;
+    --accent-ink:#ffffff;
+    --s-orange:  #eb6834;
+    --s-aqua:    #1baf7a;
+    --s-green:   #008300;
+    --s-red:     #e34948;
+    --s-violet:  #4a3aa7;
+
+    --good:      #0ca30c;
+    --critical:  #d03b3b;
+
+    --font-ui: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, Arial, sans-serif;
+    --font-num: "IBM Plex Mono", ui-monospace, "IBM Plex Sans Arabic", monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      color-scheme: dark;
+      --page:      #0d0d0d;
+      --surface:   #1a1a19;
+      --surface-2: #232321;
+      --ink:       #ffffff;
+      --ink-2:     #c3c2b7;
+      --ink-muted: #898781;
+      --grid:      #2c2c2a;
+      --baseline:  #383835;
+      --border:    rgba(255,255,255,0.10);
+
+      --accent:    #3987e5;
+      --s-orange:  #d95926;
+      --s-aqua:    #199e70;
+      --s-green:   #008300;
+      --s-red:     #e66767;
+      --s-violet:  #9085e9;
+
+      --good:      #0ca30c;
+      --critical:  #e66767;
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme: dark;
+    --page:      #0d0d0d;
+    --surface:   #1a1a19;
+    --surface-2: #232321;
+    --ink:       #ffffff;
+    --ink-2:     #c3c2b7;
+    --ink-muted: #898781;
+    --grid:      #2c2c2a;
+    --baseline:  #383835;
+    --border:    rgba(255,255,255,0.10);
+
+    --accent:    #3987e5;
+    --s-orange:  #d95926;
+    --s-aqua:    #199e70;
+    --s-green:   #008300;
+    --s-red:     #e66767;
+    --s-violet:  #9085e9;
+
+    --good:      #0ca30c;
+    --critical:  #e66767;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ text-size-adjust: 100%; }
+  body{
+    margin:0; background: var(--page); color: var(--ink);
+    font-family: var(--font-ui); direction: rtl;
+    -webkit-font-smoothing: antialiased;
+  }
+  bdi.num{ font-family: var(--font-num); font-variant-numeric: tabular-nums; unicode-bidi: isolate; }
+
+  .wrap{ max-width: 1180px; margin: 0 auto; padding: 28px 20px 64px; }
+
+  header.top{
+    display:flex; align-items:flex-start; justify-content:space-between; gap:16px;
+    flex-wrap: wrap; padding-bottom: 20px; margin-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand{ display:flex; align-items:center; gap:12px; }
+  .brand .mark{
+    width:40px; height:40px; border-radius:10px; flex:none;
+    background: linear-gradient(135deg, var(--accent), var(--s-violet));
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-weight:700; font-size:16px;
+  }
+  h1{ margin:0; font-size:1.5rem; font-weight:700; letter-spacing:-.01em; }
+  .subtitle{ margin:2px 0 0; color: var(--ink-2); font-size:.9rem; }
+  .status{ text-align:left; direction:ltr; }
+  .badge{
+    display:inline-flex; align-items:center; gap:6px;
+    background: var(--surface-2); border:1px solid var(--border);
+    border-radius:999px; padding:6px 12px; font-size:.8rem; color: var(--ink-2);
+  }
+  .badge .dot{ width:7px; height:7px; border-radius:50%; background: var(--good); }
+  .badge .dot.loading{ background: var(--s-orange); animation: pulse 1.2s infinite; }
+  @keyframes pulse{ 0%,100%{ opacity:1; } 50%{ opacity:.35; } }
+  .note{
+    margin-top:8px; font-size:.78rem; color: var(--ink-muted); max-width:340px; direction:rtl; text-align:right;
+  }
+
+  .empty-banner{
+    display:none; background: var(--surface-2); border:1px solid var(--border);
+    border-inline-start: 3px solid var(--accent); border-radius:10px;
+    padding:12px 16px; margin-bottom:20px; font-size:.88rem; color: var(--ink-2);
+  }
+  .empty-banner.show{ display:block; }
+
+  .error-banner{
+    display:none; background: var(--surface-2); border:1px solid var(--border);
+    border-inline-start: 3px solid var(--critical); border-radius:10px;
+    padding:12px 16px; margin-bottom:20px; font-size:.88rem; color: var(--ink-2);
+  }
+  .error-banner.show{ display:block; }
+
+  h2.section{
+    font-size:1.02rem; font-weight:700; margin: 36px 0 14px; padding-inline-start:10px;
+    border-inline-start: 3px solid var(--accent); color: var(--ink);
+  }
+
+  .kpi-grid{
+    display:grid; gap:12px;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  }
+  .kpi{
+    background: var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:16px 16px 14px; display:flex; flex-direction:column; gap:8px;
+    border-top: 3px solid var(--tile, var(--accent));
+  }
+  .kpi .val{ font-size:1.55rem; font-weight:700; line-height:1.1; }
+  .kpi .lbl{ font-size:.78rem; color: var(--ink-2); line-height:1.35; }
+  .kpi .sub{ font-size:.7rem; color: var(--ink-muted); }
+
+  .chart-grid{
+    display:grid; gap:16px;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  }
+  .card{
+    background: var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:16px 16px 10px;
+  }
+  .card h3{ margin:0 0 4px; font-size:.92rem; font-weight:600; }
+  .card .meta{ margin:0 0 12px; font-size:.74rem; color: var(--ink-muted); }
+  .card .canvas-wrap{ position:relative; height:260px; }
+  .card .canvas-wrap.tall{ height:340px; }
+  .chart-host{ direction:ltr; }
+  .chart-host svg{ display:block; width:100%; height:100%; overflow:visible; font-family: var(--font-ui); }
+  .chart-host text{ fill: var(--ink-2); }
+  .chart-host .axis-line{ stroke: var(--baseline); stroke-width:1; }
+  .chart-host .grid-line{ stroke: var(--grid); stroke-width:1; }
+  .chart-host .val-label{ fill: var(--ink-muted); font-variant-numeric: tabular-nums; }
+  .chart-host .cat-label{ fill: var(--ink-2); }
+  .chart-legend{ display:flex; gap:16px; margin-bottom:8px; font-size:.76rem; color:var(--ink-2); flex-wrap:wrap; }
+  .chart-legend .sw{ display:inline-block; width:10px; height:10px; border-radius:3px; margin-inline-end:5px; vertical-align:-1px; }
+  .empty-chart{ display:flex; align-items:center; justify-content:center; height:100%; color:var(--ink-muted); font-size:.82rem; direction:rtl; }
+
+  footer{
+    margin-top:44px; padding-top:18px; border-top:1px solid var(--border);
+    font-size:.76rem; color: var(--ink-muted); display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  }
+
+  @media (max-width:520px){
+    header.top{ flex-direction:column; }
+    .status{ text-align:right; direction:rtl; }
+  }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="mark">DD</div>
+      <div>
+        <h1>Departments Dashboard</h1>
+        <p class="subtitle">بيانات تشغيلية يومية — الائتمان · التحصيل · المبيعات · خدمة العملاء</p>
+      </div>
+    </div>
+    <div class="status">
+      <span class="badge"><span class="dot loading" id="statusDot"></span><span id="asOfBadge">جارِ التحميل…</span></span>
+      <p class="note">هذه الصفحة متصلة مباشرة بقاعدة البيانات وتُحدَّث تلقائيًا كل ما تتغير بيانات ملف الإكسل اليومي (عبر Power Automate).</p>
+    </div>
+  </header>
+
+  <div class="error-banner" id="errorBanner">
+    ⚠️ تعذّر الاتصال بقاعدة البيانات حاليًا. جرّبي تحديث الصفحة بعد قليل.
+  </div>
+
+  <div class="empty-banner" id="emptyBanner">
+    ⏳ لا توجد بيانات مُدخلة بعد بتاريخ اليوم — الأرقام أدناه أصفار لحد ما يبدأ إدخال البيانات اليومية في ملف الإكسل. أول تحديث حقيقي بينعكس هنا تلقائيًا.
+  </div>
+
+  <section>
+    <h2 class="section">المؤشرات الرئيسية</h2>
+    <div class="kpi-grid" id="kpiGrid"></div>
+  </section>
+
+  <section>
+    <h2 class="section">قرارات الائتمان والمبيعات — آخر يوم</h2>
+    <div class="chart-grid">
+      <div class="card">
+        <h3>قرارات الائتمان حسب النوع</h3>
+        <p class="meta" id="cdMeta">—</p>
+        <div class="canvas-wrap tall chart-host" id="chartCredit"></div>
+      </div>
+      <div class="card">
+        <h3>حالات المبيعات</h3>
+        <p class="meta" id="salesMeta">—</p>
+        <div class="canvas-wrap tall chart-host" id="chartSales"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section">خدمة العملاء والتحصيل — آخر يوم/فترة</h2>
+    <div class="chart-grid">
+      <div class="card">
+        <h3>خدمة العملاء — نشط مقابل مغلق</h3>
+        <p class="meta" id="careMeta">—</p>
+        <div class="chart-legend" id="careLegend"></div>
+        <div class="canvas-wrap chart-host" id="chartCare"></div>
+      </div>
+      <div class="card">
+        <h3>التحصيلات حسب البند</h3>
+        <p class="meta" id="collMeta">—</p>
+        <div class="canvas-wrap chart-host" id="chartColl"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section">المتأخرات الثابتة</h2>
+    <div class="chart-grid">
+      <div class="card">
+        <h3>المتأخرات حسب الباكت</h3>
+        <p class="meta" id="arrearsMeta">—</p>
+        <div class="canvas-wrap chart-host" id="chartArrears"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section">الاتجاه اليومي</h2>
+    <div class="chart-grid">
+      <div class="card">
+        <h3>إجمالي مبلغ التمويل</h3>
+        <p class="meta" id="trendFinMeta">—</p>
+        <div class="canvas-wrap chart-host" id="chartTrendFinancing"></div>
+      </div>
+      <div class="card">
+        <h3>إجمالي التحصيلات</h3>
+        <p class="meta" id="trendCollMeta">—</p>
+        <div class="canvas-wrap chart-host" id="chartTrendCollections"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Departments Dashboard — متصلة مباشرة بقاعدة البيانات (Supabase)</span>
+    <span id="generatedAt">—</span>
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* ====================== إعدادات الاتصال بـ Supabase ====================== */
+const SUPABASE_URL = 'https://xqeruhshmwavlnlqmotg.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_iog6MGgVd7CweYh3-AmF2w_ye-sDtHh';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* الفئات الثابتة كما في ملف الإكسل الأصلي (تُستخدم كمرجع لترتيب وعرض الأعمدة حتى لو لم تُدخل بعض القيم بعد) */
+const CREDIT_DECISION_LABELS = ["Approval","In progress","Review with IT","High DBR","Salary less minimum","Reject (Policy Nationality)","Reject DPD","Bad Credit History","Age less minimum","Length of service less minimum","Retired","Reject.Documents","Fraud.","Retirement Age","high risk","Reject No Documents","Rejected by client"];
+const SALES_LABELS = ["Accepted - تم التنفيذ","High profit - النسبه مرتفعه","Thinking - يفكر","Want more - يرغب ب اكثر","Active Loan - الطلب قائم","rejected - لايرغب بالتمويل","Answer - تم التواصل","Not eligible - غير مستحق","No Answer - لم يتم الرد"];
+const CARE_LABELS = ["SAMA care complaint","Customer Complaints and Requests","Stitch Tickets","Calls","Emails"];
+const COLLECTIONS_LABELS = ["البنك العربي - تحصيل لون","البنك العربي - التحصيل القضائي لون","تاب الغير مسجل بالتحصيل","مدفوعات من خلال سداد تاب - لون","مدفوعات من خلال سداد تاب - الصندوق"];
+const ARREARS_LABELS = ["1","2","3","4","5 - 30"];
+
+let DATA = null;
+
+function fmt(n){
+  if (n === null || n === undefined || isNaN(n)) return '—';
+  return Math.round(n).toLocaleString('en-US');
+}
+function bdiNum(n){ return '<bdi class="num">' + fmt(n) + '</bdi>'; }
+
+function isDark(){
+  const t = document.documentElement.getAttribute('data-theme');
+  if (t === 'dark') return true;
+  if (t === 'light') return false;
+  return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+}
+function themeVar(name){
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+/* ====================== جلب البيانات من Supabase ====================== */
+
+async function latestDateValue(table, dateCol){
+  const { data, error } = await sb.from(table).select(dateCol).order(dateCol, { ascending:false }).limit(1);
+  if (error || !data || !data.length) return null;
+  return data[0][dateCol];
+}
+
+function alignByLabel(rows, labelField, valueField, labelsOrder){
+  const map = {};
+  rows.forEach(r => { map[r[labelField]] = r[valueField]; });
+  return labelsOrder.map(l => Number(map[l] ?? 0));
+}
+
+function groupSumByDate(rows, dateField, valueField){
+  const map = {};
+  rows.forEach(r => {
+    const d = r[dateField];
+    map[d] = (map[d] || 0) + Number(r[valueField] ?? 0);
+  });
+  const dates = Object.keys(map).sort();
+  return { dates, values: dates.map(d => map[d]) };
+}
+
+async function fetchAll(){
+  const result = {
+    kpi: {
+      as_of_date: null, total_financing: 0, today_financing: 0, total_contracts: 0, cancelled: 0,
+      total_collections: 0, collections_period_to: null,
+      fixed_arrears_total: 0, fixed_arrears_asof: null,
+      sales_accepted_latest: 0, sales_date: null,
+      care_active_latest: 0, care_date: null
+    },
+    breakdowns: {
+      credit_decisions: { date: null, labels: CREDIT_DECISION_LABELS, counts: CREDIT_DECISION_LABELS.map(()=>0), amounts: CREDIT_DECISION_LABELS.map(()=>0) },
+      sales: { date: null, labels: SALES_LABELS, counts: SALES_LABELS.map(()=>0) },
+      customer_care: { date: null, labels: CARE_LABELS, active: CARE_LABELS.map(()=>0), close: CARE_LABELS.map(()=>0) },
+      collections: { period_to: null, labels: COLLECTIONS_LABELS, amounts: COLLECTIONS_LABELS.map(()=>0) },
+      fixed_arrears: { as_of: null, labels: ARREARS_LABELS, amounts: ARREARS_LABELS.map(()=>0), customers: ARREARS_LABELS.map(()=>0) }
+    },
+    trend: { dates: [], total_financing: [], total_collections: [] }
+  };
+
+  // ---- Credit decisions (latest day) ----
+  const cdDate = await latestDateValue('credit_decisions', 'decision_date');
+  if (cdDate){
+    const { data: rows } = await sb.from('credit_decisions').select('*').eq('decision_date', cdDate);
+    if (rows && rows.length){
+      result.breakdowns.credit_decisions.date = cdDate;
+      result.breakdowns.credit_decisions.counts = alignByLabel(rows, 'credit_decision', 'number_of_requests', CREDIT_DECISION_LABELS);
+      result.breakdowns.credit_decisions.amounts = alignByLabel(rows, 'credit_decision', 'amounts', CREDIT_DECISION_LABELS);
+      result.kpi.as_of_date = cdDate;
+    }
+  }
+
+  // ---- Credit KPIs (all rows for trend + latest for tiles) ----
+  const { data: kpiRows } = await sb.from('credit_kpis').select('*').order('kpi_date', { ascending:true });
+  if (kpiRows && kpiRows.length){
+    result.trend.dates = kpiRows.map(r => r.kpi_date);
+    result.trend.total_financing = kpiRows.map(r => Number(r.total_financing_amount ?? 0));
+    const latest = kpiRows[kpiRows.length - 1];
+    result.kpi.total_financing = Number(latest.total_financing_amount ?? 0);
+    result.kpi.today_financing = Number(latest.today_financing_amount ?? 0);
+    result.kpi.total_contracts = Number(latest.total_number_contracts ?? 0);
+    result.kpi.cancelled = Number(latest.cancelled ?? 0);
+    if (!result.kpi.as_of_date) result.kpi.as_of_date = latest.kpi_date;
+  }
+
+  // ---- Collections (latest period + trend) ----
+  const collDate = await latestDateValue('collection_summary', 'date_to');
+  if (collDate){
+    const { data: rows } = await sb.from('collection_summary').select('*').eq('date_to', collDate);
+    if (rows && rows.length){
+      result.breakdowns.collections.period_to = collDate;
+      result.breakdowns.collections.amounts = alignByLabel(rows, 'item', 'amount', COLLECTIONS_LABELS);
+      result.kpi.collections_period_to = collDate;
+      result.kpi.total_collections = rows.reduce((s,r)=> s + Number(r.amount ?? 0), 0);
+    }
+  }
+  const { data: collAllRows } = await sb.from('collection_summary').select('date_to, amount');
+  if (collAllRows && collAllRows.length){
+    const grouped = groupSumByDate(collAllRows, 'date_to', 'amount');
+    result.trend.total_collections = grouped.dates.map(d => grouped.values[grouped.dates.indexOf(d)]);
+    // Align collections trend dates onto the same date axis as financing trend when possible
+    if (!result.trend.dates.length){
+      result.trend.dates = grouped.dates;
+      result.trend.total_financing = grouped.dates.map(()=>null);
+    }
+    result.trend.total_collections = result.trend.dates.map(d => {
+      const idx = grouped.dates.indexOf(d);
+      return idx > -1 ? grouped.values[idx] : null;
+    });
+  }
+
+  // ---- Fixed arrears (from collection_employee, latest day) ----
+  const empDate = await latestDateValue('collection_employee', 'emp_date');
+  if (empDate){
+    const { data: rows } = await sb.from('collection_employee').select('*').eq('emp_date', empDate);
+    if (rows && rows.length){
+      result.breakdowns.fixed_arrears.as_of = empDate;
+      result.breakdowns.fixed_arrears.amounts = alignByLabel(rows, 'bucket', 'target_amount', ARREARS_LABELS);
+      result.breakdowns.fixed_arrears.customers = alignByLabel(rows, 'bucket', 'number_of_customers', ARREARS_LABELS);
+      result.kpi.fixed_arrears_asof = empDate;
+      result.kpi.fixed_arrears_total = result.breakdowns.fixed_arrears.amounts.reduce((a,b)=>a+b, 0);
+    }
+  }
+
+  // ---- Sales (latest day) ----
+  const salesDate = await latestDateValue('sales', 'sale_date');
+  if (salesDate){
+    const { data: rows } = await sb.from('sales').select('*').eq('sale_date', salesDate);
+    if (rows && rows.length){
+      result.breakdowns.sales.date = salesDate;
+      result.breakdowns.sales.counts = alignByLabel(rows, 'status', 'count', SALES_LABELS);
+      result.kpi.sales_date = salesDate;
+      const acceptedIdx = SALES_LABELS.findIndex(l => l.startsWith('Accepted'));
+      result.kpi.sales_accepted_latest = acceptedIdx > -1 ? result.breakdowns.sales.counts[acceptedIdx] : 0;
+    }
+  }
+
+  // ---- Customer care (latest day) ----
+  const careDate = await latestDateValue('customer_care', 'care_date');
+  if (careDate){
+    const { data: rows } = await sb.from('customer_care').select('*').eq('care_date', careDate);
+    if (rows && rows.length){
+      result.breakdowns.customer_care.date = careDate;
+      result.breakdowns.customer_care.active = alignByLabel(rows, 'parameter', 'active', CARE_LABELS);
+      result.breakdowns.customer_care.close = alignByLabel(rows, 'parameter', 'close', CARE_LABELS);
+      result.kpi.care_date = careDate;
+      result.kpi.care_active_latest = result.breakdowns.customer_care.active.reduce((a,b)=>a+b, 0);
+    }
+  }
+
+  return result;
+}
+
+/* ====================== رسم المؤشرات والرسوم البيانية ====================== */
+
+function renderKpis(){
+  const k = DATA.kpi;
+  const tiles = [
+    { val: bdiNum(k.total_financing), lbl: 'إجمالي مبلغ التمويل<br>Total Financing Amount', sub: k.as_of_date, tile: 'accent' },
+    { val: bdiNum(k.today_financing), lbl: 'تمويل اليوم<br>Today Financing Amount', sub: k.as_of_date, tile: 'accent' },
+    { val: bdiNum(k.total_contracts), lbl: 'إجمالي العقود<br>Total Contracts', sub: k.as_of_date, tile: 's-aqua' },
+    { val: bdiNum(k.cancelled), lbl: 'الملغى<br>Cancelled', sub: k.as_of_date, tile: 's-orange' },
+    { val: bdiNum(k.total_collections), lbl: 'إجمالي التحصيلات (آخر فترة)<br>Total Collections', sub: k.collections_period_to, tile: 's-green' },
+    { val: bdiNum(k.fixed_arrears_total), lbl: 'إجمالي المتأخرات الثابتة<br>Fixed Arrears Total', sub: 'كما في ' + (k.fixed_arrears_asof || '—'), tile: 's-red' },
+    { val: bdiNum(k.sales_accepted_latest), lbl: 'مبيعات مقبولة (آخر يوم)<br>Sales Accepted', sub: k.sales_date, tile: 's-aqua' },
+    { val: bdiNum(k.care_active_latest), lbl: 'شكاوى نشطة (آخر يوم)<br>Customer Care Active', sub: k.care_date, tile: 's-violet' },
+  ];
+  const grid = document.getElementById('kpiGrid');
+  grid.innerHTML = tiles.map(t => `
+    <div class="kpi" style="--tile:var(--${t.tile})">
+      <div class="val">${t.val}</div>
+      <div class="lbl">${t.lbl}</div>
+      <div class="sub">${t.sub || ''}</div>
+    </div>`).join('');
+
+  const allZero = [k.total_financing, k.today_financing, k.total_contracts, k.total_collections,
+                   k.sales_accepted_latest, k.care_active_latest].every(v => !v);
+  document.getElementById('emptyBanner').classList.toggle('show', allZero);
+  document.getElementById('asOfBadge').textContent = 'آخر تحديث بيانات: ' + (k.as_of_date || '—');
+  document.getElementById('statusDot').classList.remove('loading');
+}
+
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs, children){
+  const e = document.createElementNS(NS, tag);
+  for (const k in (attrs||{})) e.setAttribute(k, attrs[k]);
+  (children||[]).forEach(c => e.appendChild(c));
+  return e;
+}
+function textEl(x, y, str, attrs){
+  const t = el('text', Object.assign({ x, y }, attrs || {}));
+  t.textContent = str;
+  return t;
+}
+function niceMax(v){
+  if (v <= 0) return 1;
+  const mag = Math.pow(10, Math.floor(Math.log10(v)));
+  const n = v / mag;
+  const step = n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10;
+  return step * mag;
+}
+function truncate(s, n){ s = String(s); return s.length > n ? s.slice(0, n-1) + '…' : s; }
+
+function emptyState(host, msg){
+  host.innerHTML = '';
+  const d = document.createElement('div');
+  d.className = 'empty-chart';
+  d.textContent = msg || 'لا توجد بيانات كافية بعد';
+  host.appendChild(d);
+}
+
+function drawHBar(hostId, labels, values, color){
+  const host = document.getElementById(hostId);
+  if (!labels.length){ emptyState(host); return; }
+  const W = Math.max(host.clientWidth, 280), rowH = 26, top = 6, bottom = 6;
+  const H = top + bottom + rowH * labels.length;
+  const labelW = Math.min(Math.round(W * 0.36), 190);
+  const valueW = 56;
+  const plotW = Math.max(W - labelW - valueW - 12, 40);
+  const max = niceMax(Math.max(...values, 1));
+  const svg = el('svg', { viewBox: `0 0 ${W} ${H}` });
+  svg.appendChild(el('line', { class:'axis-line', x1:labelW, x2:labelW, y1:top-2, y2:H-bottom+2 }));
+  values.forEach((v, i) => {
+    const y = top + i * rowH;
+    const barW = (v / max) * plotW;
+    const g = el('g');
+    g.appendChild(textEl(labelW - 8, y + rowH/2 + 4, truncate(labels[i], 30),
+      { class:'cat-label', 'text-anchor':'end', 'font-size':11 }));
+    const rect = el('rect', {
+      x: labelW, y: y + (rowH-14)/2, width: Math.max(barW, v > 0 ? 2 : 0), height: 14, rx: 4, fill: color,
+    });
+    const title = el('title'); title.textContent = labels[i] + ': ' + fmt(v);
+    rect.appendChild(title);
+    g.appendChild(rect);
+    g.appendChild(textEl(labelW + barW + 8, y + rowH/2 + 4, fmt(v), { class:'val-label', 'font-size':11 }));
+    svg.appendChild(g);
+  });
+  host.innerHTML = ''; host.appendChild(svg);
+}
+
+function drawHGroupedBar(hostId, legendHostId, labels, seriesA, seriesB, nameA, nameB, colorA, colorB){
+  const host = document.getElementById(hostId);
+  const legendHost = document.getElementById(legendHostId);
+  legendHost.innerHTML = `<span><span class="sw" style="background:${colorA}"></span>${nameA}</span>` +
+                          `<span><span class="sw" style="background:${colorB}"></span>${nameB}</span>`;
+  if (!labels.length){ emptyState(host); return; }
+  const W = Math.max(host.clientWidth, 280), rowH = 40, barH = 13, top = 8, bottom = 8;
+  const H = top + bottom + rowH * labels.length;
+  const labelW = Math.min(Math.round(W * 0.34), 170);
+  const valueW = 52;
+  const plotW = Math.max(W - labelW - valueW - 12, 40);
+  const max = niceMax(Math.max(...seriesA, ...seriesB, 1));
+  const svg = el('svg', { viewBox: `0 0 ${W} ${H}` });
+  svg.appendChild(el('line', { class:'axis-line', x1:labelW, x2:labelW, y1:top-2, y2:H-bottom+2 }));
+  labels.forEach((lab, i) => {
+    const y = top + i * rowH;
+    svg.appendChild(textEl(labelW - 8, y + rowH/2 + 4, truncate(lab, 28),
+      { class:'cat-label', 'text-anchor':'end', 'font-size':11 }));
+    [[seriesA[i], colorA, nameA], [seriesB[i], colorB, nameB]].forEach(([v, color, name], j) => {
+      const barW = (v / max) * plotW;
+      const ry = y + j * (barH + 3);
+      const rect = el('rect', { x: labelW, y: ry, width: Math.max(barW, v > 0 ? 2 : 0), height: barH, rx: 3, fill: color });
+      const title = el('title'); title.textContent = lab + ' — ' + name + ': ' + fmt(v);
+      rect.appendChild(title);
+      svg.appendChild(rect);
+      svg.appendChild(textEl(labelW + barW + 8, ry + barH/2 + 3.5, fmt(v), { class:'val-label', 'font-size':10 }));
+    });
+  });
+  host.innerHTML = ''; host.appendChild(svg);
+}
+
+function drawVBar(hostId, labels, values, color){
+  const host = document.getElementById(hostId);
+  if (!labels.length){ emptyState(host); return; }
+  const W = Math.max(host.clientWidth, 240), H = 240;
+  const top = 24, bottom = 30, left = 16, right = 16;
+  const plotH = H - top - bottom, plotW = W - left - right;
+  const max = niceMax(Math.max(...values, 1));
+  const bw = Math.min(64, plotW / values.length - 16);
+  const step = plotW / values.length;
+  const svg = el('svg', { viewBox: `0 0 ${W} ${H}` });
+  svg.appendChild(el('line', { class:'axis-line', x1:left, x2:W-right, y1:H-bottom, y2:H-bottom }));
+  values.forEach((v, i) => {
+    const barH = (v / max) * plotH;
+    const cx = left + step * i + step/2;
+    const x = cx - bw/2, y = H - bottom - barH;
+    const rect = el('rect', { x, y, width: Math.max(bw,0), height: Math.max(barH, v>0?2:0), rx: 5, fill: color });
+    const title = el('title'); title.textContent = labels[i] + ': ' + fmt(v);
+    rect.appendChild(title);
+    svg.appendChild(rect);
+    svg.appendChild(textEl(cx, y - 6, fmt(v), { class:'val-label', 'text-anchor':'middle', 'font-size':11 }));
+    svg.appendChild(textEl(cx, H - bottom + 16, truncate(labels[i], 10), { class:'cat-label', 'text-anchor':'middle', 'font-size':11 }));
+  });
+  host.innerHTML = ''; host.appendChild(svg);
+}
+
+function drawLine(hostId, dates, values, color){
+  const host = document.getElementById(hostId);
+  const pts = dates.map((d, i) => ({ d, v: values[i] })).filter(p => p.v !== null && p.v !== undefined);
+  if (pts.length < 1){ emptyState(host, 'بانتظار أول قراءتين لرسم الاتجاه'); return; }
+  const W = Math.max(host.clientWidth, 280), H = 240;
+  const top = 16, bottom = 26, left = 54, right = 14;
+  const plotW = W - left - right, plotH = H - top - bottom;
+  const max = niceMax(Math.max(...pts.map(p => p.v), 1));
+  const n = dates.length;
+  const x = i => n <= 1 ? left + plotW/2 : left + (plotW * i) / (n - 1);
+  const y = v => top + plotH - (v / max) * plotH;
+  const svg = el('svg', { viewBox: `0 0 ${W} ${H}` });
+
+  const ticks = 4;
+  for (let t = 0; t <= ticks; t++){
+    const gv = (max / ticks) * t;
+    const gy = y(gv);
+    svg.appendChild(el('line', { class:'grid-line', x1:left, x2:W-right, y1:gy, y2:gy }));
+    svg.appendChild(textEl(left - 8, gy + 3, fmt(gv), { class:'val-label', 'text-anchor':'end', 'font-size':10 }));
+  }
+  svg.appendChild(el('line', { class:'axis-line', x1:left, x2:W-right, y1:H-bottom, y2:H-bottom }));
+
+  const idxOf = d => dates.indexOf(d);
+  if (pts.length > 1){
+    const linePath = pts.map((p,i) => (i===0?'M':'L') + x(idxOf(p.d)).toFixed(1) + ',' + y(p.v).toFixed(1)).join(' ');
+    const areaPath = linePath + ` L${x(idxOf(pts[pts.length-1].d)).toFixed(1)},${H-bottom} L${x(idxOf(pts[0].d)).toFixed(1)},${H-bottom} Z`;
+    svg.appendChild(el('path', { d: areaPath, fill: color, opacity: 0.14, stroke: 'none' }));
+    svg.appendChild(el('path', { d: linePath, fill: 'none', stroke: color, 'stroke-width': 2, 'stroke-linejoin':'round', 'stroke-linecap':'round' }));
+  }
+  pts.forEach((p, i) => {
+    const cx = x(idxOf(p.d)), cy = y(p.v);
+    const isLast = i === pts.length - 1;
+    const c = el('circle', { cx, cy, r: isLast ? 5 : 3, fill: isLast ? color : 'var(--surface)', stroke: color, 'stroke-width': 2 });
+    const title = el('title'); title.textContent = p.d + ': ' + fmt(p.v);
+    c.appendChild(title);
+    svg.appendChild(c);
+  });
+
+  const labelEvery = Math.max(1, Math.ceil(n / 6));
+  dates.forEach((d, i) => {
+    if (i % labelEvery !== 0 && i !== n-1) return;
+    svg.appendChild(textEl(x(i), H - bottom + 16, d.slice(5), { class:'cat-label', 'text-anchor':'middle', 'font-size':10 }));
+  });
+  host.innerHTML = ''; host.appendChild(svg);
+}
+
+function renderCharts(){
+  const accent = themeVar('--accent'), aqua = themeVar('--s-aqua'), green = themeVar('--s-green'),
+        red = themeVar('--s-red'), violet = themeVar('--s-violet'), orange = themeVar('--s-orange');
+
+  const cd = DATA.breakdowns.credit_decisions;
+  document.getElementById('cdMeta').textContent = 'بتاريخ ' + (cd.date || '—') + ' — عدد الطلبات لكل قرار';
+  drawHBar('chartCredit', cd.labels, cd.counts, accent);
+
+  const sl = DATA.breakdowns.sales;
+  document.getElementById('salesMeta').textContent = 'بتاريخ ' + (sl.date || '—') + ' — عدد الحالات لكل وضع';
+  drawHBar('chartSales', sl.labels, sl.counts, aqua);
+
+  const cc = DATA.breakdowns.customer_care;
+  document.getElementById('careMeta').textContent = 'بتاريخ ' + (cc.date || '—');
+  drawHGroupedBar('chartCare', 'careLegend', cc.labels, cc.active, cc.close, 'نشط', 'مغلق', violet, orange);
+
+  const co = DATA.breakdowns.collections;
+  document.getElementById('collMeta').textContent = 'الفترة المنتهية ' + (co.period_to || '—') + ' — المبلغ';
+  drawHBar('chartColl', co.labels, co.amounts, green);
+
+  const fa = DATA.breakdowns.fixed_arrears;
+  document.getElementById('arrearsMeta').textContent = 'كما في ' + (fa.as_of || '—') + ' — المبلغ المتأخر';
+  drawVBar('chartArrears', fa.labels, fa.amounts, red);
+
+  const tr = DATA.trend;
+  const trendNote = tr.dates.length + ' يوم من البيانات';
+  document.getElementById('trendFinMeta').textContent = trendNote;
+  document.getElementById('trendCollMeta').textContent = trendNote;
+  drawLine('chartTrendFinancing', tr.dates, tr.total_financing, accent);
+  drawLine('chartTrendCollections', tr.dates, tr.total_collections, green);
+}
+
+function renderAll(){ renderKpis(); renderCharts(); }
+
+/* ====================== التشغيل الرئيسي ====================== */
+async function main(){
+  try{
+    DATA = await fetchAll();
+    document.getElementById('errorBanner').classList.remove('show');
+  } catch(err){
+    console.error('Supabase fetch error:', err);
+    document.getElementById('errorBanner').classList.add('show');
+    document.getElementById('statusDot').classList.remove('loading');
+    if (!DATA){
+      DATA = {
+        kpi: { as_of_date:null,total_financing:0,today_financing:0,total_contracts:0,cancelled:0,total_collections:0,collections_period_to:null,fixed_arrears_total:0,fixed_arrears_asof:null,sales_accepted_latest:0,sales_date:null,care_active_latest:0,care_date:null },
+        breakdowns:{
+          credit_decisions:{date:null,labels:CREDIT_DECISION_LABELS,counts:CREDIT_DECISION_LABELS.map(()=>0),amounts:CREDIT_DECISION_LABELS.map(()=>0)},
+          sales:{date:null,labels:SALES_LABELS,counts:SALES_LABELS.map(()=>0)},
+          customer_care:{date:null,labels:CARE_LABELS,active:CARE_LABELS.map(()=>0),close:CARE_LABELS.map(()=>0)},
+          collections:{period_to:null,labels:COLLECTIONS_LABELS,amounts:COLLECTIONS_LABELS.map(()=>0)},
+          fixed_arrears:{as_of:null,labels:ARREARS_LABELS,amounts:ARREARS_LABELS.map(()=>0),customers:ARREARS_LABELS.map(()=>0)}
+        },
+        trend:{dates:[],total_financing:[],total_collections:[]}
+      };
+    }
+  }
+  renderAll();
+  document.getElementById('generatedAt').textContent = 'آخر تحديث للصفحة: ' + new Date().toLocaleString('ar-SA');
+}
+
+main();
+
+// تحديث تلقائي كل 5 دقائق ليعكس أحدث بيانات Power Automate بدون إعادة تحميل الصفحة يدويًا
+setInterval(main, 5 * 60 * 1000);
+
+if (window.matchMedia) {
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', renderCharts);
+}
+new MutationObserver(renderCharts).observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] });
+let resizeTimer;
+window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(renderCharts, 150); });
+</script>
