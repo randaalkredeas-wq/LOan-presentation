@@ -326,16 +326,6 @@ function alignByLabel(rows, labelField, valueField, labelsOrder){
   return labelsOrder.map(l => Number(map[l] ?? 0));
 }
 
-function groupSumByDate(rows, dateField, valueField){
-  const map = {};
-  rows.forEach(r => {
-    const d = r[dateField];
-    map[d] = (map[d] || 0) + Number(r[valueField] ?? 0);
-  });
-  const dates = Object.keys(map).sort();
-  return { dates, values: dates.map(d => map[d]) };
-}
-
 async function fetchAll(){
   const result = {
     kpi: {
@@ -382,6 +372,18 @@ async function fetchAll(){
   }
 
   // ---- Collections (latest period + trend) ----
+  // "الاجمالي" (Total) already equals the sum of the other item rows for that
+  // date, so it must never be summed alongside them. Match it loosely (trim +
+  // substring) since the exact spelling coming through Power Automate can
+  // vary; if no such row exists for a date, fall back to summing the item
+  // rows instead so the total is never silently zero.
+  const isTotalItem = (item) => typeof item === 'string' && item.replace(/\s+/g, '').includes('اجمالي');
+  const sumCollectionRows = (rows) => {
+    const totalRows = rows.filter(r => isTotalItem(r.item));
+    const source = totalRows.length ? totalRows : rows.filter(r => !isTotalItem(r.item));
+    return source.reduce((s, r) => s + Number(r.amount ?? 0), 0);
+  };
+
   const collDate = await latestDateValue('collection_summary', 'date_to');
   if (collDate){
     const { data: rows } = await sb.from('collection_summary').select('*').eq('date_to', collDate);
@@ -389,14 +391,15 @@ async function fetchAll(){
       result.breakdowns.collections.period_to = collDate;
       result.breakdowns.collections.amounts = alignByLabel(rows, 'item', 'amount', COLLECTIONS_LABELS);
       result.kpi.collections_period_to = collDate;
-      result.kpi.total_collections = rows
-        .filter(r => r.item === 'الاجمالي')
-        .reduce((s,r)=> s + Number(r.amount ?? 0), 0);
+      result.kpi.total_collections = sumCollectionRows(rows);
     }
   }
-  const { data: collAllRows } = await sb.from('collection_summary').select('date_to, amount').eq('item', 'الاجمالي');
+  const { data: collAllRows } = await sb.from('collection_summary').select('date_to, item, amount');
   if (collAllRows && collAllRows.length){
-    const grouped = groupSumByDate(collAllRows, 'date_to', 'amount');
+    const byDate = {};
+    collAllRows.forEach(r => { (byDate[r.date_to] ||= []).push(r); });
+    const dates = Object.keys(byDate).sort();
+    const grouped = { dates, values: dates.map(d => sumCollectionRows(byDate[d])) };
     result.trend.total_collections = grouped.dates.map(d => grouped.values[grouped.dates.indexOf(d)]);
     // Align collections trend dates onto the same date axis as financing trend when possible
     if (!result.trend.dates.length){
