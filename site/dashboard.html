@@ -376,14 +376,17 @@ async function fetchAll(){
 
   // ---- Collections (latest period + trend) ----
   // "الاجمالي" (Total) is a manually-entered row in the sheet, not a
-  // formula — it can be left blank/zero on a day it wasn't filled in, so it
-  // is never trusted as the source of truth. The real total is always
-  // derived by summing the actual item rows (everything except any row that
-  // looks like a total), which is correct regardless of whether "الاجمالي"
-  // was filled in that day.
+  // formula. When the specialist actually filled it in (non-zero) it is the
+  // most direct source and is used as-is. When it's blank/zero (not filled
+  // in yet for that day), fall back to summing the real item rows instead —
+  // that is what makes the total accurate even on a day "الاجمالي" was
+  // left empty.
   const isTotalItem = (item) => typeof item === 'string' && item.replace(/\s+/g, '').includes('اجمالي');
-  const sumCollectionRows = (rows) =>
-    rows.filter(r => !isTotalItem(r.item)).reduce((s, r) => s + Number(r.amount ?? 0), 0);
+  const sumCollectionRows = (rows) => {
+    const totalRow = rows.find(r => isTotalItem(r.item) && Number(r.amount) > 0);
+    if (totalRow) return Number(totalRow.amount);
+    return rows.filter(r => !isTotalItem(r.item)).reduce((s, r) => s + Number(r.amount ?? 0), 0);
+  };
 
   const collDate = await latestDateValue('collection_summary', 'date_to');
   if (collDate){
