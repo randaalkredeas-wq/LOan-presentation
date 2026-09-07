@@ -329,7 +329,7 @@ function alignByLabel(rows, labelField, valueField, labelsOrder){
 async function fetchAll(){
   const result = {
     kpi: {
-      as_of_date: null, total_financing: 0, today_financing: 0, total_contracts: 0, cancelled: 0,
+      as_of_date: null, financing_date: null, total_financing: 0, today_financing: 0, total_contracts: 0, cancelled: 0,
       total_collections: 0, collections_period_to: null,
       fixed_arrears_total: 0, fixed_arrears_asof: null,
       sales_accepted_latest: 0, sales_date: null,
@@ -354,11 +354,14 @@ async function fetchAll(){
       result.breakdowns.credit_decisions.date = cdDate;
       result.breakdowns.credit_decisions.counts = alignByLabel(rows, 'credit_decision', 'number_of_requests', CREDIT_DECISION_LABELS);
       result.breakdowns.credit_decisions.amounts = alignByLabel(rows, 'credit_decision', 'amounts', CREDIT_DECISION_LABELS);
-      result.kpi.as_of_date = cdDate;
     }
   }
 
   // ---- Credit KPIs (all rows for trend + latest for tiles) ----
+  // financing_date is Credit_KPIs' own latest date — kept separate from
+  // as_of_date (set below, from whichever table is most recently updated)
+  // so the financing/contracts/cancelled tiles never show a date borrowed
+  // from a different sheet than the numbers they're labeling.
   const { data: kpiRows } = await sb.from('credit_kpis').select('*').order('kpi_date', { ascending:true });
   if (kpiRows && kpiRows.length){
     result.trend.dates = kpiRows.map(r => r.kpi_date);
@@ -368,7 +371,7 @@ async function fetchAll(){
     result.kpi.today_financing = Number(latest.today_financing_amount ?? 0);
     result.kpi.total_contracts = Number(latest.total_number_contracts ?? 0);
     result.kpi.cancelled = Number(latest.cancelled ?? 0);
-    if (!result.kpi.as_of_date) result.kpi.as_of_date = latest.kpi_date;
+    result.kpi.financing_date = latest.kpi_date;
   }
 
   // ---- Collections (latest period + trend) ----
@@ -454,6 +457,14 @@ async function fetchAll(){
     }
   }
 
+  // "آخر تحديث بيانات" badge: the most recent date seen across every table.
+  const allDates = [
+    result.breakdowns.credit_decisions.date, result.kpi.financing_date,
+    result.kpi.collections_period_to, result.kpi.fixed_arrears_asof,
+    result.kpi.sales_date, result.kpi.care_date,
+  ].filter(Boolean);
+  result.kpi.as_of_date = allDates.length ? allDates.reduce((a, b) => (b > a ? b : a)) : null;
+
   return result;
 }
 
@@ -462,10 +473,10 @@ async function fetchAll(){
 function renderKpis(){
   const k = DATA.kpi;
   const tiles = [
-    { val: bdiNum(k.total_financing), lbl: 'إجمالي مبلغ التمويل<br>Total Financing Amount', sub: k.as_of_date, tile: 'accent' },
-    { val: bdiNum(k.today_financing), lbl: 'تمويل اليوم<br>Today Financing Amount', sub: k.as_of_date, tile: 'accent' },
-    { val: bdiNum(k.total_contracts), lbl: 'إجمالي العقود<br>Total Contracts', sub: k.as_of_date, tile: 's-aqua' },
-    { val: bdiNum(k.cancelled), lbl: 'الملغى<br>Cancelled', sub: k.as_of_date, tile: 's-orange' },
+    { val: bdiNum(k.total_financing), lbl: 'إجمالي مبلغ التمويل<br>Total Financing Amount', sub: k.financing_date, tile: 'accent' },
+    { val: bdiNum(k.today_financing), lbl: 'تمويل اليوم<br>Today Financing Amount', sub: k.financing_date, tile: 'accent' },
+    { val: bdiNum(k.total_contracts), lbl: 'إجمالي العقود<br>Total Contracts', sub: k.financing_date, tile: 's-aqua' },
+    { val: bdiNum(k.cancelled), lbl: 'الملغى<br>Cancelled', sub: k.financing_date, tile: 's-orange' },
     { val: bdiNum(k.total_collections), lbl: 'إجمالي التحصيلات (آخر فترة)<br>Total Collections', sub: k.collections_period_to, tile: 's-green' },
     { val: bdiNum(k.fixed_arrears_total), lbl: 'إجمالي المتأخرات الثابتة<br>Fixed Arrears Total', sub: 'كما في ' + (k.fixed_arrears_asof || '—'), tile: 's-red' },
     { val: bdiNum(k.sales_accepted_latest), lbl: 'مبيعات مقبولة (آخر يوم)<br>Sales Accepted', sub: k.sales_date, tile: 's-aqua' },
@@ -695,7 +706,7 @@ async function main(){
     document.getElementById('statusDot').classList.remove('loading');
     if (!DATA){
       DATA = {
-        kpi: { as_of_date:null,total_financing:0,today_financing:0,total_contracts:0,cancelled:0,total_collections:0,collections_period_to:null,fixed_arrears_total:0,fixed_arrears_asof:null,sales_accepted_latest:0,sales_date:null,care_active_latest:0,care_date:null },
+        kpi: { as_of_date:null,financing_date:null,total_financing:0,today_financing:0,total_contracts:0,cancelled:0,total_collections:0,collections_period_to:null,fixed_arrears_total:0,fixed_arrears_asof:null,sales_accepted_latest:0,sales_date:null,care_active_latest:0,care_date:null },
         breakdowns:{
           credit_decisions:{date:null,labels:CREDIT_DECISION_LABELS,counts:CREDIT_DECISION_LABELS.map(()=>0),amounts:CREDIT_DECISION_LABELS.map(()=>0)},
           sales:{date:null,labels:SALES_LABELS,counts:SALES_LABELS.map(()=>0)},
