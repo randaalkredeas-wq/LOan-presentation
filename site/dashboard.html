@@ -372,17 +372,15 @@ async function fetchAll(){
   }
 
   // ---- Collections (latest period + trend) ----
-  // "الاجمالي" (Total) already equals the sum of the other item rows for that
-  // date, so it must never be summed alongside them. Match it loosely (trim +
-  // substring) since the exact spelling coming through Power Automate can
-  // vary; if no such row exists for a date, fall back to summing the item
-  // rows instead so the total is never silently zero.
+  // "الاجمالي" (Total) is a manually-entered row in the sheet, not a
+  // formula — it can be left blank/zero on a day it wasn't filled in, so it
+  // is never trusted as the source of truth. The real total is always
+  // derived by summing the actual item rows (everything except any row that
+  // looks like a total), which is correct regardless of whether "الاجمالي"
+  // was filled in that day.
   const isTotalItem = (item) => typeof item === 'string' && item.replace(/\s+/g, '').includes('اجمالي');
-  const sumCollectionRows = (rows) => {
-    const totalRows = rows.filter(r => isTotalItem(r.item));
-    const source = totalRows.length ? totalRows : rows.filter(r => !isTotalItem(r.item));
-    return source.reduce((s, r) => s + Number(r.amount ?? 0), 0);
-  };
+  const sumCollectionRows = (rows) =>
+    rows.filter(r => !isTotalItem(r.item)).reduce((s, r) => s + Number(r.amount ?? 0), 0);
 
   const collDate = await latestDateValue('collection_summary', 'date_to');
   if (collDate){
