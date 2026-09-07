@@ -482,7 +482,7 @@ function renderKpis(){
     { val: bdiNum(k.total_financing), lbl: 'إجمالي مبلغ التمويل<br>Total Financing Amount', sub: k.financing_date, tile: 'accent' },
     { val: bdiNum(k.today_financing), lbl: 'تمويل اليوم<br>Today Financing Amount', sub: k.financing_date, tile: 'accent' },
     { val: bdiNum(k.total_contracts), lbl: 'إجمالي العقود<br>Total Contracts', sub: k.financing_date, tile: 's-aqua' },
-    { val: bdiNum(k.cancelled), lbl: 'الملغى<br>Cancelled', sub: k.financing_date, tile: 's-orange' },
+    { val: bdiNum(k.cancelled), lbl: 'إجمالي الإلغاء هذا الشهر<br>Total Cancellations This Month', sub: k.financing_date, tile: 's-orange' },
     { val: bdiNum(k.total_collections), lbl: 'إجمالي التحصيلات (آخر فترة)<br>Total Collections', sub: k.collections_period_to, tile: 's-green' },
     { val: bdiNum(k.fixed_arrears_total), lbl: 'إجمالي المتأخرات الثابتة<br>Fixed Arrears Total', sub: 'كما في ' + (k.fixed_arrears_asof || '—'), tile: 's-red' },
     { val: bdiNum(k.sales_accepted_latest), lbl: 'مبيعات مقبولة (آخر يوم)<br>Sales Accepted', sub: k.sales_date, tile: 's-aqua' },
