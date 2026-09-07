@@ -375,15 +375,20 @@ async function fetchAll(){
   }
 
   // ---- Collections (latest period + trend) ----
-  // "الاجمالي" (Total) is a manually-entered row in the sheet, not a
-  // formula — it can be left blank/zero on a day it wasn't filled in, so it
-  // is never trusted as the source of truth. The real total is always
-  // derived by summing the actual item rows (everything except any row that
-  // looks like a total), which is correct regardless of whether "الاجمالي"
-  // was filled in that day.
+  // "الاجمالي" (Total) is a manually-entered, running/cumulative figure —
+  // not a per-day amount — while the item rows are entered daily. So:
+  //  - The daily trend chart must always sum the actual item rows (it needs
+  //    a per-day figure; "الاجمالي" would distort it since it accumulates).
+  //  - The latest-period KPI tile may use "الاجمالي" directly when it has
+  //    actually been filled in (non-zero) for that date, falling back to
+  //    summing the item rows only when it's still blank/zero.
   const isTotalItem = (item) => typeof item === 'string' && item.replace(/\s+/g, '').includes('اجمالي');
   const sumCollectionRows = (rows) =>
     rows.filter(r => !isTotalItem(r.item)).reduce((s, r) => s + Number(r.amount ?? 0), 0);
+  const latestPeriodTotal = (rows) => {
+    const totalRow = rows.find(r => isTotalItem(r.item) && Number(r.amount) > 0);
+    return totalRow ? Number(totalRow.amount) : sumCollectionRows(rows);
+  };
 
   const collDate = await latestDateValue('collection_summary', 'date_to');
   if (collDate){
@@ -392,7 +397,7 @@ async function fetchAll(){
       result.breakdowns.collections.period_to = collDate;
       result.breakdowns.collections.amounts = alignByLabel(rows, 'item', 'amount', COLLECTIONS_LABELS);
       result.kpi.collections_period_to = collDate;
-      result.kpi.total_collections = sumCollectionRows(rows);
+      result.kpi.total_collections = latestPeriodTotal(rows);
     }
   }
   const { data: collAllRows } = await sb.from('collection_summary').select('date_to, item, amount');
