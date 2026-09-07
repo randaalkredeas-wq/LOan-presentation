@@ -329,7 +329,7 @@ function alignByLabel(rows, labelField, valueField, labelsOrder){
 async function fetchAll(){
   const result = {
     kpi: {
-      as_of_date: null, financing_date: null, total_financing: 0, today_financing: 0, total_contracts: 0, cancelled: 0,
+      as_of_date: null, financing_date: null, total_financing: 0, today_financing: 0, total_contracts: 0, today_contracts: 0, cancelled: 0,
       total_collections: 0, collections_period_to: null,
       fixed_arrears_total: 0, fixed_arrears_asof: null,
       sales_accepted_latest: 0, sales_date: null,
@@ -370,6 +370,7 @@ async function fetchAll(){
     result.kpi.total_financing = Number(latest.total_financing_amount ?? 0);
     result.kpi.today_financing = Number(latest.today_financing_amount ?? 0);
     result.kpi.total_contracts = Number(latest.total_number_contracts ?? 0);
+    result.kpi.today_contracts = Number(latest.today_number_contracts ?? 0);
     result.kpi.cancelled = Number(latest.cancelled ?? 0);
     result.kpi.financing_date = latest.kpi_date;
   }
@@ -482,6 +483,7 @@ function renderKpis(){
     { val: bdiNum(k.total_financing), lbl: 'إجمالي مبلغ التمويل<br>Total Financing Amount', sub: k.financing_date, tile: 'accent' },
     { val: bdiNum(k.today_financing), lbl: 'تمويل اليوم<br>Today Financing Amount', sub: k.financing_date, tile: 'accent' },
     { val: bdiNum(k.total_contracts), lbl: 'إجمالي العقود<br>Total Contracts', sub: k.financing_date, tile: 's-aqua' },
+    { val: bdiNum(k.today_contracts), lbl: 'إجمالي عقود اليوم<br>Total Contracts Today', sub: k.financing_date, tile: 's-aqua' },
     { val: bdiNum(k.cancelled), lbl: 'إجمالي الإلغاء هذا الشهر<br>Total Cancellations This Month', sub: k.financing_date, tile: 's-orange' },
     { val: bdiNum(k.total_collections), lbl: 'إجمالي التحصيلات (آخر فترة)<br>Total Collections', sub: k.collections_period_to, tile: 's-green' },
     { val: bdiNum(k.fixed_arrears_total), lbl: 'إجمالي المتأخرات الثابتة<br>Fixed Arrears Total', sub: 'كما في ' + (k.fixed_arrears_asof || '—'), tile: 's-red' },
@@ -720,7 +722,7 @@ async function main(){
     document.getElementById('statusDot').classList.remove('loading');
     if (!DATA){
       DATA = {
-        kpi: { as_of_date:null,financing_date:null,total_financing:0,today_financing:0,total_contracts:0,cancelled:0,total_collections:0,collections_period_to:null,fixed_arrears_total:0,fixed_arrears_asof:null,sales_accepted_latest:0,sales_date:null,care_active_latest:0,care_date:null },
+        kpi: { as_of_date:null,financing_date:null,total_financing:0,today_financing:0,total_contracts:0,today_contracts:0,cancelled:0,total_collections:0,collections_period_to:null,fixed_arrears_total:0,fixed_arrears_asof:null,sales_accepted_latest:0,sales_date:null,care_active_latest:0,care_date:null },
         breakdowns:{
           credit_decisions:{date:null,labels:CREDIT_DECISION_LABELS,counts:CREDIT_DECISION_LABELS.map(()=>0),amounts:CREDIT_DECISION_LABELS.map(()=>0)},
           sales:{date:null,labels:SALES_LABELS,counts:SALES_LABELS.map(()=>0)},
