@@ -389,10 +389,12 @@ async function fetchAll(){
       result.breakdowns.collections.period_to = collDate;
       result.breakdowns.collections.amounts = alignByLabel(rows, 'item', 'amount', COLLECTIONS_LABELS);
       result.kpi.collections_period_to = collDate;
-      result.kpi.total_collections = rows.reduce((s,r)=> s + Number(r.amount ?? 0), 0);
+      result.kpi.total_collections = rows
+        .filter(r => r.item === 'الاجمالي')
+        .reduce((s,r)=> s + Number(r.amount ?? 0), 0);
     }
   }
-  const { data: collAllRows } = await sb.from('collection_summary').select('date_to, amount');
+  const { data: collAllRows } = await sb.from('collection_summary').select('date_to, amount').eq('item', 'الاجمالي');
   if (collAllRows && collAllRows.length){
     const grouped = groupSumByDate(collAllRows, 'date_to', 'amount');
     result.trend.total_collections = grouped.dates.map(d => grouped.values[grouped.dates.indexOf(d)]);
