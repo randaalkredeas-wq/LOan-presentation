@@ -269,7 +269,7 @@
     <h2 class="section">الاتجاه اليومي</h2>
     <div class="chart-grid">
       <div class="card">
-        <h3>إجمالي مبلغ التمويل</h3>
+        <h3>تمويل اليوم</h3>
         <p class="meta" id="trendFinMeta">—</p>
         <div class="canvas-wrap chart-host" id="chartTrendFinancing"></div>
       </div>
@@ -372,7 +372,10 @@ async function fetchAll(){
   const { data: kpiRows } = await sb.from('credit_kpis').select('*').order('kpi_date', { ascending:true });
   if (kpiRows && kpiRows.length){
     result.trend.dates = kpiRows.map(r => r.kpi_date);
-    result.trend.total_financing = kpiRows.map(r => Number(r.total_financing_amount ?? 0));
+    // The financing trend line shows the daily figure (today_financing_amount),
+    // not the running cumulative total — a cumulative series always climbs and
+    // hides day-to-day performance, per the user's request.
+    result.trend.total_financing = kpiRows.map(r => Number(r.today_financing_amount ?? 0));
     const latest = kpiRows[kpiRows.length - 1];
     result.kpi.total_financing = Number(latest.total_financing_amount ?? 0);
     result.kpi.today_financing = Number(latest.today_financing_amount ?? 0);
