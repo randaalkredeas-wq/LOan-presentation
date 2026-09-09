@@ -525,7 +525,7 @@ function renderKpis(){
   document.getElementById('asOfBadge').textContent = 'آخر تحديث بيانات: ' + (k.as_of_date || '—');
   document.getElementById('statusDot').classList.remove('loading');
 
-  document.getElementById('salesTargetVal').textContent = bdiNum(k.sales_target);
+  document.getElementById('salesTargetVal').innerHTML = bdiNum(k.sales_target);
   document.getElementById('salesTargetSub').textContent = k.sales_target_date ? ('كما في ' + k.sales_target_date) : '';
 }
 
