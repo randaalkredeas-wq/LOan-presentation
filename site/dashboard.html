@@ -459,13 +459,14 @@ async function fetchAll(){
   }
 
   // ---- Sales Target (a monthly figure, entered as its own row in the same
-  // Sales sheet with status = "مستهدف الشهر" — not one of SALES_LABELS, so it
-  // never shows up in the sales-status breakdown chart. It's independent of
-  // the daily rows above: we always take the most recently entered one,
-  // regardless of which day it was entered on, so it doesn't need to be
-  // re-typed every day. ----
+  // Sales sheet with status = "Target - مستهدف الشهر" — matching this sheet's
+  // "English - Arabic" status convention (e.g. "Accepted - تم التنفيذ"). It's
+  // not one of SALES_LABELS, so it never shows up in the sales-status
+  // breakdown chart. It's independent of the daily rows above: we always
+  // take the most recently entered one, regardless of which day it was
+  // entered on, so it doesn't need to be re-typed every day. ----
   const { data: targetRows } = await sb.from('sales').select('sale_date, count')
-    .eq('status', 'مستهدف الشهر').order('sale_date', { ascending: false }).limit(1);
+    .eq('status', 'Target - مستهدف الشهر').order('sale_date', { ascending: false }).limit(1);
   if (targetRows && targetRows.length){
     result.kpi.sales_target = Number(targetRows[0].count ?? 0);
     result.kpi.sales_target_date = targetRows[0].sale_date;
