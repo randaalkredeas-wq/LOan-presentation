@@ -216,10 +216,17 @@
         <p class="meta" id="cdMeta">—</p>
         <div class="canvas-wrap tall chart-host" id="chartCredit"></div>
       </div>
-      <div class="card">
-        <h3>حالات المبيعات</h3>
-        <p class="meta" id="salesMeta">—</p>
-        <div class="canvas-wrap tall chart-host" id="chartSales"></div>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div class="kpi" style="--tile:var(--s-aqua)" id="salesTargetCard">
+          <div class="val" id="salesTargetVal">—</div>
+          <div class="lbl">مستهدف المبيعات (الشهر)<br>Sales Target (This Month)</div>
+          <div class="sub" id="salesTargetSub"></div>
+        </div>
+        <div class="card">
+          <h3>حالات المبيعات</h3>
+          <p class="meta" id="salesMeta">—</p>
+          <div class="canvas-wrap tall chart-host" id="chartSales"></div>
+        </div>
       </div>
     </div>
   </section>
@@ -332,7 +339,7 @@ async function fetchAll(){
       as_of_date: null, financing_date: null, total_financing: 0, today_financing: 0, total_contracts: 0, today_contracts: 0, cancelled: 0,
       total_collections: 0, collections_period_to: null,
       fixed_arrears_total: 0, fixed_arrears_asof: null,
-      sales_accepted_latest: 0, sales_date: null,
+      sales_accepted_latest: 0, sales_date: null, sales_target: 0, sales_target_date: null,
       care_active_latest: 0, care_date: null
     },
     breakdowns: {
@@ -451,6 +458,19 @@ async function fetchAll(){
     }
   }
 
+  // ---- Sales Target (a monthly figure, entered as its own row in the same
+  // Sales sheet with status = "مستهدف الشهر" — not one of SALES_LABELS, so it
+  // never shows up in the sales-status breakdown chart. It's independent of
+  // the daily rows above: we always take the most recently entered one,
+  // regardless of which day it was entered on, so it doesn't need to be
+  // re-typed every day. ----
+  const { data: targetRows } = await sb.from('sales').select('sale_date, count')
+    .eq('status', 'مستهدف الشهر').order('sale_date', { ascending: false }).limit(1);
+  if (targetRows && targetRows.length){
+    result.kpi.sales_target = Number(targetRows[0].count ?? 0);
+    result.kpi.sales_target_date = targetRows[0].sale_date;
+  }
+
   // ---- Customer care (latest day) ----
   const careDate = await latestDateValue('customer_care', 'care_date');
   if (careDate){
@@ -503,6 +523,9 @@ function renderKpis(){
   document.getElementById('emptyBanner').classList.toggle('show', allZero);
   document.getElementById('asOfBadge').textContent = 'آخر تحديث بيانات: ' + (k.as_of_date || '—');
   document.getElementById('statusDot').classList.remove('loading');
+
+  document.getElementById('salesTargetVal').textContent = bdiNum(k.sales_target);
+  document.getElementById('salesTargetSub').textContent = k.sales_target_date ? ('كما في ' + k.sales_target_date) : '';
 }
 
 const NS = 'http://www.w3.org/2000/svg';
@@ -722,7 +745,7 @@ async function main(){
     document.getElementById('statusDot').classList.remove('loading');
     if (!DATA){
       DATA = {
-        kpi: { as_of_date:null,financing_date:null,total_financing:0,today_financing:0,total_contracts:0,today_contracts:0,cancelled:0,total_collections:0,collections_period_to:null,fixed_arrears_total:0,fixed_arrears_asof:null,sales_accepted_latest:0,sales_date:null,care_active_latest:0,care_date:null },
+        kpi: { as_of_date:null,financing_date:null,total_financing:0,today_financing:0,total_contracts:0,today_contracts:0,cancelled:0,total_collections:0,collections_period_to:null,fixed_arrears_total:0,fixed_arrears_asof:null,sales_accepted_latest:0,sales_date:null,sales_target:0,sales_target_date:null,care_active_latest:0,care_date:null },
         breakdowns:{
           credit_decisions:{date:null,labels:CREDIT_DECISION_LABELS,counts:CREDIT_DECISION_LABELS.map(()=>0),amounts:CREDIT_DECISION_LABELS.map(()=>0)},
           sales:{date:null,labels:SALES_LABELS,counts:SALES_LABELS.map(()=>0)},
