@@ -150,6 +150,7 @@
     display:grid; gap:16px;
     grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
   }
+  .chart-grid.stacked{ grid-template-columns: 1fr; }
   .card{
     background: var(--surface); border:1px solid var(--border); border-radius:14px;
     padding:16px 16px 10px;
@@ -267,16 +268,16 @@
 
   <section>
     <h2 class="section">الاتجاه اليومي</h2>
-    <div class="chart-grid">
+    <div class="chart-grid stacked">
       <div class="card">
         <h3>تمويل اليوم</h3>
         <p class="meta" id="trendFinMeta">—</p>
-        <div class="canvas-wrap chart-host" id="chartTrendFinancing"></div>
+        <div class="canvas-wrap tall chart-host" id="chartTrendFinancing"></div>
       </div>
       <div class="card">
         <h3>إجمالي التحصيلات</h3>
         <p class="meta" id="trendCollMeta">—</p>
-        <div class="canvas-wrap chart-host" id="chartTrendCollections"></div>
+        <div class="canvas-wrap tall chart-host" id="chartTrendCollections"></div>
       </div>
     </div>
   </section>
@@ -679,7 +680,10 @@ function drawLine(hostId, dates, values, color){
     svg.appendChild(el('path', { d: areaPath, fill: color, opacity: 0.14, stroke: 'none' }));
     svg.appendChild(el('path', { d: linePath, fill: 'none', stroke: color, 'stroke-width': 2, 'stroke-linejoin':'round', 'stroke-linecap':'round' }));
   }
-  const ptLabelEvery = Math.max(1, Math.ceil(pts.length / 8));
+  // Every point gets a permanently-visible label (no hover needed). When
+  // points sit close together horizontally, a same-height label row would
+  // overlap — so labels zigzag between two vertical levels (alternating by
+  // index) to keep them legible.
   pts.forEach((p, i) => {
     const cx = x(idxOf(p.d)), cy = y(p.v);
     const isLast = i === pts.length - 1;
@@ -687,13 +691,12 @@ function drawLine(hostId, dates, values, color){
     const title = el('title'); title.textContent = p.d + ': ' + fmt(p.v);
     c.appendChild(title);
     svg.appendChild(c);
-    if (i % ptLabelEvery === 0 || isLast){
-      const ly = Math.max(cy - 9, top + 9);
-      const label = textEl(cx, ly, fmt(p.v), { class:'val-label', 'text-anchor':'middle',
-        'font-size': isLast ? 11 : 10, 'font-weight': isLast ? 700 : 400 });
-      if (isLast) label.setAttribute('style', 'fill:' + color);
-      svg.appendChild(label);
-    }
+    const offset = i % 2 === 0 ? 9 : 22;
+    const ly = Math.max(cy - offset, top + 9);
+    const label = textEl(cx, ly, fmt(p.v), { class:'val-label', 'text-anchor':'middle',
+      'font-size': isLast ? 11 : 10, 'font-weight': isLast ? 700 : 400 });
+    if (isLast) label.setAttribute('style', 'fill:' + color);
+    svg.appendChild(label);
   });
 
   const labelEvery = Math.max(1, Math.ceil(n / 6));
