@@ -283,6 +283,22 @@
   </section>
 
   <section>
+    <h2 class="section">الاتجاه الشهري للتمويل</h2>
+    <div class="chart-grid">
+      <div class="card">
+        <h3>تمويل الشهر</h3>
+        <p class="meta" id="monthlyFinMeta">—</p>
+        <div class="canvas-wrap tall chart-host" id="chartMonthlyFinancing"></div>
+      </div>
+      <div class="card">
+        <h3>الرصيد القائم</h3>
+        <p class="meta" id="monthlyOutstandingMeta">—</p>
+        <div class="canvas-wrap tall chart-host" id="chartMonthlyOutstanding"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
     <h2 class="section">الاتجاه الشهري للتحصيل</h2>
     <div class="chart-grid">
       <div class="card">
@@ -370,7 +386,8 @@ async function fetchAll(){
       collections: { period_to: null, labels: COLLECTIONS_LABELS, amounts: COLLECTIONS_LABELS.map(()=>0) },
       fixed_arrears: { as_of: null, labels: ARREARS_LABELS, amounts: ARREARS_LABELS.map(()=>0), customers: ARREARS_LABELS.map(()=>0) },
       collections_by_bucket: { date: null, labels: ARREARS_LABELS, target: ARREARS_LABELS.map(()=>0), payment: ARREARS_LABELS.map(()=>0) },
-      monthly_collection: { months: [], total: [], loun: [], fund: [], total_loun: 0, total_fund: 0 }
+      monthly_collection: { months: [], total: [], loun: [], fund: [], total_loun: 0, total_fund: 0 },
+      monthly_financing: { months: [], finance_amount: [], gross_outstanding: [] }
     },
     trend: { dates: [], total_financing: [], total_collections: [] }
   };
@@ -527,6 +544,16 @@ async function fetchAll(){
     mc.fund = sorted.map(r => Number(r.fund ?? 0));
     mc.total_loun = mc.loun.reduce((a,b) => a+b, 0);
     mc.total_fund = mc.fund.reduce((a,b) => a+b, 0);
+  }
+
+  // ---- Monthly financing comparison (Finance Amount / Gross Outstanding) ----
+  const { data: mfRows } = await sb.from('monthly_financing_comparison').select('month, finance_amount, gross_outstanding');
+  if (mfRows && mfRows.length){
+    const sorted = mfRows.slice().sort((a, b) => MONTH_ORDER.indexOf(a.month) - MONTH_ORDER.indexOf(b.month));
+    const mf = result.breakdowns.monthly_financing;
+    mf.months = sorted.map(r => r.month);
+    mf.finance_amount = sorted.map(r => Number(r.finance_amount ?? 0));
+    mf.gross_outstanding = sorted.map(r => Number(r.gross_outstanding ?? 0));
   }
 
   // "آخر تحديث بيانات" badge: the most recent date seen across every table.
@@ -824,6 +851,12 @@ function renderCharts(){
   drawLine('chartMonthlyCollection', mc.months, mc.total, green, d => d);
   document.getElementById('monthlyDonutMeta').textContent = mc.months.length ? ('إجمالي ' + mc.months.length + ' شهر') : '—';
   drawDonut('chartMonthlyDonut', 'monthlyDonutLegend', ['الصندوق', 'لون'], [mc.total_fund, mc.total_loun], [green, accent]);
+
+  const mf = DATA.breakdowns.monthly_financing;
+  document.getElementById('monthlyFinMeta').textContent = mf.months.length + ' شهر من البيانات';
+  drawLine('chartMonthlyFinancing', mf.months, mf.finance_amount, accent, d => d);
+  document.getElementById('monthlyOutstandingMeta').textContent = mf.months.length + ' شهر من البيانات';
+  drawLine('chartMonthlyOutstanding', mf.months, mf.gross_outstanding, orange, d => d);
 }
 
 function renderAll(){ renderKpis(); renderCharts(); }
@@ -847,7 +880,8 @@ async function main(){
           collections:{period_to:null,labels:COLLECTIONS_LABELS,amounts:COLLECTIONS_LABELS.map(()=>0)},
           fixed_arrears:{as_of:null,labels:ARREARS_LABELS,amounts:ARREARS_LABELS.map(()=>0),customers:ARREARS_LABELS.map(()=>0)},
           collections_by_bucket:{date:null,labels:ARREARS_LABELS,target:ARREARS_LABELS.map(()=>0),payment:ARREARS_LABELS.map(()=>0)},
-          monthly_collection:{months:[],total:[],loun:[],fund:[],total_loun:0,total_fund:0}
+          monthly_collection:{months:[],total:[],loun:[],fund:[],total_loun:0,total_fund:0},
+          monthly_financing:{months:[],finance_amount:[],gross_outstanding:[]}
         },
         trend:{dates:[],total_financing:[],total_collections:[]}
       };
