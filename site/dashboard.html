@@ -295,6 +295,16 @@
         <p class="meta" id="monthlyOutstandingMeta">—</p>
         <div class="canvas-wrap tall chart-host" id="chartMonthlyOutstanding"></div>
       </div>
+      <div class="card">
+        <h3>عدد العقود</h3>
+        <p class="meta" id="monthlyContractsMeta">—</p>
+        <div class="canvas-wrap tall chart-host" id="chartMonthlyContracts"></div>
+      </div>
+      <div class="card">
+        <h3>عملاء السداد المبكر بنفس الشهر</h3>
+        <p class="meta" id="monthlyEarlyMeta">—</p>
+        <div class="canvas-wrap tall chart-host" id="chartMonthlyEarly"></div>
+      </div>
     </div>
   </section>
 
@@ -387,7 +397,7 @@ async function fetchAll(){
       fixed_arrears: { as_of: null, labels: ARREARS_LABELS, amounts: ARREARS_LABELS.map(()=>0), customers: ARREARS_LABELS.map(()=>0) },
       collections_by_bucket: { date: null, labels: ARREARS_LABELS, target: ARREARS_LABELS.map(()=>0), payment: ARREARS_LABELS.map(()=>0) },
       monthly_collection: { months: [], total: [], loun: [], fund: [], total_loun: 0, total_fund: 0 },
-      monthly_financing: { months: [], finance_amount: [], gross_outstanding: [] }
+      monthly_financing: { months: [], finance_amount: [], gross_outstanding: [], contracts: [], early_settlement: [] }
     },
     trend: { dates: [], total_financing: [], total_collections: [] }
   };
@@ -546,14 +556,18 @@ async function fetchAll(){
     mc.total_fund = mc.fund.reduce((a,b) => a+b, 0);
   }
 
-  // ---- Monthly financing comparison (Finance Amount / Gross Outstanding) ----
-  const { data: mfRows } = await sb.from('monthly_financing_comparison').select('month, finance_amount, gross_outstanding');
+  // ---- Monthly financing comparison (Finance Amount / Gross Outstanding /
+  // Contracts / Early Settlement) ----
+  const { data: mfRows } = await sb.from('monthly_financing_comparison')
+    .select('month, finance_amount, gross_outstanding, contracts, early_settlement');
   if (mfRows && mfRows.length){
     const sorted = mfRows.slice().sort((a, b) => MONTH_ORDER.indexOf(a.month) - MONTH_ORDER.indexOf(b.month));
     const mf = result.breakdowns.monthly_financing;
     mf.months = sorted.map(r => r.month);
     mf.finance_amount = sorted.map(r => Number(r.finance_amount ?? 0));
     mf.gross_outstanding = sorted.map(r => Number(r.gross_outstanding ?? 0));
+    mf.contracts = sorted.map(r => Number(r.contracts ?? 0));
+    mf.early_settlement = sorted.map(r => Number(r.early_settlement ?? 0));
   }
 
   // "آخر تحديث بيانات" badge: the most recent date seen across every table.
@@ -857,6 +871,13 @@ function renderCharts(){
   drawLine('chartMonthlyFinancing', mf.months, mf.finance_amount, accent, d => d);
   document.getElementById('monthlyOutstandingMeta').textContent = mf.months.length + ' شهر من البيانات';
   drawLine('chartMonthlyOutstanding', mf.months, mf.gross_outstanding, orange, d => d);
+  // Contracts and early-settlement counts sit on very different scales
+  // (hundreds vs. tens/units), so each gets its own bar chart card rather
+  // than sharing one axis, where the smaller series would be unreadable.
+  document.getElementById('monthlyContractsMeta').textContent = mf.months.length + ' شهر من البيانات';
+  drawVBar('chartMonthlyContracts', mf.months, mf.contracts, violet);
+  document.getElementById('monthlyEarlyMeta').textContent = mf.months.length + ' شهر من البيانات';
+  drawVBar('chartMonthlyEarly', mf.months, mf.early_settlement, red);
 }
 
 function renderAll(){ renderKpis(); renderCharts(); }
@@ -881,7 +902,7 @@ async function main(){
           fixed_arrears:{as_of:null,labels:ARREARS_LABELS,amounts:ARREARS_LABELS.map(()=>0),customers:ARREARS_LABELS.map(()=>0)},
           collections_by_bucket:{date:null,labels:ARREARS_LABELS,target:ARREARS_LABELS.map(()=>0),payment:ARREARS_LABELS.map(()=>0)},
           monthly_collection:{months:[],total:[],loun:[],fund:[],total_loun:0,total_fund:0},
-          monthly_financing:{months:[],finance_amount:[],gross_outstanding:[]}
+          monthly_financing:{months:[],finance_amount:[],gross_outstanding:[],contracts:[],early_settlement:[]}
         },
         trend:{dates:[],total_financing:[],total_collections:[]}
       };
