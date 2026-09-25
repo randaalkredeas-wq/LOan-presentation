@@ -724,11 +724,10 @@ function drawVBar(hostId, labels, values, color){
   host.innerHTML = ''; host.appendChild(svg);
 }
 
-// Two series on very different scales (e.g. contracts in the hundreds vs.
-// early-settlement counts in the tens) shown side-by-side per category.
-// Each series is normalized to its OWN max height (not a shared axis) so
-// both stay readable — bar heights compare each series' own trend shape,
-// not the two series' absolute values against each other.
+// Two series shown side-by-side per category on one shared axis, so bar
+// height always reflects the real value directly (a smaller number is
+// always a shorter bar) — even though one series (contracts) runs much
+// larger than the other (early settlement).
 function drawVGroupedBar(hostId, legendHostId, labels, seriesA, seriesB, nameA, nameB, colorA, colorB){
   const host = document.getElementById(hostId);
   const legendHost = document.getElementById(legendHostId);
@@ -738,14 +737,14 @@ function drawVGroupedBar(hostId, legendHostId, labels, seriesA, seriesB, nameA, 
   const W = Math.max(host.clientWidth, 280), H = 240;
   const top = 24, bottom = 30, left = 16, right = 16;
   const plotH = H - top - bottom, plotW = W - left - right;
-  const maxA = niceMax(Math.max(...seriesA, 1)), maxB = niceMax(Math.max(...seriesB, 1));
+  const max = niceMax(Math.max(...seriesA, ...seriesB, 1));
   const step = plotW / labels.length;
   const bw = Math.min(28, step / 2 - 6);
   const svg = el('svg', { viewBox: `0 0 ${W} ${H}` });
   svg.appendChild(el('line', { class:'axis-line', x1:left, x2:W-right, y1:H-bottom, y2:H-bottom }));
   labels.forEach((lab, i) => {
     const cx = left + step * i + step/2;
-    [[seriesA[i], maxA, colorA, nameA, -1], [seriesB[i], maxB, colorB, nameB, 1]].forEach(([v, max, color, name, dir]) => {
+    [[seriesA[i], colorA, nameA, -1], [seriesB[i], colorB, nameB, 1]].forEach(([v, color, name, dir]) => {
       const barH = (v / max) * plotH;
       const x = cx + dir * (bw/2 + 2) - bw/2, y = H - bottom - barH;
       const rect = el('rect', { x, y, width: Math.max(bw,0), height: Math.max(barH, v>0?2:0), rx: 4, fill: color });
