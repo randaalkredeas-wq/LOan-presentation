@@ -284,22 +284,22 @@
 
   <section>
     <h2 class="section">الاتجاه الشهري للتمويل</h2>
-    <div class="chart-grid stacked">
+    <div class="chart-grid">
       <div class="card">
         <h3>تمويل الشهر</h3>
         <p class="meta" id="monthlyFinMeta">—</p>
-        <div class="canvas-wrap tall chart-host" id="chartMonthlyFinancing"></div>
+        <div class="canvas-wrap chart-host" id="chartMonthlyFinancing"></div>
       </div>
       <div class="card">
         <h3>الرصيد القائم</h3>
         <p class="meta" id="monthlyOutstandingMeta">—</p>
-        <div class="canvas-wrap tall chart-host" id="chartMonthlyOutstanding"></div>
+        <div class="canvas-wrap chart-host" id="chartMonthlyOutstanding"></div>
       </div>
       <div class="card">
         <h3>عدد العقود وعملاء السداد المبكر بنفس الشهر</h3>
         <p class="meta" id="monthlyContractsMeta">—</p>
         <div class="chart-legend" id="monthlyContractsLegend"></div>
-        <div class="canvas-wrap tall chart-host" id="chartMonthlyContracts"></div>
+        <div class="canvas-wrap chart-host" id="chartMonthlyContracts"></div>
       </div>
     </div>
   </section>
@@ -759,6 +759,7 @@ function drawVGroupedBar(hostId, legendHostId, labels, seriesA, seriesB, nameA, 
 }
 
 function drawLine(hostId, dates, values, color, catLabelFn){
+  const showAllLabels = !!catLabelFn; // month-based charts (few categories) always show every label
   catLabelFn = catLabelFn || (d => d.slice(5));
   const host = document.getElementById(hostId);
   const pts = dates.map((d, i) => ({ d, v: values[i] })).filter(p => p.v !== null && p.v !== undefined);
@@ -807,7 +808,7 @@ function drawLine(hostId, dates, values, color, catLabelFn){
     svg.appendChild(label);
   });
 
-  const labelEvery = Math.max(1, Math.ceil(n / 6));
+  const labelEvery = showAllLabels ? 1 : Math.max(1, Math.ceil(n / 6));
   dates.forEach((d, i) => {
     if (i % labelEvery !== 0 && i !== n-1) return;
     svg.appendChild(textEl(x(i), H - bottom + 16, catLabelFn(d), { class:'cat-label', 'text-anchor':'middle', 'font-size':10 }));
