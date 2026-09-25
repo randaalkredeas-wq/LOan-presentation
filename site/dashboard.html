@@ -145,6 +145,9 @@
   .kpi .val{ font-size:1.55rem; font-weight:700; line-height:1.1; }
   .kpi .lbl{ font-size:.78rem; color: var(--ink-2); line-height:1.35; }
   .kpi .sub{ font-size:.7rem; color: var(--ink-muted); }
+  .kpi .delta{ font-size:.74rem; font-weight:700; display:inline-flex; align-items:center; gap:2px; margin-top:2px; }
+  .kpi .delta.up{ color: var(--s-green); }
+  .kpi .delta.down{ color: var(--s-red); }
 
   .chart-grid{
     display:grid; gap:16px;
@@ -381,7 +384,7 @@ function alignByLabel(rows, labelField, valueField, labelsOrder){
 async function fetchAll(){
   const result = {
     kpi: {
-      as_of_date: null, financing_date: null, total_financing: 0, today_financing: 0, total_contracts: 0, today_contracts: 0, cancelled: 0,
+      as_of_date: null, financing_date: null, total_financing: 0, today_financing: 0, today_financing_delta: null, total_contracts: 0, today_contracts: 0, today_contracts_delta: null, cancelled: 0,
       total_collections: 0, collections_period_to: null,
       fixed_arrears_total: 0, fixed_arrears_asof: null,
       sales_accepted_latest: 0, sales_date: null, sales_target: 0, sales_target_date: null,
@@ -430,6 +433,18 @@ async function fetchAll(){
     result.kpi.today_contracts = Number(latest.today_number_contracts ?? 0);
     result.kpi.cancelled = Number(latest.cancelled ?? 0);
     result.kpi.financing_date = latest.kpi_date;
+
+    // Day-over-day % change vs the previous entered day, for the two daily
+    // ("today") tiles — shown as an up/down arrow + percentage on the tile.
+    if (kpiRows.length >= 2){
+      const prev = kpiRows[kpiRows.length - 2];
+      const prevFin = Number(prev.today_financing_amount ?? 0);
+      const curFin = Number(latest.today_financing_amount ?? 0);
+      result.kpi.today_financing_delta = prevFin > 0 ? ((curFin - prevFin) / prevFin) * 100 : null;
+      const prevContracts = Number(prev.today_number_contracts ?? 0);
+      const curContracts = Number(latest.today_number_contracts ?? 0);
+      result.kpi.today_contracts_delta = prevContracts > 0 ? ((curContracts - prevContracts) / prevContracts) * 100 : null;
+    }
   }
 
   // ---- Collections (latest period + trend) ----
@@ -585,9 +600,9 @@ function renderKpis(){
   const k = DATA.kpi;
   const tiles = [
     { val: bdiNum(k.total_financing), lbl: 'إجمالي مبلغ التمويل<br>Total Financing Amount', sub: k.financing_date, tile: 'accent' },
-    { val: bdiNum(k.today_financing), lbl: 'تمويل اليوم<br>Today Financing Amount', sub: k.financing_date, tile: 'accent' },
+    { val: bdiNum(k.today_financing), lbl: 'تمويل اليوم<br>Today Financing Amount', sub: k.financing_date, tile: 'accent', delta: k.today_financing_delta },
     { val: bdiNum(k.total_contracts), lbl: 'إجمالي العقود<br>Total Contracts', sub: k.financing_date, tile: 's-aqua' },
-    { val: bdiNum(k.today_contracts), lbl: 'إجمالي عقود اليوم<br>Total Contracts Today', sub: k.financing_date, tile: 's-aqua' },
+    { val: bdiNum(k.today_contracts), lbl: 'إجمالي عقود اليوم<br>Total Contracts Today', sub: k.financing_date, tile: 's-aqua', delta: k.today_contracts_delta },
     { val: bdiNum(k.cancelled), lbl: 'إجمالي الإلغاء هذا الشهر<br>Total Cancellations This Month', sub: k.financing_date, tile: 's-orange' },
     { val: bdiNum(k.total_collections), lbl: 'إجمالي التحصيلات (آخر فترة)<br>Total Collections', sub: k.collections_period_to, tile: 's-green' },
     { val: bdiNum(k.fixed_arrears_total), lbl: 'إجمالي المتأخرات الثابتة<br>Fixed Arrears Total', sub: 'كما في ' + (k.fixed_arrears_asof || '—'), tile: 's-red' },
@@ -595,12 +610,19 @@ function renderKpis(){
     { val: bdiNum(k.care_active_latest), lbl: 'شكاوى نشطة (آخر يوم)<br>Customer Care Active', sub: k.care_date, tile: 's-violet' },
   ];
   const grid = document.getElementById('kpiGrid');
-  grid.innerHTML = tiles.map(t => `
+  grid.innerHTML = tiles.map(t => {
+    const hasDelta = t.delta !== undefined && t.delta !== null;
+    const deltaHtml = hasDelta
+      ? `<div class="delta ${t.delta >= 0 ? 'up' : 'down'}">${t.delta >= 0 ? '▲' : '▼'} ${bdiNum(Math.abs(Math.round(t.delta)))}%</div>`
+      : '';
+    return `
     <div class="kpi" style="--tile:var(--${t.tile})">
       <div class="val">${t.val}</div>
       <div class="lbl">${t.lbl}</div>
       <div class="sub">${t.sub || ''}</div>
-    </div>`).join('');
+      ${deltaHtml}
+    </div>`;
+  }).join('');
 
   const allZero = [k.total_financing, k.today_financing, k.total_contracts, k.total_collections,
                    k.sales_accepted_latest, k.care_active_latest].every(v => !v);
@@ -922,7 +944,7 @@ async function main(){
     document.getElementById('statusDot').classList.remove('loading');
     if (!DATA){
       DATA = {
-        kpi: { as_of_date:null,financing_date:null,total_financing:0,today_financing:0,total_contracts:0,today_contracts:0,cancelled:0,total_collections:0,collections_period_to:null,fixed_arrears_total:0,fixed_arrears_asof:null,sales_accepted_latest:0,sales_date:null,sales_target:0,sales_target_date:null,care_active_latest:0,care_date:null },
+        kpi: { as_of_date:null,financing_date:null,total_financing:0,today_financing:0,today_financing_delta:null,total_contracts:0,today_contracts:0,today_contracts_delta:null,cancelled:0,total_collections:0,collections_period_to:null,fixed_arrears_total:0,fixed_arrears_asof:null,sales_accepted_latest:0,sales_date:null,sales_target:0,sales_target_date:null,care_active_latest:0,care_date:null },
         breakdowns:{
           credit_decisions:{date:null,labels:CREDIT_DECISION_LABELS,counts:CREDIT_DECISION_LABELS.map(()=>0),amounts:CREDIT_DECISION_LABELS.map(()=>0)},
           sales:{date:null,labels:SALES_LABELS,counts:SALES_LABELS.map(()=>0)},
