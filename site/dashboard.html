@@ -282,6 +282,23 @@
     </div>
   </section>
 
+  <section>
+    <h2 class="section">الاتجاه الشهري للتحصيل</h2>
+    <div class="chart-grid">
+      <div class="card">
+        <h3>إجمالي التحصيل الشهري</h3>
+        <p class="meta" id="monthlyCollMeta">—</p>
+        <div class="canvas-wrap tall chart-host" id="chartMonthlyCollection"></div>
+      </div>
+      <div class="card">
+        <h3>التحصيل: الصندوق مقابل لون</h3>
+        <p class="meta" id="monthlyDonutMeta">—</p>
+        <div class="chart-legend" id="monthlyDonutLegend"></div>
+        <div class="canvas-wrap tall chart-host" id="chartMonthlyDonut"></div>
+      </div>
+    </div>
+  </section>
+
   <footer>
     <span>Departments Dashboard — متصلة مباشرة بقاعدة البيانات (Supabase)</span>
     <span id="generatedAt">—</span>
@@ -301,6 +318,9 @@ const SALES_LABELS = ["Accepted - تم التنفيذ","High profit - النسب
 const CARE_LABELS = ["SAMA care complaint","Customer Complaints and Requests","Stitch Tickets","Calls","Emails"];
 const COLLECTIONS_LABELS = ["البنك العربي - تحصيل لون","البنك العربي - التحصيل القضائي لون","تاب الغير مسجل بالتحصيل","مدفوعات من خلال سداد تاب - لون","مدفوعات من خلال سداد تاب - الصندوق"];
 const ARREARS_LABELS = ["1","2","3","4","5 - 30"];
+// Arabic month names in calendar order — used to sort Monthly_Comparison rows
+// correctly, since the sheet has no year/date column, only a month name.
+const MONTH_ORDER = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
 
 let DATA = null;
 
@@ -349,7 +369,8 @@ async function fetchAll(){
       customer_care: { date: null, labels: CARE_LABELS, active: CARE_LABELS.map(()=>0), close: CARE_LABELS.map(()=>0) },
       collections: { period_to: null, labels: COLLECTIONS_LABELS, amounts: COLLECTIONS_LABELS.map(()=>0) },
       fixed_arrears: { as_of: null, labels: ARREARS_LABELS, amounts: ARREARS_LABELS.map(()=>0), customers: ARREARS_LABELS.map(()=>0) },
-      collections_by_bucket: { date: null, labels: ARREARS_LABELS, target: ARREARS_LABELS.map(()=>0), payment: ARREARS_LABELS.map(()=>0) }
+      collections_by_bucket: { date: null, labels: ARREARS_LABELS, target: ARREARS_LABELS.map(()=>0), payment: ARREARS_LABELS.map(()=>0) },
+      monthly_collection: { months: [], total: [], loun: [], fund: [], latest_month: null, latest_loun: 0, latest_fund: 0 }
     },
     trend: { dates: [], total_financing: [], total_collections: [] }
   };
@@ -491,6 +512,23 @@ async function fetchAll(){
       result.kpi.care_date = careDate;
       result.kpi.care_active_latest = result.breakdowns.customer_care.active.reduce((a,b)=>a+b, 0);
     }
+  }
+
+  // ---- Monthly collection comparison (Loun/Fund split, one row per month) ----
+  // The sheet has no date column, only an Arabic month name, so rows are
+  // sorted using MONTH_ORDER rather than a date sort.
+  const { data: mcRows } = await sb.from('monthly_collection_comparison').select('month, loun, fund, total');
+  if (mcRows && mcRows.length){
+    const sorted = mcRows.slice().sort((a, b) => MONTH_ORDER.indexOf(a.month) - MONTH_ORDER.indexOf(b.month));
+    const mc = result.breakdowns.monthly_collection;
+    mc.months = sorted.map(r => r.month);
+    mc.total = sorted.map(r => Number(r.total ?? 0));
+    mc.loun = sorted.map(r => Number(r.loun ?? 0));
+    mc.fund = sorted.map(r => Number(r.fund ?? 0));
+    const latest = sorted[sorted.length - 1];
+    mc.latest_month = latest.month;
+    mc.latest_loun = Number(latest.loun ?? 0);
+    mc.latest_fund = Number(latest.fund ?? 0);
   }
 
   // "آخر تحديث بيانات" badge: the most recent date seen across every table.
@@ -651,7 +689,8 @@ function drawVBar(hostId, labels, values, color){
   host.innerHTML = ''; host.appendChild(svg);
 }
 
-function drawLine(hostId, dates, values, color){
+function drawLine(hostId, dates, values, color, catLabelFn){
+  catLabelFn = catLabelFn || (d => d.slice(5));
   const host = document.getElementById(hostId);
   const pts = dates.map((d, i) => ({ d, v: values[i] })).filter(p => p.v !== null && p.v !== undefined);
   if (pts.length < 1){ emptyState(host, 'بانتظار أول قراءتين لرسم الاتجاه'); return; }
@@ -702,8 +741,40 @@ function drawLine(hostId, dates, values, color){
   const labelEvery = Math.max(1, Math.ceil(n / 6));
   dates.forEach((d, i) => {
     if (i % labelEvery !== 0 && i !== n-1) return;
-    svg.appendChild(textEl(x(i), H - bottom + 16, d.slice(5), { class:'cat-label', 'text-anchor':'middle', 'font-size':10 }));
+    svg.appendChild(textEl(x(i), H - bottom + 16, catLabelFn(d), { class:'cat-label', 'text-anchor':'middle', 'font-size':10 }));
   });
+  host.innerHTML = ''; host.appendChild(svg);
+}
+
+function drawDonut(hostId, legendHostId, labels, values, colors){
+  const host = document.getElementById(hostId);
+  const legendHost = document.getElementById(legendHostId);
+  const total = values.reduce((a,b) => a + b, 0);
+  legendHost.innerHTML = labels.map((lab, i) =>
+    `<span><span class="sw" style="background:${colors[i]}"></span>${lab}: ${fmt(values[i])}</span>`).join('');
+  if (!total){ emptyState(host); return; }
+  const W = Math.max(host.clientWidth, 240), H = 240;
+  const cx = W/2, cy = H/2, r = Math.min(W,H)/2 - 18, sw = 28;
+  const circumference = 2 * Math.PI * r;
+  const svg = el('svg', { viewBox: `0 0 ${W} ${H}` });
+  let offset = 0;
+  values.forEach((v, i) => {
+    if (!v) return;
+    const frac = v / total;
+    const dash = frac * circumference;
+    const circle = el('circle', {
+      cx, cy, r, fill: 'none', stroke: colors[i], 'stroke-width': sw,
+      'stroke-dasharray': `${dash} ${circumference - dash}`,
+      'stroke-dashoffset': -offset,
+      transform: `rotate(-90 ${cx} ${cy})`,
+    });
+    const title = el('title'); title.textContent = labels[i] + ': ' + fmt(v) + ' (' + Math.round(frac*100) + '%)';
+    circle.appendChild(title);
+    svg.appendChild(circle);
+    offset += dash;
+  });
+  svg.appendChild(textEl(cx, cy - 4, fmt(total), { class:'val-label', 'text-anchor':'middle', 'font-size':17, 'font-weight':700 }));
+  svg.appendChild(textEl(cx, cy + 14, 'الإجمالي', { class:'cat-label', 'text-anchor':'middle', 'font-size':11 }));
   host.innerHTML = ''; host.appendChild(svg);
 }
 
@@ -741,6 +812,12 @@ function renderCharts(){
   document.getElementById('trendCollMeta').textContent = trendNote;
   drawLine('chartTrendFinancing', tr.dates, tr.total_financing, accent);
   drawLine('chartTrendCollections', tr.dates, tr.total_collections, green);
+
+  const mc = DATA.breakdowns.monthly_collection;
+  document.getElementById('monthlyCollMeta').textContent = mc.months.length + ' شهر من البيانات';
+  drawLine('chartMonthlyCollection', mc.months, mc.total, green, d => d);
+  document.getElementById('monthlyDonutMeta').textContent = mc.latest_month ? ('شهر ' + mc.latest_month) : '—';
+  drawDonut('chartMonthlyDonut', 'monthlyDonutLegend', ['الصندوق', 'لون'], [mc.latest_fund, mc.latest_loun], [green, accent]);
 }
 
 function renderAll(){ renderKpis(); renderCharts(); }
@@ -763,7 +840,8 @@ async function main(){
           customer_care:{date:null,labels:CARE_LABELS,active:CARE_LABELS.map(()=>0),close:CARE_LABELS.map(()=>0)},
           collections:{period_to:null,labels:COLLECTIONS_LABELS,amounts:COLLECTIONS_LABELS.map(()=>0)},
           fixed_arrears:{as_of:null,labels:ARREARS_LABELS,amounts:ARREARS_LABELS.map(()=>0),customers:ARREARS_LABELS.map(()=>0)},
-          collections_by_bucket:{date:null,labels:ARREARS_LABELS,target:ARREARS_LABELS.map(()=>0),payment:ARREARS_LABELS.map(()=>0)}
+          collections_by_bucket:{date:null,labels:ARREARS_LABELS,target:ARREARS_LABELS.map(()=>0),payment:ARREARS_LABELS.map(()=>0)},
+          monthly_collection:{months:[],total:[],loun:[],fund:[],latest_month:null,latest_loun:0,latest_fund:0}
         },
         trend:{dates:[],total_financing:[],total_collections:[]}
       };
