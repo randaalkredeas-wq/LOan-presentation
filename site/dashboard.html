@@ -284,7 +284,7 @@
 
   <section>
     <h2 class="section">الاتجاه الشهري للتمويل</h2>
-    <div class="chart-grid">
+    <div class="chart-grid stacked">
       <div class="card">
         <h3>تمويل الشهر</h3>
         <p class="meta" id="monthlyFinMeta">—</p>
@@ -296,14 +296,10 @@
         <div class="canvas-wrap tall chart-host" id="chartMonthlyOutstanding"></div>
       </div>
       <div class="card">
-        <h3>عدد العقود</h3>
+        <h3>عدد العقود وعملاء السداد المبكر بنفس الشهر</h3>
         <p class="meta" id="monthlyContractsMeta">—</p>
+        <div class="chart-legend" id="monthlyContractsLegend"></div>
         <div class="canvas-wrap tall chart-host" id="chartMonthlyContracts"></div>
-      </div>
-      <div class="card">
-        <h3>عملاء السداد المبكر بنفس الشهر</h3>
-        <p class="meta" id="monthlyEarlyMeta">—</p>
-        <div class="canvas-wrap tall chart-host" id="chartMonthlyEarly"></div>
       </div>
     </div>
   </section>
@@ -728,6 +724,41 @@ function drawVBar(hostId, labels, values, color){
   host.innerHTML = ''; host.appendChild(svg);
 }
 
+// Two series on very different scales (e.g. contracts in the hundreds vs.
+// early-settlement counts in the tens) shown side-by-side per category.
+// Each series is normalized to its OWN max height (not a shared axis) so
+// both stay readable — bar heights compare each series' own trend shape,
+// not the two series' absolute values against each other.
+function drawVGroupedBar(hostId, legendHostId, labels, seriesA, seriesB, nameA, nameB, colorA, colorB){
+  const host = document.getElementById(hostId);
+  const legendHost = document.getElementById(legendHostId);
+  legendHost.innerHTML = `<span><span class="sw" style="background:${colorA}"></span>${nameA}</span>` +
+                          `<span><span class="sw" style="background:${colorB}"></span>${nameB}</span>`;
+  if (!labels.length){ emptyState(host); return; }
+  const W = Math.max(host.clientWidth, 280), H = 240;
+  const top = 24, bottom = 30, left = 16, right = 16;
+  const plotH = H - top - bottom, plotW = W - left - right;
+  const maxA = niceMax(Math.max(...seriesA, 1)), maxB = niceMax(Math.max(...seriesB, 1));
+  const step = plotW / labels.length;
+  const bw = Math.min(28, step / 2 - 6);
+  const svg = el('svg', { viewBox: `0 0 ${W} ${H}` });
+  svg.appendChild(el('line', { class:'axis-line', x1:left, x2:W-right, y1:H-bottom, y2:H-bottom }));
+  labels.forEach((lab, i) => {
+    const cx = left + step * i + step/2;
+    [[seriesA[i], maxA, colorA, nameA, -1], [seriesB[i], maxB, colorB, nameB, 1]].forEach(([v, max, color, name, dir]) => {
+      const barH = (v / max) * plotH;
+      const x = cx + dir * (bw/2 + 2) - bw/2, y = H - bottom - barH;
+      const rect = el('rect', { x, y, width: Math.max(bw,0), height: Math.max(barH, v>0?2:0), rx: 4, fill: color });
+      const title = el('title'); title.textContent = lab + ' — ' + name + ': ' + fmt(v);
+      rect.appendChild(title);
+      svg.appendChild(rect);
+      svg.appendChild(textEl(x + bw/2, y - 5, fmt(v), { class:'val-label', 'text-anchor':'middle', 'font-size':9 }));
+    });
+    svg.appendChild(textEl(cx, H - bottom + 16, truncate(lab, 10), { class:'cat-label', 'text-anchor':'middle', 'font-size':11 }));
+  });
+  host.innerHTML = ''; host.appendChild(svg);
+}
+
 function drawLine(hostId, dates, values, color, catLabelFn){
   catLabelFn = catLabelFn || (d => d.slice(5));
   const host = document.getElementById(hostId);
@@ -871,13 +902,9 @@ function renderCharts(){
   drawLine('chartMonthlyFinancing', mf.months, mf.finance_amount, accent, d => d);
   document.getElementById('monthlyOutstandingMeta').textContent = mf.months.length + ' شهر من البيانات';
   drawLine('chartMonthlyOutstanding', mf.months, mf.gross_outstanding, orange, d => d);
-  // Contracts and early-settlement counts sit on very different scales
-  // (hundreds vs. tens/units), so each gets its own bar chart card rather
-  // than sharing one axis, where the smaller series would be unreadable.
   document.getElementById('monthlyContractsMeta').textContent = mf.months.length + ' شهر من البيانات';
-  drawVBar('chartMonthlyContracts', mf.months, mf.contracts, violet);
-  document.getElementById('monthlyEarlyMeta').textContent = mf.months.length + ' شهر من البيانات';
-  drawVBar('chartMonthlyEarly', mf.months, mf.early_settlement, red);
+  drawVGroupedBar('chartMonthlyContracts', 'monthlyContractsLegend', mf.months, mf.contracts, mf.early_settlement,
+    'عدد العقود', 'عملاء السداد المبكر', violet, red);
 }
 
 function renderAll(){ renderKpis(); renderCharts(); }
