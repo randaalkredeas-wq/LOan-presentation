@@ -370,7 +370,7 @@ async function fetchAll(){
       collections: { period_to: null, labels: COLLECTIONS_LABELS, amounts: COLLECTIONS_LABELS.map(()=>0) },
       fixed_arrears: { as_of: null, labels: ARREARS_LABELS, amounts: ARREARS_LABELS.map(()=>0), customers: ARREARS_LABELS.map(()=>0) },
       collections_by_bucket: { date: null, labels: ARREARS_LABELS, target: ARREARS_LABELS.map(()=>0), payment: ARREARS_LABELS.map(()=>0) },
-      monthly_collection: { months: [], total: [], loun: [], fund: [], latest_month: null, latest_loun: 0, latest_fund: 0 }
+      monthly_collection: { months: [], total: [], loun: [], fund: [], total_loun: 0, total_fund: 0 }
     },
     trend: { dates: [], total_financing: [], total_collections: [] }
   };
@@ -525,10 +525,8 @@ async function fetchAll(){
     mc.total = sorted.map(r => Number(r.total ?? 0));
     mc.loun = sorted.map(r => Number(r.loun ?? 0));
     mc.fund = sorted.map(r => Number(r.fund ?? 0));
-    const latest = sorted[sorted.length - 1];
-    mc.latest_month = latest.month;
-    mc.latest_loun = Number(latest.loun ?? 0);
-    mc.latest_fund = Number(latest.fund ?? 0);
+    mc.total_loun = mc.loun.reduce((a,b) => a+b, 0);
+    mc.total_fund = mc.fund.reduce((a,b) => a+b, 0);
   }
 
   // "آخر تحديث بيانات" badge: the most recent date seen across every table.
@@ -816,8 +814,8 @@ function renderCharts(){
   const mc = DATA.breakdowns.monthly_collection;
   document.getElementById('monthlyCollMeta').textContent = mc.months.length + ' شهر من البيانات';
   drawLine('chartMonthlyCollection', mc.months, mc.total, green, d => d);
-  document.getElementById('monthlyDonutMeta').textContent = mc.latest_month ? ('شهر ' + mc.latest_month) : '—';
-  drawDonut('chartMonthlyDonut', 'monthlyDonutLegend', ['الصندوق', 'لون'], [mc.latest_fund, mc.latest_loun], [green, accent]);
+  document.getElementById('monthlyDonutMeta').textContent = mc.months.length ? ('إجمالي ' + mc.months.length + ' شهر') : '—';
+  drawDonut('chartMonthlyDonut', 'monthlyDonutLegend', ['الصندوق', 'لون'], [mc.total_fund, mc.total_loun], [green, accent]);
 }
 
 function renderAll(){ renderKpis(); renderCharts(); }
@@ -841,7 +839,7 @@ async function main(){
           collections:{period_to:null,labels:COLLECTIONS_LABELS,amounts:COLLECTIONS_LABELS.map(()=>0)},
           fixed_arrears:{as_of:null,labels:ARREARS_LABELS,amounts:ARREARS_LABELS.map(()=>0),customers:ARREARS_LABELS.map(()=>0)},
           collections_by_bucket:{date:null,labels:ARREARS_LABELS,target:ARREARS_LABELS.map(()=>0),payment:ARREARS_LABELS.map(()=>0)},
-          monthly_collection:{months:[],total:[],loun:[],fund:[],latest_month:null,latest_loun:0,latest_fund:0}
+          monthly_collection:{months:[],total:[],loun:[],fund:[],total_loun:0,total_fund:0}
         },
         trend:{dates:[],total_financing:[],total_collections:[]}
       };
