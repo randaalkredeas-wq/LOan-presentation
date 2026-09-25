@@ -749,7 +749,7 @@ function drawDonut(hostId, legendHostId, labels, values, colors){
   const legendHost = document.getElementById(legendHostId);
   const total = values.reduce((a,b) => a + b, 0);
   legendHost.innerHTML = labels.map((lab, i) =>
-    `<span><span class="sw" style="background:${colors[i]}"></span>${lab}: ${fmt(values[i])}</span>`).join('');
+    `<span><span class="sw" style="background:${colors[i]}"></span>${lab}: ${fmt(values[i])}${total ? ' (' + Math.round(values[i]/total*100) + '%)' : ''}</span>`).join('');
   if (!total){ emptyState(host); return; }
   const W = Math.max(host.clientWidth, 240), H = 240;
   const cx = W/2, cy = H/2, r = Math.min(W,H)/2 - 18, sw = 28;
@@ -766,9 +766,17 @@ function drawDonut(hostId, legendHostId, labels, values, colors){
       'stroke-dashoffset': -offset,
       transform: `rotate(-90 ${cx} ${cy})`,
     });
-    const title = el('title'); title.textContent = labels[i] + ': ' + fmt(v) + ' (' + Math.round(frac*100) + '%)';
+    const pct = Math.round(frac*100);
+    const title = el('title'); title.textContent = labels[i] + ': ' + fmt(v) + ' (' + pct + '%)';
     circle.appendChild(title);
     svg.appendChild(circle);
+    // Permanently-visible percentage label at the segment's midpoint angle
+    // (a hover-only tooltip would hide which side is larger at a glance).
+    const midAngle = (-90 + (offset / circumference) * 360 + (frac * 360) / 2) * Math.PI / 180;
+    const lx = cx + Math.cos(midAngle) * r, ly = cy + Math.sin(midAngle) * r;
+    const pctLabel = textEl(lx, ly + 4, pct + '%', { 'text-anchor':'middle', 'font-size':13, 'font-weight':700 });
+    pctLabel.setAttribute('style', 'fill:#fff');
+    svg.appendChild(pctLabel);
     offset += dash;
   });
   svg.appendChild(textEl(cx, cy - 4, fmt(total), { class:'val-label', 'text-anchor':'middle', 'font-size':17, 'font-weight':700 }));
