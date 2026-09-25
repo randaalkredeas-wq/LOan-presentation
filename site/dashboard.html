@@ -613,7 +613,7 @@ function renderKpis(){
   grid.innerHTML = tiles.map(t => {
     const hasDelta = t.delta !== undefined && t.delta !== null;
     const deltaHtml = hasDelta
-      ? `<div class="delta ${t.delta >= 0 ? 'up' : 'down'}">${t.delta >= 0 ? '▲' : '▼'} ${bdiNum(Math.abs(Math.round(t.delta)))}%</div>`
+      ? `<div class="delta ${t.delta >= 0 ? 'up' : 'down'}">${t.delta >= 0 ? '▲ ارتفاع' : '▼ انخفاض'} ${bdiNum(Math.abs(Math.round(t.delta)))}%</div>`
       : '';
     return `
     <div class="kpi" style="--tile:var(--${t.tile})">
