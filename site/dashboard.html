@@ -401,7 +401,7 @@ async function fetchAll(){
       monthly_collection: { months: [], total: [], loun: [], fund: [], total_loun: 0, total_fund: 0 },
       monthly_financing: { months: [], finance_amount: [], gross_outstanding: [], contracts: [], early_settlement: [] }
     },
-    trend: { dates: [], total_financing: [], total_collections: [] }
+    trend: { dates: [], total_financing: [], collDates: [], total_collections: [] }
   };
 
   // ---- Credit decisions (latest day) ----
@@ -474,22 +474,18 @@ async function fetchAll(){
       result.kpi.total_collections = latestPeriodTotal(rows);
     }
   }
+  // Collections keeps its own date axis (collection_summary's own date_to
+  // range) rather than borrowing credit_kpis' dates — the two tables are
+  // filled in independently, and forcing collections onto the financing
+  // trend's (often much shorter) date list was silently truncating a full
+  // collections history down to whatever few days credit_kpis happened to have.
   const { data: collAllRows } = await sb.from('collection_summary').select('date_to, item, amount');
   if (collAllRows && collAllRows.length){
     const byDate = {};
     collAllRows.forEach(r => { (byDate[r.date_to] ||= []).push(r); });
     const dates = Object.keys(byDate).sort();
-    const grouped = { dates, values: dates.map(d => sumCollectionRows(byDate[d])) };
-    result.trend.total_collections = grouped.dates.map(d => grouped.values[grouped.dates.indexOf(d)]);
-    // Align collections trend dates onto the same date axis as financing trend when possible
-    if (!result.trend.dates.length){
-      result.trend.dates = grouped.dates;
-      result.trend.total_financing = grouped.dates.map(()=>null);
-    }
-    result.trend.total_collections = result.trend.dates.map(d => {
-      const idx = grouped.dates.indexOf(d);
-      return idx > -1 ? grouped.values[idx] : null;
-    });
+    result.trend.collDates = dates;
+    result.trend.total_collections = dates.map(d => sumCollectionRows(byDate[d]));
   }
 
   // ---- Collection_Employee (latest day): feeds both "Fixed arrears by bucket"
@@ -910,11 +906,10 @@ function renderCharts(){
   drawVBar('chartArrears', fa.labels, fa.amounts, red);
 
   const tr = DATA.trend;
-  const trendNote = tr.dates.length + ' يوم من البيانات';
-  document.getElementById('trendFinMeta').textContent = trendNote;
-  document.getElementById('trendCollMeta').textContent = trendNote;
+  document.getElementById('trendFinMeta').textContent = tr.dates.length + ' يوم من البيانات';
+  document.getElementById('trendCollMeta').textContent = tr.collDates.length + ' يوم من البيانات';
   drawLine('chartTrendFinancing', tr.dates, tr.total_financing, accent);
-  drawLine('chartTrendCollections', tr.dates, tr.total_collections, green);
+  drawLine('chartTrendCollections', tr.collDates, tr.total_collections, green);
 
   const mc = DATA.breakdowns.monthly_collection;
   document.getElementById('monthlyCollMeta').textContent = mc.months.length + ' شهر من البيانات';
@@ -956,7 +951,7 @@ async function main(){
           monthly_collection:{months:[],total:[],loun:[],fund:[],total_loun:0,total_fund:0},
           monthly_financing:{months:[],finance_amount:[],gross_outstanding:[],contracts:[],early_settlement:[]}
         },
-        trend:{dates:[],total_financing:[],total_collections:[]}
+        trend:{dates:[],total_financing:[],collDates:[],total_collections:[]}
       };
     }
   }
