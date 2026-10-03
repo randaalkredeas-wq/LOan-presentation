@@ -330,6 +330,12 @@
         <div class="chart-legend" id="monthlyDonutLegend"></div>
         <div class="canvas-wrap tall chart-host" id="chartMonthlyDonut"></div>
       </div>
+      <div class="card">
+        <h3>نسبة كل شهر من إجمالي التحصيل</h3>
+        <p class="meta" id="monthlyCollShareMeta">—</p>
+        <div class="chart-legend" id="monthlyCollShareLegend"></div>
+        <div class="canvas-wrap tall chart-host" id="chartMonthlyCollShare"></div>
+      </div>
     </div>
   </section>
 
@@ -885,7 +891,8 @@ function drawDonut(hostId, legendHostId, labels, values, colors){
 
 function renderCharts(){
   const accent = themeVar('--accent'), aqua = themeVar('--s-aqua'), green = themeVar('--s-green'),
-        red = themeVar('--s-red'), violet = themeVar('--s-violet'), orange = themeVar('--s-orange');
+        red = themeVar('--s-red'), violet = themeVar('--s-violet'), orange = themeVar('--s-orange'),
+        muted = themeVar('--ink-muted');
 
   const cd = DATA.breakdowns.credit_decisions;
   document.getElementById('cdMeta').textContent = 'بتاريخ ' + (cd.date || '—') + ' — عدد الطلبات لكل قرار';
@@ -923,6 +930,13 @@ function renderCharts(){
   document.getElementById('monthlyDonutMeta').textContent = mc.months.length ? ('إجمالي ' + mc.months.length + ' شهر') : '—';
   drawDonut('chartMonthlyDonut', 'monthlyDonutLegend', ['الصندوق', 'لون'], [mc.total_fund, mc.total_loun], [green, accent]);
 
+  const maxColl = mc.total.length ? Math.max(...mc.total) : 0;
+  const maxCollIdx = mc.total.indexOf(maxColl);
+  document.getElementById('monthlyCollShareMeta').textContent =
+    maxCollIdx > -1 ? ('أعلى شهر تحصيلاً: ' + mc.months[maxCollIdx]) : '—';
+  drawDonut('chartMonthlyCollShare', 'monthlyCollShareLegend', mc.months, mc.total,
+    mc.months.map((_, i) => i === maxCollIdx ? green : muted));
+
   const mf = DATA.breakdowns.monthly_financing;
   document.getElementById('monthlyFinMeta').textContent = mf.months.length + ' شهر من البيانات';
   drawLine('chartMonthlyFinancing', mf.months, mf.finance_amount, accent, d => d);
@@ -935,7 +949,6 @@ function renderCharts(){
   // Highlight the single highest-financing month in accent color against a
   // muted gray for the rest, so "which month" reads at a glance rather than
   // asking the viewer to decode N distinct hues across the year.
-  const muted = themeVar('--ink-muted');
   const maxFin = mf.finance_amount.length ? Math.max(...mf.finance_amount) : 0;
   const maxIdx = mf.finance_amount.indexOf(maxFin);
   document.getElementById('monthlyFinShareMeta').textContent =
