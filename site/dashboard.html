@@ -307,6 +307,12 @@
         <div class="chart-legend" id="monthlyContractsLegend"></div>
         <div class="canvas-wrap chart-host" id="chartMonthlyContracts"></div>
       </div>
+      <div class="card">
+        <h3>نسبة كل شهر من إجمالي التمويل</h3>
+        <p class="meta" id="monthlyFinShareMeta">—</p>
+        <div class="chart-legend" id="monthlyFinShareLegend"></div>
+        <div class="canvas-wrap chart-host" id="chartMonthlyFinShare"></div>
+      </div>
     </div>
   </section>
 
@@ -925,6 +931,17 @@ function renderCharts(){
   document.getElementById('monthlyContractsMeta').textContent = mf.months.length + ' شهر من البيانات';
   drawVGroupedBar('chartMonthlyContracts', 'monthlyContractsLegend', mf.months, mf.contracts, mf.early_settlement,
     'عدد العقود', 'عملاء السداد المبكر', violet, red);
+
+  // Highlight the single highest-financing month in accent color against a
+  // muted gray for the rest, so "which month" reads at a glance rather than
+  // asking the viewer to decode N distinct hues across the year.
+  const muted = themeVar('--ink-muted');
+  const maxFin = mf.finance_amount.length ? Math.max(...mf.finance_amount) : 0;
+  const maxIdx = mf.finance_amount.indexOf(maxFin);
+  document.getElementById('monthlyFinShareMeta').textContent =
+    maxIdx > -1 ? ('أعلى شهر تمويلاً: ' + mf.months[maxIdx]) : '—';
+  drawDonut('chartMonthlyFinShare', 'monthlyFinShareLegend', mf.months, mf.finance_amount,
+    mf.months.map((_, i) => i === maxIdx ? accent : muted));
 }
 
 function renderAll(){ renderKpis(); renderCharts(); }
