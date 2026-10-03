@@ -566,14 +566,18 @@ async function fetchAll(){
   // ---- Monthly collection comparison (Loun/Fund split, one row per month) ----
   // The sheet has no date column, only an Arabic month name, so rows are
   // sorted using MONTH_ORDER rather than a date sort.
-  const { data: mcRows } = await sb.from('monthly_collection_comparison').select('month, loun, fund, total');
+  // "total" is computed as fund + loun rather than read from its own column —
+  // the sheet enters all three independently, so they could drift apart; this
+  // guarantees the monthly total always matches the fund/loun split shown
+  // next to it instead of trusting two separately-typed numbers to agree.
+  const { data: mcRows } = await sb.from('monthly_collection_comparison').select('month, loun, fund');
   if (mcRows && mcRows.length){
     const sorted = mcRows.slice().sort((a, b) => MONTH_ORDER.indexOf(a.month) - MONTH_ORDER.indexOf(b.month));
     const mc = result.breakdowns.monthly_collection;
     mc.months = sorted.map(r => r.month);
-    mc.total = sorted.map(r => Number(r.total ?? 0));
     mc.loun = sorted.map(r => Number(r.loun ?? 0));
     mc.fund = sorted.map(r => Number(r.fund ?? 0));
+    mc.total = mc.loun.map((v, i) => v + mc.fund[i]);
     mc.total_loun = mc.loun.reduce((a,b) => a+b, 0);
     mc.total_fund = mc.fund.reduce((a,b) => a+b, 0);
   }
