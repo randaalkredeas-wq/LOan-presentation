@@ -398,6 +398,7 @@ async function fetchAll(){
   const result = {
     kpi: {
       as_of_date: null, financing_date: null, total_financing: 0, today_financing: 0, today_financing_delta: null, total_contracts: 0, today_contracts: 0, today_contracts_delta: null, cancelled: 0,
+      contracts_jarir: 0, financing_amount_jarir: 0,
       total_collections: 0, collections_period_to: null,
       fixed_arrears_total: 0, fixed_arrears_asof: null,
       sales_accepted_latest: 0, sales_date: null, sales_target: 0, sales_target_date: null,
@@ -446,6 +447,8 @@ async function fetchAll(){
     result.kpi.today_contracts = Number(latest.today_number_contracts ?? 0);
     result.kpi.cancelled = Number(latest.cancelled ?? 0);
     result.kpi.financing_date = latest.kpi_date;
+    result.kpi.contracts_jarir = Number(latest.contracts_jarir ?? 0);
+    result.kpi.financing_amount_jarir = Number(latest.total_financing_amount_jarir ?? 0);
 
     // Day-over-day % change vs the previous entered day, for the two daily
     // ("today") tiles — shown as an up/down arrow + percentage on the tile.
@@ -617,6 +620,8 @@ function renderKpis(){
     { val: bdiNum(k.total_contracts), lbl: 'إجمالي العقود<br>Total Contracts', sub: k.financing_date, tile: 's-aqua' },
     { val: bdiNum(k.today_contracts), lbl: 'إجمالي عقود اليوم<br>Total Contracts Today', sub: k.financing_date, tile: 's-aqua', delta: k.today_contracts_delta },
     { val: bdiNum(k.cancelled), lbl: 'إجمالي الإلغاء هذا الشهر<br>Total Cancellations This Month', sub: k.financing_date, tile: 's-orange' },
+    { val: bdiNum(k.contracts_jarir), lbl: 'عدد عقود منتج جرير<br>Jarir Contracts', sub: k.financing_date, tile: 's-aqua' },
+    { val: bdiNum(k.financing_amount_jarir), lbl: 'إجمالي مبالغ التمويل - جرير<br>Jarir Financing Amount', sub: k.financing_date, tile: 'accent' },
     { val: bdiNum(k.total_collections), lbl: 'إجمالي التحصيلات (آخر فترة)<br>Total Collections', sub: k.collections_period_to, tile: 's-green' },
     { val: bdiNum(k.fixed_arrears_total), lbl: 'إجمالي المتأخرات الثابتة<br>Fixed Arrears Total', sub: 'كما في ' + (k.fixed_arrears_asof || '—'), tile: 's-red' },
     { val: bdiNum(k.sales_accepted_latest), lbl: 'مبيعات مقبولة (آخر يوم)<br>Sales Accepted', sub: k.sales_date, tile: 's-aqua' },
