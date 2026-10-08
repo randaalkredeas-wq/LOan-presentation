@@ -623,7 +623,6 @@ function renderKpis(){
     { val: bdiNum(k.contracts_jarir), lbl: 'عدد عقود منتج جرير<br>Jarir Contracts', sub: k.financing_date, tile: 's-aqua' },
     { val: bdiNum(k.financing_amount_jarir), lbl: 'إجمالي مبالغ التمويل - جرير<br>Jarir Financing Amount', sub: k.financing_date, tile: 'accent' },
     { val: bdiNum(k.total_collections), lbl: 'إجمالي التحصيلات (آخر فترة)<br>Total Collections', sub: k.collections_period_to, tile: 's-green' },
-    { val: bdiNum(k.fixed_arrears_total), lbl: 'إجمالي المتأخرات الثابتة<br>Fixed Arrears Total', sub: 'كما في ' + (k.fixed_arrears_asof || '—'), tile: 's-red' },
     { val: bdiNum(k.sales_accepted_latest), lbl: 'مبيعات مقبولة (آخر يوم)<br>Sales Accepted', sub: k.sales_date, tile: 's-aqua' },
     { val: bdiNum(k.care_active_latest), lbl: 'شكاوى نشطة (آخر يوم)<br>Customer Care Active', sub: k.care_date, tile: 's-violet' },
   ];
