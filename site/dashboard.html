@@ -494,11 +494,15 @@ async function fetchAll(){
   // filled in independently, and forcing collections onto the financing
   // trend's (often much shorter) date list was silently truncating a full
   // collections history down to whatever few days credit_kpis happened to have.
+  // The daily trend only shows the current calendar month — past months
+  // belong on the monthly trend chart further down the page, and piling
+  // every day since launch onto one line makes it unreadable.
   const { data: collAllRows } = await sb.from('collection_summary').select('date_to, item, amount');
   if (collAllRows && collAllRows.length){
     const byDate = {};
     collAllRows.forEach(r => { (byDate[r.date_to] ||= []).push(r); });
-    const dates = Object.keys(byDate).sort();
+    const curMonthPrefix = new Date().toISOString().slice(0, 7);
+    const dates = Object.keys(byDate).filter(d => d.startsWith(curMonthPrefix)).sort();
     result.trend.collDates = dates;
     result.trend.total_collections = dates.map(d => sumCollectionRows(byDate[d]));
   }
