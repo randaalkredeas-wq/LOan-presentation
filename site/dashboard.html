@@ -183,9 +183,42 @@
     header.top{ flex-direction:column; }
     .status{ text-align:right; direction:rtl; }
   }
+
+  .nav-btn{
+    display:inline-flex; align-items:center; gap:6px;
+    background: var(--accent); color: var(--accent-ink); border:none;
+    border-radius:10px; padding:10px 16px; font-size:.85rem; font-weight:600;
+    font-family: var(--font-ui); cursor:pointer;
+  }
+  .nav-btn.ghost{ background: var(--surface); color: var(--ink); border:1px solid var(--border); }
+  .page-nav{ display:flex; justify-content:flex-start; margin-bottom:18px; }
+
+  .filters{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px; }
+  .filters input[type="text"], .filters select{
+    background: var(--surface); color: var(--ink); border:1px solid var(--border);
+    border-radius:8px; padding:8px 12px; font-size:.84rem; font-family: var(--font-ui);
+  }
+  .filters input[type="text"]{ flex:1; min-width:180px; }
+
+  .table-wrap{ overflow-x:auto; border:1px solid var(--border); border-radius:12px; }
+  table.data-table{ width:100%; border-collapse:collapse; font-size:.82rem; min-width:920px; }
+  table.data-table th, table.data-table td{
+    padding:9px 12px; text-align:right; border-bottom:1px solid var(--border); white-space:nowrap;
+  }
+  table.data-table th{ background: var(--surface-2); color: var(--ink-2); font-weight:600; }
+  table.data-table tbody tr:hover{ background: var(--surface-2); }
+
+  .sla-pill{
+    display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:999px;
+    font-size:.72rem; font-weight:700; white-space:nowrap;
+  }
+  .sla-pill.ok{ background: rgba(12,163,12,.12); color: var(--good); }
+  .sla-pill.warn{ background: rgba(184,114,46,.16); color: var(--s-orange); }
+  .sla-pill.late{ background: rgba(211,59,59,.14); color: var(--critical); }
+  .sla-pill.none{ background: var(--surface-2); color: var(--ink-muted); }
 </style>
 
-<div class="wrap">
+<div class="wrap" id="mainView">
   <header class="top">
     <div class="brand">
       <div class="mark"><img src="data:image/png;base64,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" alt="لون"></div>
@@ -199,6 +232,10 @@
       <p class="note">هذه الصفحة متصلة مباشرة بقاعدة البيانات وتُحدَّث تلقائيًا كل ما تتغير بيانات ملف الإكسل اليومي (عبر Power Automate).</p>
     </div>
   </header>
+
+  <div class="page-nav">
+    <button class="nav-btn" onclick="showView('debt')" type="button">شراء المديونية ←</button>
+  </div>
 
   <div class="error-banner" id="errorBanner">
     ⚠️ تعذّر الاتصال بقاعدة البيانات حاليًا. جرّبي تحديث الصفحة بعد قليل.
@@ -345,6 +382,107 @@
   </footer>
 </div>
 
+<div class="wrap" id="debtView" style="display:none">
+  <header class="top">
+    <div class="brand">
+      <div>
+        <h1>شراء المديونية</h1>
+        <p class="subtitle">Debt Buyout — متابعة العملاء والتحويلات المالية</p>
+      </div>
+    </div>
+    <div class="status">
+      <button class="nav-btn ghost" onclick="showView('main')" type="button">→ العودة للرئيسية</button>
+      <p class="note">البيانات مصدرها ملف إكسل في SharePoint، وتُحدَّث عبر Power Automate.</p>
+    </div>
+  </header>
+
+  <div class="error-banner" id="debtErrorBanner">
+    ⚠️ تعذّر الاتصال بقاعدة البيانات حاليًا. جرّبي تحديث الصفحة بعد قليل.
+  </div>
+
+  <div class="empty-banner" id="debtEmptyBanner">
+    ⏳ لا يوجد عملاء مُدخلين بعد لمنتج شراء المديونية — الأرقام أدناه أصفار لحد ما يبدأ إدخال البيانات في ملف الإكسل.
+  </div>
+
+  <section>
+    <h2 class="section">المؤشرات الرئيسية</h2>
+    <div class="kpi-grid" id="debtKpiGrid"></div>
+  </section>
+
+  <section>
+    <h2 class="section">العملاء حسب حالة الطلب والجهة التمويلية</h2>
+    <div class="chart-grid stacked">
+      <div class="card">
+        <h3>عدد العملاء حسب حالة الطلب</h3>
+        <p class="meta" id="debtStatusMeta">—</p>
+        <div class="canvas-wrap tall chart-host" id="chartDebtStatus"></div>
+      </div>
+    </div>
+    <div class="chart-grid stacked" style="margin-top:16px;">
+      <div class="card">
+        <h3>عدد العملاء حسب البنك / شركة التمويل الحالية</h3>
+        <p class="meta" id="debtBankMeta">—</p>
+        <div class="canvas-wrap tall chart-host" id="chartDebtBank"></div>
+      </div>
+    </div>
+    <div class="chart-grid" style="margin-top:16px;">
+      <div class="card">
+        <h3>المبالغ المعتمدة مقابل المبالغ المحوّلة فعليًا</h3>
+        <p class="meta" id="debtAmountsMeta">—</p>
+        <div class="chart-legend" id="debtAmountsLegend"></div>
+        <div class="canvas-wrap chart-host" id="chartDebtAmounts"></div>
+      </div>
+      <div class="card">
+        <h3>توزيع الطلبات على مراحل رحلة العميل</h3>
+        <p class="meta" id="debtStageMeta">—</p>
+        <div class="chart-legend" id="debtStageLegend"></div>
+        <div class="canvas-wrap chart-host" id="chartDebtStage"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section">متابعة العملاء</h2>
+    <div class="filters">
+      <input type="text" id="debtSearch" placeholder="بحث برقم الطلب أو اسم العميل">
+      <select id="debtStatusFilter"><option value="">كل الحالات</option></select>
+      <select id="debtBankFilter"><option value="">كل الجهات التمويلية</option></select>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>رقم الطلب</th><th>اسم العميل</th><th>البنك / شركة التمويل الحالية</th>
+            <th>مبلغ المديونية</th><th>حالة الطلب</th><th>تاريخ إحالة الطلب للمالية</th>
+            <th>الوقت المتبقي للتحويل</th><th>حالة مهلة التحويل</th>
+            <th>المبلغ المحوّل فعليًا</th><th>سبب التأخير</th>
+          </tr>
+        </thead>
+        <tbody id="debtTableBody"></tbody>
+      </table>
+    </div>
+    <p class="meta" id="debtTableMeta" style="margin-top:10px;">—</p>
+  </section>
+
+  <section>
+    <h2 class="section">متابعة التحويلات المالية — مهلة 24 ساعة</h2>
+    <div class="kpi-grid" id="debtSlaGrid"></div>
+    <div class="table-wrap" style="margin-top:16px;">
+      <table class="data-table">
+        <thead>
+          <tr><th>رقم الطلب</th><th>اسم العميل</th><th>تاريخ الإحالة للمالية</th><th>مدة التجاوز</th><th>سبب التأخير</th></tr>
+        </thead>
+        <tbody id="debtDelayedBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <span>شراء المديونية — متصلة مباشرة بقاعدة البيانات (Supabase)</span>
+    <span id="debtGeneratedAt">—</span>
+  </footer>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 /* ====================== إعدادات الاتصال بـ Supabase ====================== */
@@ -361,6 +499,77 @@ const ARREARS_LABELS = ["1","2","3","4","5 - 30"];
 // Arabic month names in calendar order — used to sort Monthly_Comparison rows
 // correctly, since the sheet has no year/date column, only a month name.
 const MONTH_ORDER = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+
+/* ====================== شراء المديونية (Debt Buyout) ====================== */
+// Status list exactly as specified — order also carries meaning (used below
+// to group statuses into approved/submitted/interested buckets).
+const DEBT_STATUS_LIST = [
+  "عميل جديد","لم يتم التواصل","تمت محاولة التواصل","بانتظار رد العميل","مهتم","غير مهتم",
+  "بانتظار تقديم الطلب","تم تقديم الطلب","الطلب قيد الدراسة","تمت الموافقة","مرفوض",
+  "بانتظار خطاب المديونية","تم استلام خطاب المديونية","بانتظار إخلاء الطرف","تم استلام إخلاء الطرف",
+  "بانتظار التحويل المالي","تم التحويل","مكتمل","ملغي","متوقف بانتظار العميل"
+];
+
+// Journey-stage grouping for the "مراحل الرحلة" chart — adjust this mapping
+// if the business groups these statuses differently.
+const DEBT_STAGE_MAP = {
+  "عميل جديد":"التواصل الأولي", "لم يتم التواصل":"التواصل الأولي", "تمت محاولة التواصل":"التواصل الأولي",
+  "بانتظار رد العميل":"التواصل الأولي", "متوقف بانتظار العميل":"التواصل الأولي",
+  "مهتم":"الاهتمام", "غير مهتم":"الاهتمام",
+  "بانتظار تقديم الطلب":"تقديم الطلب", "تم تقديم الطلب":"تقديم الطلب", "الطلب قيد الدراسة":"تقديم الطلب",
+  "تمت الموافقة":"الموافقة", "مرفوض":"الموافقة",
+  "بانتظار خطاب المديونية":"إجراءات المديونية", "تم استلام خطاب المديونية":"إجراءات المديونية",
+  "بانتظار إخلاء الطرف":"إجراءات المديونية", "تم استلام إخلاء الطرف":"إجراءات المديونية",
+  "بانتظار التحويل المالي":"التحويل المالي", "تم التحويل":"التحويل المالي",
+  "مكتمل":"مكتمل/ملغي", "ملغي":"مكتمل/ملغي",
+};
+const DEBT_STAGE_ORDER = ["التواصل الأولي","الاهتمام","تقديم الطلب","الموافقة","إجراءات المديونية","التحويل المالي","مكتمل/ملغي"];
+
+const DEBT_APPROVED_OR_LATER = new Set([
+  "تمت الموافقة","بانتظار خطاب المديونية","تم استلام خطاب المديونية","بانتظار إخلاء الطرف",
+  "تم استلام إخلاء الطرف","بانتظار التحويل المالي","تم التحويل","مكتمل"
+]);
+const DEBT_SUBMITTED_OR_LATER = new Set(["تم تقديم الطلب","الطلب قيد الدراسة","مرفوض", ...DEBT_APPROVED_OR_LATER]);
+const DEBT_INTERESTED_OR_LATER = new Set(["مهتم","بانتظار تقديم الطلب", ...DEBT_SUBMITTED_OR_LATER]);
+const DEBT_TERMINAL = new Set(["مكتمل","ملغي"]);
+
+const DEBT_SLA_HOURS = 24;
+const DEBT_SLA_WARN_HOURS = 4;
+
+// transferred_at set -> countdown stopped ("تم التحويل"). No finance_referral_at
+// -> countdown never started. Otherwise: overdue past 24h, "اقترب موعد
+// الاستحقاق" inside the last 4h, else on track.
+function debtSlaState(referralAt, transferredAt){
+  if (transferredAt) return { state: 'ok', label: 'تم التحويل', remainingMs: null };
+  if (!referralAt) return { state: 'none', label: 'لم تبدأ المهلة', remainingMs: null };
+  const deadline = new Date(referralAt).getTime() + DEBT_SLA_HOURS * 3600000;
+  const remainingMs = deadline - Date.now();
+  if (remainingMs <= 0) return { state: 'late', label: 'متأخر عن المهلة', remainingMs };
+  if (remainingMs <= DEBT_SLA_WARN_HOURS * 3600000) return { state: 'warn', label: 'اقترب موعد الاستحقاق', remainingMs };
+  return { state: 'ok', label: 'ضمن المهلة', remainingMs };
+}
+function fmtDuration(ms){
+  if (ms === null || ms === undefined || isNaN(ms)) return '—';
+  const abs = Math.abs(ms);
+  const h = Math.floor(abs / 3600000), m = Math.floor((abs % 3600000) / 60000);
+  return h + 'س ' + m + 'د';
+}
+
+let DEBT_ROWS = [];
+
+async function fetchDebtBuyout(){
+  const { data, error } = await sb.from('debt_buyout_customers').select('*').order('id', { ascending:true });
+  if (error) throw error;
+  return data || [];
+}
+
+function showView(view){
+  const isDebt = view === 'debt';
+  document.getElementById('mainView').style.display = isDebt ? 'none' : '';
+  document.getElementById('debtView').style.display = isDebt ? '' : 'none';
+  window.scrollTo(0, 0);
+  location.hash = isDebt ? '#debt' : '';
+}
 
 let DATA = null;
 
@@ -901,6 +1110,135 @@ function drawDonut(hostId, legendHostId, labels, values, colors){
   host.innerHTML = ''; host.appendChild(svg);
 }
 
+function debtStatusBadgeClass(state){
+  return { ok:'ok', warn:'warn', late:'late', none:'none' }[state] || 'none';
+}
+
+function populateDebtFilters(bankLabels){
+  const statusSel = document.getElementById('debtStatusFilter');
+  if (!statusSel.dataset.filled){
+    statusSel.innerHTML = '<option value="">كل الحالات</option>' +
+      DEBT_STATUS_LIST.map(s => `<option value="${s}">${s}</option>`).join('');
+    statusSel.dataset.filled = '1';
+  }
+  const bankSel = document.getElementById('debtBankFilter');
+  const prevBank = bankSel.value;
+  bankSel.innerHTML = '<option value="">كل الجهات التمويلية</option>' +
+    bankLabels.map(b => `<option value="${b}">${b}</option>`).join('');
+  if (bankLabels.includes(prevBank)) bankSel.value = prevBank;
+}
+
+function renderDebtTable(){
+  const q = (document.getElementById('debtSearch').value || '').trim().toLowerCase();
+  const statusF = document.getElementById('debtStatusFilter').value;
+  const bankF = document.getElementById('debtBankFilter').value;
+  const filtered = DEBT_ROWS.filter(r => {
+    if (statusF && r.status !== statusF) return false;
+    if (bankF && (r.current_bank || 'غير محدد') !== bankF) return false;
+    if (q && !((r.customer_name||'').toLowerCase().includes(q) || String(r.request_number||'').toLowerCase().includes(q))) return false;
+    return true;
+  });
+  document.getElementById('debtTableMeta').textContent = 'عرض ' + filtered.length + ' من ' + DEBT_ROWS.length + ' عميل';
+  document.getElementById('debtTableBody').innerHTML = filtered.length ? filtered.map(r => {
+    const sla = debtSlaState(r.finance_referral_at, r.transferred_at);
+    const remaining = sla.state === 'late' ? ('متأخر ' + fmtDuration(sla.remainingMs))
+      : (sla.remainingMs != null ? fmtDuration(sla.remainingMs) : '—');
+    return `
+    <tr>
+      <td>${r.request_number || '—'}</td>
+      <td>${r.customer_name || '—'}</td>
+      <td>${r.current_bank || 'غير محدد'}</td>
+      <td>${bdiNum(r.debt_amount)}</td>
+      <td>${r.status || '—'}</td>
+      <td>${r.finance_referral_at ? new Date(r.finance_referral_at).toLocaleString('ar-SA') : '—'}</td>
+      <td>${remaining}</td>
+      <td><span class="sla-pill ${debtStatusBadgeClass(sla.state)}">${sla.label}</span></td>
+      <td>${r.transferred_amount != null ? bdiNum(r.transferred_amount) : '—'}</td>
+      <td>${r.delay_reason || '—'}</td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="10" style="text-align:center;color:var(--ink-muted);">لا يوجد عملاء مطابقين</td></tr>';
+}
+
+function renderDebtBuyout(rows){
+  DEBT_ROWS = rows;
+  const accent = themeVar('--accent'), aqua = themeVar('--s-aqua'), green = themeVar('--s-green'),
+        red = themeVar('--s-red'), violet = themeVar('--s-violet'), orange = themeVar('--s-orange'),
+        muted = themeVar('--ink-muted');
+
+  const total = rows.length;
+  const interested = rows.filter(r => DEBT_INTERESTED_OR_LATER.has(r.status)).length;
+  const submitted = rows.filter(r => DEBT_SUBMITTED_OR_LATER.has(r.status)).length;
+  const approvedRows = rows.filter(r => DEBT_APPROVED_OR_LATER.has(r.status));
+  const approvedAmount = approvedRows.reduce((s,r) => s + Number(r.debt_amount ?? 0), 0);
+  const transferredAmount = rows.reduce((s,r) => s + Number(r.transferred_amount ?? 0), 0);
+  const inProgress = rows.filter(r => !DEBT_TERMINAL.has(r.status)).length;
+  const slaList = rows.map(r => Object.assign({}, r, { sla: debtSlaState(r.finance_referral_at, r.transferred_at) }));
+  const lateCount = slaList.filter(r => r.sla.state === 'late').length;
+
+  const kTiles = [
+    { val: bdiNum(total), lbl: 'إجمالي العملاء المستلمين', tile: 'accent' },
+    { val: bdiNum(interested), lbl: 'العملاء المهتمون', tile: 's-aqua' },
+    { val: bdiNum(submitted), lbl: 'الطلبات المقدمة', tile: 's-aqua' },
+    { val: bdiNum(approvedRows.length), lbl: 'المديونيات المعتمدة', tile: 's-violet' },
+    { val: bdiNum(approvedAmount), lbl: 'إجمالي مبالغ المديونيات المعتمدة (ر.س)', tile: 'accent' },
+    { val: bdiNum(transferredAmount), lbl: 'إجمالي المبالغ المحوّلة فعليًا (ر.س)', tile: 's-green' },
+    { val: bdiNum(inProgress), lbl: 'الطلبات قيد الإجراء', tile: 's-orange' },
+    { val: bdiNum(lateCount), lbl: 'التحويلات المتأخرة عن 24 ساعة', tile: 's-red' },
+  ];
+  document.getElementById('debtKpiGrid').innerHTML = kTiles.map(t => `
+    <div class="kpi" style="--tile:var(--${t.tile})">
+      <div class="val">${t.val}</div>
+      <div class="lbl">${t.lbl}</div>
+    </div>`).join('');
+  document.getElementById('debtEmptyBanner').classList.toggle('show', total === 0);
+
+  const statusCounts = DEBT_STATUS_LIST.map(s => rows.filter(r => r.status === s).length);
+  document.getElementById('debtStatusMeta').textContent = total ? ('إجمالي ' + total + ' عميل') : '—';
+  drawHBar('chartDebtStatus', DEBT_STATUS_LIST, statusCounts, accent);
+
+  const bankCounts = {};
+  rows.forEach(r => { const b = r.current_bank || 'غير محدد'; bankCounts[b] = (bankCounts[b]||0) + 1; });
+  const bankLabels = Object.keys(bankCounts).sort((a,b) => bankCounts[b]-bankCounts[a]);
+  document.getElementById('debtBankMeta').textContent = bankLabels.length ? ('إجمالي ' + bankLabels.length + ' جهة') : '—';
+  drawHBar('chartDebtBank', bankLabels, bankLabels.map(b => bankCounts[b]), aqua);
+
+  document.getElementById('debtAmountsMeta').textContent = 'بالريال السعودي';
+  drawHGroupedBar('chartDebtAmounts', 'debtAmountsLegend', [''], [approvedAmount], [transferredAmount],
+    'معتمد', 'محوّل فعليًا', accent, green);
+
+  const stageCounts = DEBT_STAGE_ORDER.map(st => rows.filter(r => DEBT_STAGE_MAP[r.status] === st).length);
+  const stageColors = [accent, aqua, violet, orange, green, red, muted];
+  document.getElementById('debtStageMeta').textContent = total ? ('إجمالي ' + total + ' طلب') : '—';
+  drawDonut('chartDebtStage', 'debtStageLegend', DEBT_STAGE_ORDER, stageCounts, stageColors);
+
+  const waiting = slaList.filter(r => r.finance_referral_at && !r.transferred_at).length;
+  const warnCount = slaList.filter(r => r.sla.state === 'warn').length;
+  const slaTiles = [
+    { val: bdiNum(waiting), lbl: 'عملاء بانتظار التحويل', tile: 's-aqua' },
+    { val: bdiNum(warnCount), lbl: 'بقي على مهلتهم 4 ساعات أو أقل', tile: 's-orange' },
+    { val: bdiNum(lateCount), lbl: 'تجاوزوا 24 ساعة', tile: 's-red' },
+  ];
+  document.getElementById('debtSlaGrid').innerHTML = slaTiles.map(t => `
+    <div class="kpi" style="--tile:var(--${t.tile})">
+      <div class="val">${t.val}</div>
+      <div class="lbl">${t.lbl}</div>
+    </div>`).join('');
+
+  const delayedRows = slaList.filter(r => r.sla.state === 'late').sort((a,b) => a.sla.remainingMs - b.sla.remainingMs);
+  document.getElementById('debtDelayedBody').innerHTML = delayedRows.length ? delayedRows.map(r => `
+    <tr>
+      <td>${r.request_number || '—'}</td>
+      <td>${r.customer_name || '—'}</td>
+      <td>${r.finance_referral_at ? new Date(r.finance_referral_at).toLocaleString('ar-SA') : '—'}</td>
+      <td>${fmtDuration(r.sla.remainingMs)}</td>
+      <td>${r.delay_reason || '—'}</td>
+    </tr>`).join('') : '<tr><td colspan="5" style="text-align:center;color:var(--ink-muted);">لا يوجد عملاء متأخرين حاليًا</td></tr>';
+
+  populateDebtFilters(bankLabels);
+  renderDebtTable();
+  document.getElementById('debtGeneratedAt').textContent = 'آخر تحديث للصفحة: ' + new Date().toLocaleString('ar-SA');
+}
+
 function renderCharts(){
   const accent = themeVar('--accent'), aqua = themeVar('--s-aqua'), green = themeVar('--s-green'),
         red = themeVar('--s-red'), violet = themeVar('--s-violet'), orange = themeVar('--s-orange'),
@@ -1000,17 +1338,33 @@ async function main(){
   }
   renderAll();
   document.getElementById('generatedAt').textContent = 'آخر تحديث للصفحة: ' + new Date().toLocaleString('ar-SA');
+
+  try {
+    const debtRows = await fetchDebtBuyout();
+    renderDebtBuyout(debtRows);
+    document.getElementById('debtErrorBanner').classList.remove('show');
+  } catch(err){
+    console.error('Debt buyout fetch error:', err);
+    document.getElementById('debtErrorBanner').classList.add('show');
+  }
+
+  if (location.hash === '#debt') showView('debt');
 }
+
+document.getElementById('debtSearch').addEventListener('input', renderDebtTable);
+document.getElementById('debtStatusFilter').addEventListener('change', renderDebtTable);
+document.getElementById('debtBankFilter').addEventListener('change', renderDebtTable);
 
 main();
 
 // تحديث تلقائي كل 5 دقائق ليعكس أحدث بيانات Power Automate بدون إعادة تحميل الصفحة يدويًا
 setInterval(main, 5 * 60 * 1000);
 
+function renderAllCharts(){ renderCharts(); renderDebtBuyout(DEBT_ROWS); }
 if (window.matchMedia) {
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', renderCharts);
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', renderAllCharts);
 }
-new MutationObserver(renderCharts).observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] });
+new MutationObserver(renderAllCharts).observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] });
 let resizeTimer;
-window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(renderCharts, 150); });
+window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(renderAllCharts, 150); });
 </script>
