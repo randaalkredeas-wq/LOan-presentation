@@ -1170,6 +1170,8 @@ function renderDebtBuyout(rows){
   const submitted = rows.filter(r => DEBT_SUBMITTED_OR_LATER.has(r.status)).length;
   const approvedRows = rows.filter(r => DEBT_APPROVED_OR_LATER.has(r.status));
   const approvedAmount = approvedRows.reduce((s,r) => s + Number(r.debt_amount ?? 0), 0);
+  const pendingApprovalAmount = rows.filter(r => !DEBT_APPROVED_OR_LATER.has(r.status))
+    .reduce((s,r) => s + Number(r.debt_amount ?? 0), 0);
   const transferredAmount = rows.reduce((s,r) => s + Number(r.transferred_amount ?? 0), 0);
   const awaitingSubmission = rows.filter(r => r.status === 'بانتظار تقديم الطلب').length;
   const rejectedCount = rows.filter(r => r.status === 'مرفوض').length;
@@ -1182,6 +1184,7 @@ function renderDebtBuyout(rows){
     { val: bdiNum(submitted), lbl: 'الطلبات المقدمة', tile: 's-aqua' },
     { val: bdiNum(approvedRows.length), lbl: 'المديونيات المعتمدة', tile: 's-violet' },
     { val: bdiNum(approvedAmount), lbl: 'إجمالي مبالغ المديونيات المعتمدة (ر.س)', tile: 'accent' },
+    { val: bdiNum(pendingApprovalAmount), lbl: 'إجمالي مبالغ المديونيات المستلمة (لم يتم اعتمادها) (ر.س)', tile: 's-aqua' },
     { val: bdiNum(transferredAmount), lbl: 'إجمالي المبالغ المحوّلة فعليًا (ر.س)', tile: 's-green' },
     { val: bdiNum(awaitingSubmission), lbl: 'بانتظار تقديم الطلب', tile: 's-orange' },
     { val: bdiNum(rejectedCount), lbl: 'الطلبات المرفوضة', tile: 's-red' },
