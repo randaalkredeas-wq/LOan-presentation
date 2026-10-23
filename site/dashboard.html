@@ -517,13 +517,13 @@ const DEBT_STAGE_MAP = {
   "بانتظار رد العميل":"التواصل الأولي", "متوقف بانتظار العميل":"التواصل الأولي",
   "مهتم":"الاهتمام", "غير مهتم":"الاهتمام",
   "بانتظار تقديم الطلب":"تقديم الطلب", "تم تقديم الطلب":"تقديم الطلب", "الطلب قيد الدراسة":"تقديم الطلب",
-  "تمت الموافقة":"الموافقة", "مرفوض":"الموافقة",
+  "تمت الموافقة":"الموافقة", "مرفوض":"مرفوض",
   "بانتظار خطاب المديونية":"إجراءات المديونية", "تم استلام خطاب المديونية":"إجراءات المديونية",
   "بانتظار إخلاء الطرف":"إجراءات المديونية", "تم استلام إخلاء الطرف":"إجراءات المديونية",
   "بانتظار التحويل المالي":"التحويل المالي", "تم التحويل":"التحويل المالي",
   "مكتمل":"مكتمل/ملغي", "ملغي":"مكتمل/ملغي",
 };
-const DEBT_STAGE_ORDER = ["التواصل الأولي","الاهتمام","تقديم الطلب","الموافقة","إجراءات المديونية","التحويل المالي","مكتمل/ملغي"];
+const DEBT_STAGE_ORDER = ["التواصل الأولي","الاهتمام","تقديم الطلب","الموافقة","مرفوض","إجراءات المديونية","التحويل المالي","مكتمل/ملغي"];
 
 const DEBT_APPROVED_OR_LATER = new Set([
   "تمت الموافقة","بانتظار خطاب المديونية","تم استلام خطاب المديونية","بانتظار إخلاء الطرف",
@@ -1164,7 +1164,7 @@ function renderDebtBuyout(rows){
   DEBT_ROWS = rows;
   const accent = themeVar('--accent'), aqua = themeVar('--s-aqua'), green = themeVar('--s-green'),
         red = themeVar('--s-red'), violet = themeVar('--s-violet'), orange = themeVar('--s-orange'),
-        muted = themeVar('--ink-muted');
+        muted = themeVar('--ink-muted'), good = themeVar('--good');
 
   const total = rows.length;
   const interested = rows.filter(r => DEBT_INTERESTED_OR_LATER.has(r.status)).length;
@@ -1213,7 +1213,7 @@ function renderDebtBuyout(rows){
     'معتمد', 'محوّل فعليًا', accent, green);
 
   const stageCounts = DEBT_STAGE_ORDER.map(st => rows.filter(r => DEBT_STAGE_MAP[r.status] === st).length);
-  const stageColors = [accent, aqua, violet, orange, green, red, muted];
+  const stageColors = [accent, aqua, violet, green, red, orange, good, muted];
   document.getElementById('debtStageMeta').textContent = total ? ('إجمالي ' + total + ' طلب') : '—';
   drawDonut('chartDebtStage', 'debtStageLegend', DEBT_STAGE_ORDER, stageCounts, stageColors);
 
