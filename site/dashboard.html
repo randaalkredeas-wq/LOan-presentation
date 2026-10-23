@@ -422,7 +422,8 @@
       <div class="card">
         <h3>عدد العملاء حسب البنك / شركة التمويل الحالية</h3>
         <p class="meta" id="debtBankMeta">—</p>
-        <div class="canvas-wrap tall chart-host" id="chartDebtBank"></div>
+        <div class="chart-legend" id="debtBankLegend"></div>
+        <div class="canvas-wrap chart-host" id="chartDebtBank"></div>
       </div>
     </div>
     <div class="chart-grid" style="margin-top:16px;">
@@ -1171,7 +1172,8 @@ function renderDebtBuyout(rows){
   const approvedRows = rows.filter(r => DEBT_APPROVED_OR_LATER.has(r.status));
   const approvedAmount = approvedRows.reduce((s,r) => s + Number(r.debt_amount ?? 0), 0);
   const transferredAmount = rows.reduce((s,r) => s + Number(r.transferred_amount ?? 0), 0);
-  const inProgress = rows.filter(r => !DEBT_TERMINAL.has(r.status)).length;
+  const awaitingSubmission = rows.filter(r => r.status === 'بانتظار تقديم الطلب').length;
+  const rejectedCount = rows.filter(r => r.status === 'مرفوض').length;
   const slaList = rows.map(r => Object.assign({}, r, { sla: debtSlaState(r.finance_referral_at, r.transferred_at) }));
   const lateCount = slaList.filter(r => r.sla.state === 'late').length;
 
@@ -1182,7 +1184,8 @@ function renderDebtBuyout(rows){
     { val: bdiNum(approvedRows.length), lbl: 'المديونيات المعتمدة', tile: 's-violet' },
     { val: bdiNum(approvedAmount), lbl: 'إجمالي مبالغ المديونيات المعتمدة (ر.س)', tile: 'accent' },
     { val: bdiNum(transferredAmount), lbl: 'إجمالي المبالغ المحوّلة فعليًا (ر.س)', tile: 's-green' },
-    { val: bdiNum(inProgress), lbl: 'الطلبات قيد الإجراء', tile: 's-orange' },
+    { val: bdiNum(awaitingSubmission), lbl: 'بانتظار تقديم الطلب', tile: 's-orange' },
+    { val: bdiNum(rejectedCount), lbl: 'الطلبات المرفوضة', tile: 's-red' },
     { val: bdiNum(lateCount), lbl: 'التحويلات المتأخرة عن 24 ساعة', tile: 's-red' },
   ];
   document.getElementById('debtKpiGrid').innerHTML = kTiles.map(t => `
@@ -1200,7 +1203,9 @@ function renderDebtBuyout(rows){
   rows.forEach(r => { const b = r.current_bank || 'غير محدد'; bankCounts[b] = (bankCounts[b]||0) + 1; });
   const bankLabels = Object.keys(bankCounts).sort((a,b) => bankCounts[b]-bankCounts[a]);
   document.getElementById('debtBankMeta').textContent = bankLabels.length ? ('إجمالي ' + bankLabels.length + ' جهة') : '—';
-  drawHBar('chartDebtBank', bankLabels, bankLabels.map(b => bankCounts[b]), aqua);
+  const bankPalette = [accent, aqua, green, violet, orange, red, muted];
+  const bankColors = bankLabels.map((_, i) => bankPalette[i % bankPalette.length]);
+  drawDonut('chartDebtBank', 'debtBankLegend', bankLabels, bankLabels.map(b => bankCounts[b]), bankColors);
 
   document.getElementById('debtAmountsMeta').textContent = 'بالريال السعودي';
   drawHGroupedBar('chartDebtAmounts', 'debtAmountsLegend', [''], [approvedAmount], [transferredAmount],
