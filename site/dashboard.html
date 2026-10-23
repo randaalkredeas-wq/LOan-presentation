@@ -422,8 +422,7 @@
       <div class="card">
         <h3>عدد العملاء حسب البنك / شركة التمويل الحالية</h3>
         <p class="meta" id="debtBankMeta">—</p>
-        <div class="chart-legend" id="debtBankLegend"></div>
-        <div class="canvas-wrap chart-host" id="chartDebtBank"></div>
+        <div class="canvas-wrap tall chart-host" id="chartDebtBank"></div>
       </div>
     </div>
     <div class="chart-grid" style="margin-top:16px;">
@@ -1203,9 +1202,7 @@ function renderDebtBuyout(rows){
   rows.forEach(r => { const b = r.current_bank || 'غير محدد'; bankCounts[b] = (bankCounts[b]||0) + 1; });
   const bankLabels = Object.keys(bankCounts).sort((a,b) => bankCounts[b]-bankCounts[a]);
   document.getElementById('debtBankMeta').textContent = bankLabels.length ? ('إجمالي ' + bankLabels.length + ' جهة') : '—';
-  const bankPalette = [accent, aqua, green, violet, orange, red, muted];
-  const bankColors = bankLabels.map((_, i) => bankPalette[i % bankPalette.length]);
-  drawDonut('chartDebtBank', 'debtBankLegend', bankLabels, bankLabels.map(b => bankCounts[b]), bankColors);
+  drawHBar('chartDebtBank', bankLabels, bankLabels.map(b => bankCounts[b]), aqua);
 
   document.getElementById('debtAmountsMeta').textContent = 'بالريال السعودي';
   drawHGroupedBar('chartDebtAmounts', 'debtAmountsLegend', [''], [approvedAmount], [transferredAmount],
