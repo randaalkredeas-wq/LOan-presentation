@@ -422,7 +422,7 @@
       <div class="card">
         <h3>عدد العملاء حسب البنك / شركة التمويل الحالية</h3>
         <p class="meta" id="debtBankMeta">—</p>
-        <div class="canvas-wrap tall chart-host" id="chartDebtBank"></div>
+        <div class="canvas-wrap chart-host" id="chartDebtBank"></div>
       </div>
     </div>
     <div class="chart-grid" style="margin-top:16px;">
@@ -919,6 +919,7 @@ function drawHBar(hostId, labels, values, color){
     g.appendChild(textEl(labelW + barW + 8, y + rowH/2 + 4, fmt(v), { class:'val-label', 'font-size':11 }));
     svg.appendChild(g);
   });
+  host.style.height = H + 'px';
   host.innerHTML = ''; host.appendChild(svg);
 }
 
